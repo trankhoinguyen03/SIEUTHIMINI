@@ -93,7 +93,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class QuanLySanPhamGui_NVK extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textFieldImg;
+	//private JTextField textFieldImg;
 	private JTextField textFieldMasp;
 	private JTextField textFieldTensp;
 	private JTextField textFieldGianhap;
@@ -132,7 +132,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 	JLabel lbThemanh = new JLabel();
 	File selectedFile;
 	ImageIcon icon = new ImageIcon();
-	JButton btnCapNhatAnh = new JButton();
+	//JButton btnCapNhatAnh = new JButton();
 	Object lastValueMaSp;
 	JButton btnXoa = new JButton("Ẩn");
 	JButton btnSua = new JButton("Sửa");
@@ -395,8 +395,8 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 	}
 
 	public void resetValue() {
-		textFieldImg.setText("");
-		textFieldImg.setEnabled(true);
+		//textFieldImg.setText("");
+		//textFieldImg.setEnabled(true);
 		textFieldMasp.setText("");
 		textFieldMasp.setEnabled(true);
 		textFieldHsd.setText("");
@@ -411,7 +411,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 		textFieldTensp.setEnabled(true);
 		comboBox.setEnabled(true);
 		lbThemanh.setIcon(null);
-		btnCapNhatAnh.setEnabled(true);
+		//btnCapNhatAnh.setEnabled(true);
 		//btnThem.setEnabled(true);
 		btnXoa.setEnabled(false);
 		btnSua.setEnabled(false);
@@ -430,7 +430,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 	}
 
 	public void unSetEnable() {
-		textFieldImg.setEnabled(true);
+		//textFieldImg.setEnabled(true);
 		textFieldMasp.setEnabled(true);
 		textFieldHsd.setEnabled(true);
 		textFieldGiaban.setEnabled(true);
@@ -439,7 +439,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 		textFieldTensp.setEnabled(true);
 
 		comboBox.setEnabled(true);
-		btnCapNhatAnh.setEnabled(true);
+		//btnCapNhatAnh.setEnabled(true);
 		//btnThem.setEnabled(true);
 		btnXoa.setEnabled(false);
 		btnSua.setEnabled(false);
@@ -456,7 +456,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 
 	public void setEnable() {
 
-		textFieldImg.setEnabled(false);
+		//textFieldImg.setEnabled(false);
 
 		textFieldMasp.setEnabled(false);
 
@@ -466,7 +466,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 		textFieldNsx.setEnabled(false);
 		textFieldTensp.setEnabled(false);
 		comboBox.setEnabled(false);
-		btnCapNhatAnh.setEnabled(false);
+		//btnCapNhatAnh.setEnabled(false);
 //		Tabbed 2
 
 		textMaSP1.setEnabled(false);
@@ -507,10 +507,11 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 			}
 
 		}
-		if (selectedFile == null && textFieldImg.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Chưa chọn ảnh cho sản phẩm");
-			return false;
-		}
+		/*
+		 * if (selectedFile == null && textFieldImg.getText().isEmpty()) {
+		 * JOptionPane.showMessageDialog(contentPane, "Chưa chọn ảnh cho sản phẩm");
+		 * return false; }
+		 */
 		if (textFieldGiaban.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(contentPane, "Giá bán rỗng");
 			textFieldGiaban.requestFocus();
@@ -750,36 +751,29 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 		JPanel panel_5 = new JPanel();
 		panel_5.setBorder(new LineBorder(new Color(0, 0, 0)));
 
-		btnCapNhatAnh.setText("Cập nhật ảnh");
-		btnCapNhatAnh.setEnabled(false);
-		btnCapNhatAnh.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser();
-				FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Images", "jpg", "png");
-				fileChooser.setFileFilter(imageFilter);
-				fileChooser.setMultiSelectionEnabled(false);
-				int returnVal = fileChooser.showDialog(tabbedPane, "Chọn ảnh");
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					selectedFile = fileChooser.getSelectedFile();
-
-					ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
-					Image image = icon.getImage();
-					g.drawImage(image, 0, 0, newWidth, newHeight, null);
-//					g.dispose();
-					ImageIcon resizedIcon = new ImageIcon(resizedImage);
-					lbThemanh.setIcon(resizedIcon);
-					textFieldImg.setText(selectedFile.getAbsolutePath());
-
-				}
-			}
-		});
-		btnCapNhatAnh.setFocusPainted(false);
-		btnCapNhatAnh.setFont(new Font("Arial", Font.BOLD, 12));
-
-		textFieldImg = new JTextField();
-		textFieldImg.setEnabled(false);
-		textFieldImg.setEditable(false);
-		textFieldImg.setColumns(10);
+		/*
+		 * btnCapNhatAnh.setText("Cập nhật ảnh"); btnCapNhatAnh.setEnabled(false);
+		 * btnCapNhatAnh.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { JFileChooser fileChooser = new
+		 * JFileChooser(); FileNameExtensionFilter imageFilter = new
+		 * FileNameExtensionFilter("Images", "jpg", "png");
+		 * fileChooser.setFileFilter(imageFilter);
+		 * fileChooser.setMultiSelectionEnabled(false); int returnVal =
+		 * fileChooser.showDialog(tabbedPane, "Chọn ảnh"); if (returnVal ==
+		 * JFileChooser.APPROVE_OPTION) { selectedFile = fileChooser.getSelectedFile();
+		 * 
+		 * ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath()); Image image =
+		 * icon.getImage(); g.drawImage(image, 0, 0, newWidth, newHeight, null); //
+		 * g.dispose(); ImageIcon resizedIcon = new ImageIcon(resizedImage);
+		 * lbThemanh.setIcon(resizedIcon);
+		 * textFieldImg.setText(selectedFile.getAbsolutePath());
+		 * 
+		 * } } }); btnCapNhatAnh.setFocusPainted(false); btnCapNhatAnh.setFont(new
+		 * Font("Arial", Font.BOLD, 12));
+		 * 
+		 * textFieldImg = new JTextField(); textFieldImg.setEnabled(false);
+		 * textFieldImg.setEditable(false); textFieldImg.setColumns(10);
+		 */
 
 		JLabel lblNewLabel_1 = new JLabel("Mã sản phẩm");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -957,9 +951,9 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 
 							try {
 								if (selectedFile == null) {
-									File file = new File(textFieldImg.getText());
-									String fileName = file.getName();
-									sp.setImg(fileName);
+									//File file = new File(textFieldImg.getText());
+									//String fileName = file.getName();
+									//sp.setImg(fileName);
 								} else {
 									sp.setImg(selectedFile.getName());
 								}
@@ -1249,7 +1243,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 					icon = new ImageIcon(Toolkit.getDefaultToolkit()
 							.createImage(LoginGui.class.getResource(".//Image//default.png")));
 					image = icon.getImage();
-					textFieldImg.setText("");
+					//textFieldImg.setText("");
 					Image resizedImg = image.getScaledInstance(130, 130, Image.SCALE_SMOOTH);
 					ImageIcon resizedIcon = new ImageIcon(resizedImg);
 					lbThemanh.setIcon(resizedIcon);
@@ -1260,7 +1254,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 						icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(img)));
 
 						image = icon.getImage();
-						textFieldImg.setText(img);
+						//textFieldImg.setText(img);
 						g.drawImage(image, 0, 0, newWidth, newHeight, null);
 						ImageIcon resizedIcon = new ImageIcon(resizedImage);
 						lbThemanh.setIcon(resizedIcon);
@@ -1609,12 +1603,12 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 					.addComponent(lbThemanh, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
 					.addGap(10)
 					.addGroup(gl_panel_5.createParallelGroup(Alignment.TRAILING)
-						.addComponent(lblNewLabel_6, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
-						.addComponent(btnCapNhatAnh, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
+						.addComponent(lblNewLabel_6, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
+						//.addComponent(btnCapNhatAnh, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
 					.addGroup(gl_panel_5.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_5.createSequentialGroup()
 							.addGap(10)
-							.addComponent(textFieldImg, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+							//.addComponent(textFieldImg, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
 							.addGap(10))
 						.addGroup(gl_panel_5.createSequentialGroup()
 							.addGap(9)
@@ -1682,11 +1676,11 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 									.addGap(10)
 									.addGroup(gl_panel_5.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_panel_5.createSequentialGroup()
-											.addGap(1)
-											.addComponent(btnCapNhatAnh, GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))
+											.addGap(1))
+											//.addComponent(btnCapNhatAnh, GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))
 										.addGroup(gl_panel_5.createSequentialGroup()
-											.addGap(2)
-											.addComponent(textFieldImg, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
+											.addGap(2))
+											//.addComponent(textFieldImg, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
 										.addGroup(gl_panel_5.createSequentialGroup()
 											.addGap(4)
 											.addComponent(lblNewLabel_3, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))))
