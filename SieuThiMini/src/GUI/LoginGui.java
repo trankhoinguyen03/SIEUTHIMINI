@@ -138,15 +138,17 @@ public class LoginGui extends JFrame {
 		JLabel lblNewLabel_4 = new JLabel("");
 		lblNewLabel_4.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Key.png"))));
 		
-		JButton btnNewButton = new JButton("Đổi Mật Khẩu");
-		ImageIcon icon = new ImageIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Key.png"))).getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-		btnNewButton.setIcon(icon);
-		btnNewButton.setHorizontalAlignment(SwingConstants.RIGHT);
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 13));
+		/*
+		 * //JButton btnNewButton = new JButton("Đổi Mật Khẩu"); ImageIcon icon = new
+		 * ImageIcon(new
+		 * ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
+		 * ".\\Image\\Key.png"))).getImage().getScaledInstance(20, 20,
+		 * Image.SCALE_DEFAULT)); btnNewButton.setIcon(icon);
+		 * btnNewButton.setHorizontalAlignment(SwingConstants.RIGHT);
+		 * btnNewButton.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { } }); btnNewButton.setFont(new Font("Arial",
+		 * Font.PLAIN, 13));
+		 */
 		
 		JButton btnNewButton_1 = new JButton("Đăng Nhập");
 		btnNewButton_1.addActionListener(new ActionListener() {
@@ -235,8 +237,8 @@ public class LoginGui extends JFrame {
 								.addComponent(textField_1, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)))
 						.addGroup(gl_panel_1.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(btnNewButton)
-							.addGap(18)
+							//.addComponent(btnNewButton)
+							//.addGap(18)
 							.addComponent(btnNewButton_1)
 							.addGap(18)
 							.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)))
@@ -265,8 +267,8 @@ public class LoginGui extends JFrame {
 					.addGap(18)
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE))
+						.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
+						//.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE))
 					.addGap(23))
 		);
 		panel_1.setLayout(gl_panel_1);
