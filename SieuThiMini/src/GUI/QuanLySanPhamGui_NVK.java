@@ -137,7 +137,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 	JButton btnXoa = new JButton("Ẩn");
 	JButton btnSua = new JButton("Sửa");
 	boolean isNumber = true;
-	JButton btnThem = new JButton("Thêm");
+	//JButton btnThem = new JButton("Thêm");
 	JButton btnLuu = new JButton("Lưu");
 	int lastRow = 0;
 	JRadioButton radio1 = new JRadioButton("Tên sản phẩm");
@@ -412,7 +412,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 		comboBox.setEnabled(true);
 		lbThemanh.setIcon(null);
 		btnCapNhatAnh.setEnabled(true);
-		btnThem.setEnabled(true);
+		//btnThem.setEnabled(true);
 		btnXoa.setEnabled(false);
 		btnSua.setEnabled(false);
 		btnLuu.setEnabled(false);
@@ -440,7 +440,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 
 		comboBox.setEnabled(true);
 		btnCapNhatAnh.setEnabled(true);
-		btnThem.setEnabled(true);
+		//btnThem.setEnabled(true);
 		btnXoa.setEnabled(false);
 		btnSua.setEnabled(false);
 		btnLuu.setEnabled(false);
@@ -1007,40 +1007,25 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 				}
 			}
 		});
-		btnThem.setFont(new Font("Arial", Font.BOLD, 12));
-		btnThem.setFocusPainted(false);
-		btnThem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				addbtn = true;
-				resetValue();
-				SanPhamDAL spdDal;
-				try {
-					spdDal = new SanPhamDAL();
-					int masp = spdDal.getLastMaSP();
-					masp++;
-					textFieldMasp.setText("" + masp);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-				textFieldMasp.setEnabled(false);
-
-				btnThem.setEnabled(false);
-				btnLuu.setEnabled(true);
-				btnXoa.setEnabled(false);
-				btnSua.setEnabled(false);
-				try {
-					hienthisanpham("them");
-				} catch (SQLException e3) {
-					// TODO Auto-generated catch block
-					e3.printStackTrace();
-				}
-
-			}
-		});
-		btnThem.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
+		/*
+		 * btnThem.setFont(new Font("Arial", Font.BOLD, 12));
+		 * btnThem.setFocusPainted(false); btnThem.addActionListener(new
+		 * ActionListener() { public void actionPerformed(ActionEvent e) { addbtn =
+		 * true; resetValue(); SanPhamDAL spdDal; try { spdDal = new SanPhamDAL(); int
+		 * masp = spdDal.getLastMaSP(); masp++; textFieldMasp.setText("" + masp); }
+		 * catch (SQLException e1) { // TODO Auto-generated catch block
+		 * e1.printStackTrace(); }
+		 * 
+		 * textFieldMasp.setEnabled(false);
+		 * 
+		 * btnThem.setEnabled(false); btnLuu.setEnabled(true); btnXoa.setEnabled(false);
+		 * btnSua.setEnabled(false); try { hienthisanpham("them"); } catch (SQLException
+		 * e3) { // TODO Auto-generated catch block e3.printStackTrace(); }
+		 * 
+		 * } }); btnThem.setIcon(new ImageIcon(
+		 * Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
+		 * ".\\Image\\Add.png"))));
+		 */
 		btnSua.setFont(new Font("Arial", Font.BOLD, 12));
 
 		btnSua.setEnabled(false);
@@ -1053,7 +1038,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 				addbtn = false;
 				oldMaSP = textFieldMasp.getText();
 				unSetEnable();
-				btnThem.setEnabled(false);
+				//btnThem.setEnabled(false);
 				btnLuu.setEnabled(true);
 
 				try {
@@ -1248,7 +1233,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 				setEnable();
 				btnXoa.setEnabled(true);
 				btnSua.setEnabled(true);
-				btnThem.setEnabled(true);
+				//btnThem.setEnabled(true);
 				btnLuu.setEnabled(false);
 
 				String img = null;
@@ -1435,13 +1420,15 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 			}
 		});
 
-		JLabel lblNewLabel_15 = new JLabel("Từ");
-		lblNewLabel_15.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_15.setFont(new Font("Arial", Font.BOLD, 14));
-
-		JLabel lblNewLabel_16 = new JLabel("Tới");
-		lblNewLabel_16.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_16.setFont(new Font("Arial", Font.BOLD, 14));
+		/*
+		 * JLabel lblNewLabel_15 = new JLabel("Từ");
+		 * lblNewLabel_15.setHorizontalAlignment(SwingConstants.CENTER);
+		 * lblNewLabel_15.setFont(new Font("Arial", Font.BOLD, 14));
+		 * 
+		 * JLabel lblNewLabel_16 = new JLabel("Tới");
+		 * lblNewLabel_16.setHorizontalAlignment(SwingConstants.CENTER);
+		 * lblNewLabel_16.setFont(new Font("Arial", Font.BOLD, 14));
+		 */
 
 		textFieldSearch.setColumns(10);
 
@@ -1528,15 +1515,15 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 					.addGap(37)
 					.addComponent(comboBoxSearch, 0, 189, Short.MAX_VALUE)
 					.addGap(49)
-					.addComponent(lblNewLabel_15, GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
-					.addGap(18)
-					.addComponent(textFieldFrom, GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-					.addGap(10)
-					.addComponent(lblNewLabel_16, GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
+					//.addComponent(lblNewLabel_15, GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
+					//.addGap(18)
+					//.addComponent(textFieldFrom, GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+					//.addGap(10)
+					//.addComponent(lblNewLabel_16, GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(textFieldTo)
-					.addGap(66))
-		);
+					//.addComponent(textFieldTo)
+					//.addGap(66))
+		));
 		gl_panel_7_1.setVerticalGroup(
 			gl_panel_7_1.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_7_1.createSequentialGroup()
@@ -1551,15 +1538,15 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 									.addGap(4)
 									.addComponent(comboBoxSearch, GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))
 								.addGroup(gl_panel_7_1.createSequentialGroup()
-									.addGap(5)
-									.addComponent(lblNewLabel_15, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
+									.addGap(5))
+									//.addComponent(lblNewLabel_15, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
 								.addGroup(gl_panel_7_1.createSequentialGroup()
-									.addGap(3)
-									.addGroup(gl_panel_7_1.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblNewLabel_16, GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
-										.addComponent(textFieldTo, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-										.addComponent(textFieldFrom, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))))))
-					.addGap(9))
+									.addGap(3))))))
+									//.addGroup(gl_panel_7_1.createParallelGroup(Alignment.BASELINE)
+										//.addComponent(lblNewLabel_16, GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+										//.addComponent(textFieldTo, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+										//.addComponent(textFieldFrom, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))))))
+					//.addGap(9))
 		);
 		panel_7_1.setLayout(gl_panel_7_1);
 		GroupLayout gl_panel_8 = new GroupLayout(panel_8);
@@ -1590,8 +1577,8 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 					.addGap(10)
 					.addComponent(btnLuu, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
 					.addGap(32)
-					.addComponent(btnThem, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
-					.addGap(33)
+					//.addComponent(btnThem, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+					//.addGap(33)
 					.addComponent(btnSua, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
 					.addGap(32)
 					.addComponent(btnXoa, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
@@ -1606,7 +1593,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 					.addGap(10)
 					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnLuu, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-						.addComponent(btnThem, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+						//.addComponent(btnThem, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
 						.addComponent(btnSua, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
 						.addComponent(btnXoa, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
 						.addComponent(btnDongBo, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)

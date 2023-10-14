@@ -82,9 +82,10 @@ public class NhapHangGUI extends JFrame {
     private JPanel contentPane;
     private JTextField textFieldMapn;
     private JComboBox comboBoxNhanVien;
+    private JTextField textFieldMaNhanVien;
     private JComboBox comboBoxNhaCC;
     private JTextField textFieldSanPham;
-    private JTextField textFieldLoaiHang;
+    private JComboBox comboBoxLoaiHang;
     //private JTextField textFieldNgaylap;
     private JTextField textFieldGiaNhap;
     private JTextField textFieldSoluong;
@@ -458,6 +459,14 @@ public class NhapHangGUI extends JFrame {
         comboBoxNhanVien = new JComboBox();
         comboBoxNhanVien.setBounds(130, 50, 200, 25);
         comboBoxNhanVien.setEnabled(false);
+        
+        JLabel lblNewLabel_manhanvien = new JLabel("Mã nhân viên");
+        lblNewLabel_manhanvien.setBounds(20, 90, 100, 25);
+
+        textFieldMaNhanVien = new JTextField();
+        textFieldMaNhanVien.setBounds(130, 90, 200, 25);
+        textFieldMaNhanVien.setEnabled(false);
+        textFieldMaNhanVien.setColumns(10);
 
 		/*
 		 * JLabel lblNewLabel_4 = new JLabel("Thời điểm lập");
@@ -469,18 +478,18 @@ public class NhapHangGUI extends JFrame {
 		 */
 
         JLabel lblNewLabel_6 = new JLabel("Sản phẩm");
-        lblNewLabel_6.setBounds(20, 90, 100, 25);
+        lblNewLabel_6.setBounds(20, 130, 100, 25);
 
         textFieldSanPham = new JTextField();
-        textFieldSanPham.setBounds(130, 90, 200, 25);
+        textFieldSanPham.setBounds(130, 130, 200, 25);
         textFieldSanPham.setEnabled(false);
         
         JLabel lblNewLabel_loaihang = new JLabel("Loại hàng");
-        lblNewLabel_loaihang.setBounds(20, 130, 100, 25);
+        lblNewLabel_loaihang.setBounds(20, 170, 100, 25);
 
-        textFieldLoaiHang = new JTextField();
-        textFieldLoaiHang.setBounds(130, 130, 200, 25);
-        textFieldLoaiHang.setEnabled(false);
+        comboBoxLoaiHang = new JComboBox();
+        comboBoxLoaiHang.setBounds(130, 170, 200, 25);
+        comboBoxLoaiHang.setEnabled(false);
 
         JLabel lblNewLabel_7 = new JLabel("Nhà Cung Cấp");
         lblNewLabel_7.setBounds(350, 10, 100, 25);
@@ -1021,11 +1030,13 @@ public class NhapHangGUI extends JFrame {
         panel_5.add(textFieldMapn);
         panel_5.add(lblNewLabel_7);
         panel_5.add(comboBoxNhanVien);
+        panel_5.add(lblNewLabel_manhanvien);
+        panel_5.add(textFieldMaNhanVien);
         panel_5.add(lblNewLabel_3);
         //panel_5.add(lblNewLabel_4);
         panel_5.add(textFieldSanPham);
         panel_5.add(lblNewLabel_loaihang);
-        panel_5.add(textFieldLoaiHang);
+        panel_5.add(comboBoxLoaiHang);
         panel_5.add(comboBoxNhaCC);
         panel_5.add(lblNewLabel_8);
         //panel_5.add(lblNewLabel_9);

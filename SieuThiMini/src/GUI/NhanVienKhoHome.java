@@ -101,8 +101,8 @@ public class NhanVienKhoHome extends javax.swing.JFrame {
         jLabel3.setText("PHẦN MỀM QUẢN LÝ SIÊU THỊ MINI");
 
         jButton7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Image/User.png"))); // NOI18N
-        jButton7.setText("NHÀ CUNG CẤP");
+        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Image/Add.png"))); // NOI18N
+        jButton7.setText("NHẬP HÀNG");
         jButton7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton7.setPreferredSize(new java.awt.Dimension(134, 107));
         jButton7.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
