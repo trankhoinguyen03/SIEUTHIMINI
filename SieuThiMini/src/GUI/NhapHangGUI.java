@@ -122,7 +122,7 @@ public class NhapHangGUI extends JFrame {
     JButton btnCapNhatAnh = new JButton();
     Object lastValueMaPn;
     JButton btnXoa = new JButton("Ẩn");
-    JButton btnSua = new JButton("Sửa");
+    //JButton btnSua = new JButton("Sửa");
     boolean check = true;
     JButton btnThem = new JButton("Thêm");
     JButton btnLuu = new JButton("Lưu");
@@ -739,20 +739,21 @@ public class NhapHangGUI extends JFrame {
         btnThem.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
 		
-		  btnSua.setBounds(283, 10, 104, 53);
-		  
-		  btnSua.setEnabled(false); btnSua.setIcon(new ImageIcon(
-		  Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
-		  ".\\Image\\Change.png")))); btnSua.setFocusPainted(false);
-		  btnSua.addActionListener(new ActionListener() { public void
-		  actionPerformed(ActionEvent e) { addbtn = false; fixbtn = true; addifbtn =
-		  false; fixifbtn = false; textFieldMapn.setEnabled(false); oldMaPN =
-		  textFieldMapn.getText(); unSetEnable("themphieunhap");
-		  btnThem.setEnabled(false); btnLuu.setEnabled(true);
-		  
-		  try { hienthiphieunhap("themphieunhap"); } catch (SQLException e1) { // TODO
-		  //Auto-generated catch block e1.printStackTrace(); 
-			  } } });
+		/*
+		 * btnSua.setBounds(283, 10, 104, 53);
+		 * 
+		 * btnSua.setEnabled(false); btnSua.setIcon(new ImageIcon(
+		 * Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
+		 * ".\\Image\\Change.png")))); btnSua.setFocusPainted(false);
+		 * btnSua.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { addbtn = false; fixbtn = true; addifbtn =
+		 * false; fixifbtn = false; textFieldMapn.setEnabled(false); oldMaPN =
+		 * textFieldMapn.getText(); unSetEnable("themphieunhap");
+		 * btnThem.setEnabled(false); btnLuu.setEnabled(true);
+		 * 
+		 * try { hienthiphieunhap("themphieunhap"); } catch (SQLException e1) { // TODO
+		 * //Auto-generated catch block e1.printStackTrace(); } } });
+		 */
 		  /*btnXoaChitiet.setBounds(419, 10, 104, 53); btnXoaChitiet.setEnabled(false);
 		  btnXoaChitiet.setIcon(new ImageIcon(
 		  Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
@@ -1009,7 +1010,7 @@ public class NhapHangGUI extends JFrame {
         panel_6.setLayout(null);
         panel_6.add(btnLuu);
         panel_6.add(btnThem);
-        panel_6.add(btnSua);
+        //panel_6.add(btnSua);
         panel_6.add(btnXoa);
         panel_6.add(btnDongBo);
         //panel_6.add(btnNhap);
