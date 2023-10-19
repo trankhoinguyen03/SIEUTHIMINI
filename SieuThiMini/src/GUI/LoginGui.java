@@ -67,7 +67,7 @@ public class LoginGui extends JFrame {
 		
 			nv = dn.checkLogin(textField.getText(), textField_1.getText());
 			if(nv.getChucVu()==1 &&nv.getHoTen().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!")==false &&nv.getHoTen().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
-				 HomeAdmin admin=new HomeAdmin();
+				 AdminHome admin=new AdminHome();
 	             setVisible(false);
 	             
 	             admin.setVisible(true);
@@ -75,7 +75,7 @@ public class LoginGui extends JFrame {
 			}
 			else if(nv.getChucVu()!=1 &&nv.getHoTen().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!")==false &&nv.getHoTen().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
 			
-				HomeNhanVien hnv = new HomeNhanVien();
+				QuanLyHome hnv = new QuanLyHome();
 				setVisible(false);
 				hnv.setVisible(true);
 				hnv.setLocationRelativeTo(null);
@@ -160,7 +160,7 @@ public class LoginGui extends JFrame {
 					nv = dn.checkLogin(textField.getText(), textField_1.getText());
 					
 					if(nv.getChucVu()==1 &&nv.getHoTen().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!")==false &&nv.getHoTen().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
-						 HomeAdmin admin=new HomeAdmin();
+						 AdminHome admin=new AdminHome();
 			             setVisible(false);
 			             
 			             admin.setVisible(true);
@@ -168,7 +168,7 @@ public class LoginGui extends JFrame {
 					}
 					else if(nv.getChucVu()!=1 &&nv.getHoTen().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!")==false &&nv.getHoTen().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
 					
-						HomeNhanVien hnv = new HomeNhanVien();
+						QuanLyHome hnv = new QuanLyHome();
 						setVisible(false);
 						ShareDAta.nhanVien = nv;
 					

@@ -6,6 +6,8 @@ package GUI;
 
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author TruongHo
@@ -176,12 +178,19 @@ public class NhanVienBanHangHome extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+    	try {
+			QuanLyKhachHangGui kh = new QuanLyKhachHangGui();
+	        this.setVisible(false);
+	        kh.setVisible(true);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        HoaDon1 hd;
 		try {
-			hd = new HoaDon1();
+			HoaDon1 hd = new HoaDon1();
 	        this.setVisible(false);
 	        hd.setVisible(true);
 		} catch (SQLException e) {
@@ -193,14 +202,38 @@ public class NhanVienBanHangHome extends javax.swing.JFrame {
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
+    	try {
+			QuanLySanPhamGui sp = new QuanLySanPhamGui();
+	        this.setVisible(false);
+	        sp.setVisible(true);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // TODO add your handling code here:
+        int click = JOptionPane.showConfirmDialog(null, "Bạn có muốn đăng xuất khỏi tài khoản hay không?", "Thông Báo",2);
+        if(click ==JOptionPane.YES_OPTION){
+            LoginGui login = new LoginGui();
+            this.setVisible(false);
+            login.setLocationRelativeTo(null);
+            login.setVisible(true);
+        }
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
         // TODO add your handling code here:
+    	int click=JOptionPane.showConfirmDialog(null,"Bạn Có Muốn Thoát Khỏi Chương Trình Hay Không?","Thông Báo",2);
+        if(click==JOptionPane.OK_OPTION){
+            System.exit(0);
+        }
+        else{
+            if(click==JOptionPane.CANCEL_OPTION){    
+                this.setVisible(true);
+            }
+        }
     }//GEN-LAST:event_jButton13ActionPerformed
 
     /**

@@ -863,7 +863,7 @@ public class TaiKhoanGui extends JFrame {
         JButton btnNewButton = new JButton("Hệ Thống");
         btnNewButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		 HomeAdmin home=new HomeAdmin();
+        		 AdminHome home=new AdminHome();
                  setVisible(false);
               
                  home.setVisible(true);

@@ -77,7 +77,7 @@ import java.util.regex.Pattern;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class NhapHangGUI extends JFrame {
+public class NhapHangGui extends JFrame {
 
     private JPanel contentPane;
     private JTextField textFieldMapn;
@@ -101,7 +101,7 @@ public class NhapHangGUI extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    NhapHangGUI frame = new NhapHangGUI();
+                    NhapHangGui frame = new NhapHangGui();
                     frame.setVisible(true);
 
                 } catch (Exception e) {
@@ -418,7 +418,7 @@ public class NhapHangGUI extends JFrame {
         return true;
     }
 
-    public NhapHangGUI() throws SQLException {
+    public NhapHangGui() throws SQLException {
 
         setTitle("Quản lý nhập");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -731,7 +731,7 @@ public class NhapHangGUI extends JFrame {
                     }
 
                 } catch (SQLException ex) {
-                    Logger.getLogger(NhapHangGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(NhapHangGui.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             }
@@ -805,7 +805,7 @@ public class NhapHangGUI extends JFrame {
         JButton btnDongBo = new JButton("");
         btnDongBo.setBounds(563, 10, 104, 53);
         btnDongBo.setIcon(new ImageIcon(
-                Toolkit.getDefaultToolkit().createImage(NhapHangGUI.class.getResource(".\\Image\\Refresh-icon.png"))));
+                Toolkit.getDefaultToolkit().createImage(NhapHangGui.class.getResource(".\\Image\\Refresh-icon.png"))));
         btnDongBo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -1085,7 +1085,7 @@ public class NhapHangGUI extends JFrame {
         JButton btnNewButton = new JButton("Hệ Thống");
         btnNewButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		 HomeAdmin home=new HomeAdmin();
+        		 QuanLyHome home=new QuanLyHome();
                  setVisible(false);
               
                  home.setVisible(true);

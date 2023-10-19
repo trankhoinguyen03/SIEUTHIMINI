@@ -905,7 +905,7 @@ public class QuanLyNhanVienGui extends JFrame {
         JButton btnNewButton = new JButton("Hệ Thống");
         btnNewButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		 HomeAdmin home=new HomeAdmin();
+        		 QuanLyHome home=new QuanLyHome();
                  setVisible(false);
               
                  home.setVisible(true);

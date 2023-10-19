@@ -90,7 +90,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class QuanLySanPhamGui_NVK extends JFrame {
+public class QuanLySanPhamGui extends JFrame {
 
 	private JPanel contentPane;
 	//private JTextField textFieldImg;
@@ -111,7 +111,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					QuanLySanPhamGui_NVK frame = new QuanLySanPhamGui_NVK();
+					QuanLySanPhamGui frame = new QuanLySanPhamGui();
 					frame.setVisible(true);
 					
 					
@@ -669,7 +669,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 		return true;
 	}
 
-	public QuanLySanPhamGui_NVK() throws SQLException {
+	public QuanLySanPhamGui() throws SQLException {
 
 		
 		tabbedPane.addChangeListener(new ChangeListener() {
@@ -720,7 +720,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 
 			}
 		});
-		setTitle("Nhân viên kho");
+		setTitle("Quản lý sản phẩm");
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener((WindowListener) new WindowAdapter() {
@@ -1089,7 +1089,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 
 		JButton btnDongBo = new JButton("");
 		btnDongBo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit()
-				.createImage(QuanLySanPhamGui_NVBH.class.getResource(".\\Image\\Refresh-icon.png"))));
+				.createImage(QuanLySanPhamGui.class.getResource(".\\Image\\Refresh-icon.png"))));
 		btnDongBo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -1302,7 +1302,7 @@ public class QuanLySanPhamGui_NVK extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				HomeNhanVien hnv = new HomeNhanVien();
+				QuanLyHome hnv = new QuanLyHome();
 				hnv.setLocationRelativeTo(null);
 				hnv.setVisible(true);
 			}

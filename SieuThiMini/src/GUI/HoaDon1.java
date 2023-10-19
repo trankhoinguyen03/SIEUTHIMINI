@@ -1301,9 +1301,9 @@ public void start()
 }
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        HomeNhanVien nv = new HomeNhanVien();
+        QuanLyHome home = new QuanLyHome();
         this.setVisible(false);
-        nv.setVisible(true);
+        home.setVisible(true);
     }                                        
 
     private void TFtienkhachActionPerformed(java.awt.event.ActionEvent evt) {                                            

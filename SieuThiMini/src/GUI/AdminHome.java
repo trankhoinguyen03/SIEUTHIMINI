@@ -6,6 +6,8 @@ package GUI;
 
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author TruongHo
@@ -193,6 +195,13 @@ public class AdminHome extends javax.swing.JFrame {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
+    	try {
+    		TaiKhoanGui tk = new TaiKhoanGui();
+    		this.setVisible(false);
+    		tk.setVisible(rootPaneCheckingEnabled);
+    	} catch(SQLException e) {
+    		e.printStackTrace();
+    	}
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -205,10 +214,26 @@ public class AdminHome extends javax.swing.JFrame {
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         // TODO add your handling code here:
+        int click = JOptionPane.showConfirmDialog(null, "Bạn có muốn đăng xuất khỏi tài khoản hay không?", "Thông Báo",2);
+        if(click ==JOptionPane.YES_OPTION){
+            LoginGui login = new LoginGui();
+            this.setVisible(false);
+            login.setLocationRelativeTo(null);
+            login.setVisible(true);
+        }
     }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // TODO add your handling code here:
+    	int click=JOptionPane.showConfirmDialog(null,"Bạn Có Muốn Thoát Khỏi Chương Trình Hay Không?","Thông Báo",2);
+        if(click==JOptionPane.OK_OPTION){
+            System.exit(0);
+        }
+        else{
+            if(click==JOptionPane.CANCEL_OPTION){    
+                this.setVisible(true);
+            }
+        }
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

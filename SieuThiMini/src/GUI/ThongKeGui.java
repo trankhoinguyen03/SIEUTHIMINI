@@ -634,7 +634,7 @@ public class ThongKeGui extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				HomeAdmin hnv = new HomeAdmin();
+				QuanLyHome hnv = new QuanLyHome();
 				hnv.setLocationRelativeTo(null);
 				hnv.setVisible(true);
 			}

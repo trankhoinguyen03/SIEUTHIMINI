@@ -733,11 +733,11 @@ public class QuanLyKhachHangGui extends JFrame {
         JButton btnNewButton = new JButton("Hệ Thống");
         btnNewButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		HomeNhanVien sanpham=new HomeNhanVien();
+        		QuanLyHome home=new QuanLyHome();
                 setVisible(false);
              
-                sanpham.setVisible(true);
-                sanpham.setLocationRelativeTo(null);
+                home.setVisible(true);
+                home.setLocationRelativeTo(null);
         	}
         });
         btnNewButton.setBounds(10, 8, 95, 37);

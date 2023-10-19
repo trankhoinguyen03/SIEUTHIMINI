@@ -1322,7 +1322,7 @@ public class KhoGui extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				HomeNhanVien hnv = new HomeNhanVien();
+				QuanLyHome hnv = new QuanLyHome();
 				hnv.setLocationRelativeTo(null);
 				hnv.setVisible(true);
 			}
@@ -1530,7 +1530,10 @@ public class KhoGui extends JFrame {
 					.addComponent(comboBoxSearch, 0, 200, Short.MAX_VALUE)
 					.addGap(49)
 					.addComponent(btnDongBo,GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+					.addGap(3)
+					.addComponent(btnNewButton,GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
 					.addGap(3))
+					
 					//.addComponent(lblNewLabel_15, GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
 					//.addGap(18)
 					//.addComponent(textFieldFrom, GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
@@ -1552,6 +1555,7 @@ public class KhoGui extends JFrame {
 							.addGroup(gl_panel_7_1.createParallelGroup(Alignment.BASELINE)
 								.addComponent(textFieldSearch, GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
 								.addComponent(btnDongBo,GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+								.addComponent(btnNewButton,GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
 								.addComponent(comboBoxSearch, GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
 								.addGap(0)))))
 									//.addComponent(lblNewLabel_15, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
