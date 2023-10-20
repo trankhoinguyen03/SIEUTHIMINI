@@ -2,63 +2,38 @@
 package BLL;
 
 public class KhachHang {
-    private int makh;
-    private float diemThuong;
-    private String hoTen, diaChi, img, ngayCapThe, ngayMuaGanNhat;
+    private String maKh, tenKh, soDienThoai, tichDiem;
 
-    public int getMakh() {
-        return makh;
-    }
+	public String getMaKh() {
+		return maKh;
+	}
 
-    public void setMakh(int makh) {
-        this.makh = makh;
-    }
+	public void setMaKh(String maKh) {
+		this.maKh = maKh;
+	}
 
-    public float getDiemThuong() {
-        return diemThuong;
-    }
+	public String getTenKh() {
+		return tenKh;
+	}
 
-    public void setDiemThuong(float diemThuong) {
-        this.diemThuong = diemThuong;
-    }
+	public void setTenKh(String tenKh) {
+		this.tenKh = tenKh;
+	}
 
-    public String getHoTen() {
-        return hoTen;
-    }
+	public String getSoDienThoai() {
+		return soDienThoai;
+	}
 
-    public void setHoTen(String hoTen) {
-        this.hoTen = hoTen;
-    }
+	public void setSoDienThoai(String soDienThoai) {
+		this.soDienThoai = soDienThoai;
+	}
 
-    public String getDiaChi() {
-        return diaChi;
-    }
+	public String getTichDiem() {
+		return tichDiem;
+	}
 
-    public void setDiaChi(String diaChi) {
-        this.diaChi = diaChi;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public String getNgayCapThe() {
-        return ngayCapThe;
-    }
-
-    public void setNgayCapThe(String gayCapThe) {
-        this.ngayCapThe = gayCapThe;
-    }
-
-    public String getNgayMuaGanNhat() {
-        return ngayMuaGanNhat;
-    }
-
-    public void setNgayMuaGanNhat(String ngayMuaGanNhat) {
-        this.ngayMuaGanNhat = ngayMuaGanNhat;
-    }
+	public void setTichDiem(String tichDiem) {
+		this.tichDiem = tichDiem;
+	}
+    
 }

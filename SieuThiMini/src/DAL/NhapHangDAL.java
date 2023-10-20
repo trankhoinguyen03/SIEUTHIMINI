@@ -25,29 +25,27 @@ public class NhapHangDAL extends connectSql {
         ArrayList<NhapHang> arrList = new ArrayList<NhapHang>();
         try {
             if (condition.equals("docphieunhap")) {
-                sql = "select * from PHIEUNHAP where isDeleted = 1";
+                sql = "select * from DSPHIEUNHAP where TrangThai = 1";
             }
             if (condition.equals("docchitiet")) {
-                sql = "select * from CHITIETPHIEUNHAP where isDeleted = 1 and MaPN ="+value;
+                sql = "select * from CHITIETPHIEUNHAP where TrangThai = 1 and MaPN ="+value;
             }
             PreparedStatement pstm = conn.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
                 NhapHang nh = new NhapHang();
                 if (condition.equals("docphieunhap")) {
-                    nh.setMaPn(rs.getInt("MaPN"));
-                    nh.setMaNv(rs.getInt("MaNV"));
-                    nh.setThoiDiemLap(rs.getString("ThoiDiemLap"));
-                    nh.setIsDeleted(rs.getInt("isDeleted"));
+                    nh.setMaPn(rs.getString("MaPN"));
+                    nh.setMaNv(rs.getString("MaNV"));
+                    nh.setMaNcc(rs.getString("MaNCC"));
+                    nh.setTongTien(rs.getString("TongTien"));
+                    nh.setNgayNhap(rs.getString("NgayNhap"));
                 }
                 if (condition.equals("docchitiet")) {
-                    nh.setMaPn(rs.getInt("MaPN"));
-                    nh.setMaSp(rs.getInt("MaSP"));
-                    nh.setMaNcc(rs.getInt("MaNCC"));
-                    nh.setSoLuong(rs.getInt("SoLuong"));
-                    nh.setNgaySanXuat(rs.getString("NgaySX"));
-                    nh.setNgayNhap(rs.getString("NgayNhap"));
-                    nh.setIsDeleted(rs.getInt("isDeleted"));
+                    nh.setMaPn(rs.getString("MaPN"));
+                    nh.setMaSp(rs.getString("MaSP"));
+                    nh.setSoLuong(rs.getString("SoLuong"));
+                    nh.setThanhTien(rs.getString("ThanhTien"));
                 }
                 arrList.add(nh);
             }
@@ -57,19 +55,19 @@ public class NhapHangDAL extends connectSql {
         return arrList;
     }
 
-    public int layMaNv(String tenMaNv) throws SQLException {
+    public String layMaNv(String tenMaNv) throws SQLException {
         String sql = "SELECT MaNV FROM NHANVIEN WHERE HoTen = ?";
         try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
             pstm.setString(1, tenMaNv);
             ResultSet rs = pstm.executeQuery();
             if (rs.next()) {
-                return rs.getInt("MaNV");
+                return rs.getString("MaNV");
             } else {
-                return -1; // or throw an exception
+                return null; // or throw an exception
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1; // or throw an exception
+            return null; // or throw an exception
         }
     }
     
@@ -119,25 +117,25 @@ public class NhapHangDAL extends connectSql {
 	return arrSanpham;
 	}
     
-    public int layMaNcc(String tenMaNcc) throws SQLException {
+    public String layMaNcc(String tenMaNcc) throws SQLException {
         String sql = "SELECT MaNCC FROM NHACC WHERE TenNCC = ?";
         try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
             pstm.setString(1, tenMaNcc);
             ResultSet rs = pstm.executeQuery();
             if (rs.next()) {
-                return rs.getInt("MaNCC");
+                return rs.getString("MaNCC");
             } else {
-                return -1; // or throw an exception
+                return null; // or throw an exception
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1; // or throw an exception
+            return null; // or throw an exception
         }
     }
     
     public ArrayList<DTO.NhaCungCap> docNhaCungCapMaNCC(int maNcc) throws SQLException{
 		ArrayList<DTO.NhaCungCap> arrNhacungcap = new ArrayList<DTO.NhaCungCap>();
-		String sql = "select * from NHACC where MaNCC =" + maNcc;
+		String sql = "select * from NHACUNGCAP where MaNCC =" + maNcc;
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
 		while(rs.next()) {
@@ -151,7 +149,7 @@ public class NhapHangDAL extends connectSql {
 	}
 
     public boolean xoaNhapHang(String mapn) throws SQLException {
-        String sql = "UPDATE PHIEUNHAP SET isDeleted = " + 0 + " where MaPN = " + mapn;
+        String sql = "UPDATE DSPHIEUNHAP SET TrangThai = " + 0 + " where MaPN = " + mapn;
         try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
             int rowsUpdated = pstm.executeUpdate();
 
@@ -160,7 +158,7 @@ public class NhapHangDAL extends connectSql {
     }
 
     public boolean xoaChiTiet(String mapn, String masp, String mancc) throws SQLException {
-        String sql = "UPDATE CHITIETPHIEUNHAP SET isDeleted = " + 0 + " where MaPN = " + mapn +"and MaSP =" + masp + "and MaNCC ="+mancc;
+        String sql = "UPDATE CHITIETPHIEUNHAP SET TrangThai = " + 0 + " where MaPN = " + mapn +"and MaSP =" + masp + "and MaNCC ="+mancc;
         try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
             int rowsUpdated = pstm.executeUpdate();
 
@@ -183,48 +181,27 @@ public class NhapHangDAL extends connectSql {
     public boolean themphieunhap(NhapHang nh, String condition, String oldMaPN, String oldMaSP, String oldMaNCC) throws SQLException {
         String sql = "";
         if (condition.equals("themphieunhap")) {
-            sql = "INSERT INTO PHIEUNHAP (MaNV, ThoiDiemLap, isDeleted) VALUES (?, ?, ?)";
-        }
-        if (condition.equals("suaphieunhap")) {
-            sql = "UPDATE PHIEUNHAP SET MaNV = ?, ThoiDiemLap = ?, isDeleted = ? WHERE MaPN = ?";
+            sql = "INSERT INTO DSPHIEUNHAP (MaNV, MaNCC, TongTien, NgayNhap, TrangThai) VALUES (?, ?, ?, ?, ?)";
         }
         if (condition.equals("themchitiet")) {
-            sql = "INSERT INTO CHITIETPHIEUNHAP (MaPN, MaSP, MaNCC, SoLuong, NgaySX, NgayNhap, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        }
-        if (condition.equals("suachitiet")) {
-            sql = "UPDATE CHITIETPHIEUNHAP SET SoLuong = ?, NgaySX = ?, NgayNhap = ?, isDeleted = ? WHERE MaPN = ? and MaSP = ? and MaNCC = ?";
+            sql = "INSERT INTO CHITIETPHIEUNHAP (MaPN, MaSP, SoLuong, ThanhTien, TrangThai) VALUES (?, ?, ?, ?, ?)";
         }
         PreparedStatement pstm = conn.prepareStatement(sql);
 
         try {
             if (condition.equals("themphieunhap")) {
-                pstm.setInt(1, nh.getMaNv());
-                pstm.setString(2, nh.getThoiDiemLap());
-                pstm.setInt(3, 1);
-            }
-            if (condition.equals("suaphieunhap")) {
-                pstm.setInt(1, nh.getMaNv());
-                pstm.setString(2, nh.getThoiDiemLap());
-                pstm.setInt(3, 1);
-                pstm.setInt(4, nh.getMaPn());
+                pstm.setString(1, nh.getMaNv());
+                pstm.setString(2, nh.getMaNcc());
+                pstm.setString(3, nh.getTongTien());
+                pstm.setString(4, nh.getNgayNhap());
+                pstm.setString(5, ""+1);
             }
             if (condition.equals("themchitiet")) {
-                pstm.setInt(1, nh.getMaPn());
-                pstm.setInt(2, nh.getMaSp());
-                pstm.setInt(3, nh.getMaNcc());
-                pstm.setInt(4, nh.getSoLuong());
-                pstm.setString(5, nh.getNgaySanXuat());
-                pstm.setString(6, nh.getNgayNhap());
-                pstm.setInt(7, 1);
-            }
-            if (condition.equals("suachitiet")) {
-                pstm.setInt(1, nh.getSoLuong());
-                pstm.setString(2, nh.getNgaySanXuat());
-                pstm.setString(3, nh.getNgayNhap());
-                pstm.setInt(4, 1);
-                pstm.setInt(5, nh.getMaPn());
-                pstm.setInt(6, nh.getMaSp());
-                pstm.setInt(7, nh.getMaNcc());
+                pstm.setString(1, nh.getMaPn());
+                pstm.setString(2, nh.getMaSp());
+                pstm.setString(3, nh.getSoLuong());
+                pstm.setString(4, nh.getThanhTien());
+                pstm.setString(5, ""+1);
             }
             pstm.executeUpdate();
             return true;

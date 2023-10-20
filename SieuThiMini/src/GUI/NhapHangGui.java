@@ -221,15 +221,15 @@ public class NhapHangGui extends JFrame {
             lastValueMaPn = table.getValueAt(lastRow, 0); // get the value at the last row and column n
         }
         if (condition == "chitiet" || condition == "themchitiet") {
-            String[] columnNames = {"MaPN", "MaSP", "MaNCC", "Soluong", "NgaySanXuat", "NgayNhap"};
+            String[] columnNames = {"MaPN", "MaSP", "Soluong", "ThanhTien"};
             DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
             table.setModel(model);
             model.setRowCount(0);
             for (NhapHang nhdata : arrNh) {
                 //NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-                Object[] row = new Object[]{nhdata.getMaPn(), nhdata.getMaSp(), nhdata.getMaNcc(), nhdata.getSoLuong(),
-                    nhdata.getNgaySanXuat(), nhdata.getNgayNhap()};
+                Object[] row = new Object[]{nhdata.getMaPn(), nhdata.getMaSp(), nhdata.getSoLuong(),
+                    nhdata.getThanhTien()};
                 model.addRow(row);
             }
 
@@ -343,7 +343,7 @@ public class NhapHangGui extends JFrame {
                 arrPro = nhd.docNhapHang("docphieunhap", null);
                 if (fixbtn) {
                     for (NhapHang nh : arrPro) {
-                        if (Integer.parseInt(oldMaPN) != Integer.parseInt(textFieldMapn.getText()) && nh.getMaPn() == Integer.parseInt(textFieldMapn.getText())) {
+                        if (oldMaPN != textFieldMapn.getText() && nh.getMaPn() == textFieldMapn.getText()) {
                             JOptionPane.showMessageDialog(contentPane, "Mã phiếu nhập đã tồn tại!");
                             textFieldMapn.requestFocus();
                             return false;
@@ -352,7 +352,7 @@ public class NhapHangGui extends JFrame {
                 }
                 if (addbtn) {
                     for (NhapHang nh : arrPro) {
-                        if (nh.getMaNv() == Integer.parseInt(textFieldMapn.getText())) {
+                        if (nh.getMaNv() == textFieldMapn.getText()) {
                             JOptionPane.showMessageDialog(contentPane, "Mã phiếu nhập đã tồn tại!");
                             textFieldMapn.requestFocus();
                             return false;
@@ -580,8 +580,8 @@ public class NhapHangGui extends JFrame {
                         if (addbtn) {
                             try {
                                 luunh = new NhapHangDAL();
-                                nh.setMaPn(Integer.parseInt(textFieldMapn.getText()));
-                                int manv = luunh.layMaNv((String) (comboBoxNhanVien.getSelectedItem()));
+                                nh.setMaPn(textFieldMapn.getText());
+                                String manv = luunh.layMaNv((String) (comboBoxNhanVien.getSelectedItem()));
                                 nh.setMaNv(manv);
                                 //nh.setThoiDiemLap(textFieldNgaylap.getText());
                                 boolean checkAddPro = luunh.themphieunhap(nh, "themphieunhap", null, null, null);
@@ -602,8 +602,8 @@ public class NhapHangGui extends JFrame {
                         if (fixbtn) {
                             try {
                                 luunh = new NhapHangDAL();
-                                nh.setMaPn(Integer.parseInt(textFieldMapn.getText()));
-                                int manv = luunh.layMaNv((String) (comboBoxNhanVien.getSelectedItem()));
+                                nh.setMaPn(textFieldMapn.getText());
+                                String manv = luunh.layMaNv((String) (comboBoxNhanVien.getSelectedItem()));
                                 nh.setMaNv(manv);
                                 //nh.setThoiDiemLap(textFieldNgaylap.getText());
                                 boolean checkAddPro = luunh.themphieunhap(nh, "suaphieunhap", oldMaPN, null, null);
@@ -652,10 +652,10 @@ public class NhapHangGui extends JFrame {
                         if (addifbtn) {
                             try {
                                 luunh = new NhapHangDAL();
-                                nh.setMaPn(Integer.parseInt(textFieldMapn.getText()));
-                                int mancc = luunh.layMaNcc((String) (comboBoxNhaCC.getSelectedItem()));
+                                nh.setMaPn(textFieldMapn.getText());
+                                String mancc = luunh.layMaNcc((String) (comboBoxNhaCC.getSelectedItem()));
                                 nh.setMaNcc(mancc);
-                                nh.setSoLuong(Integer.parseInt(textFieldSoluong.getText()));
+                                nh.setSoLuong(textFieldSoluong.getText());
                                 //nh.setNgaySanXuat(textFieldNgaysx.getText());
                                 nh.setNgayNhap(textFieldNgaynhap.getText());
                                 boolean checkAddPro = luunh.themphieunhap(nh, "themchitiet", oldMaPN, oldMaSP, oldMaNCC);
@@ -676,10 +676,10 @@ public class NhapHangGui extends JFrame {
                         if (fixifbtn) {
                             try {
                                 luunh = new NhapHangDAL();
-                                nh.setMaPn(Integer.parseInt(textFieldMapn.getText()));
-                                int mancc = luunh.layMaNcc((String) (comboBoxNhaCC.getSelectedItem()));
+                                nh.setMaPn(textFieldMapn.getText());
+                                String mancc = luunh.layMaNcc((String) (comboBoxNhaCC.getSelectedItem()));
                                 nh.setMaNcc(mancc);
-                                nh.setSoLuong(Integer.parseInt(textFieldSoluong.getText()));
+                                nh.setSoLuong(textFieldSoluong.getText());
                                 //nh.setNgaySanXuat(textFieldNgaysx.getText());
                                 nh.setNgayNhap(textFieldNgaynhap.getText());
                                 boolean checkAddPro = luunh.themphieunhap(nh, "suachitiet", oldMaPN, oldMaSP, oldMaNCC);

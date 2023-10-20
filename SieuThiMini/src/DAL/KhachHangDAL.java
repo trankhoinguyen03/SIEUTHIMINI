@@ -18,7 +18,7 @@ public class KhachHangDAL extends connectSql {
 //	public  String getTen(String ten) throws SQLException {
 //        
 //        
-//        String sql = "SELECT HoTen FROM KHTT  ";
+//        String sql = "SELECT HoTen FROM KHACHHANG  ";
 //        try (PreparedStatement pstmt = conn.prepareStatement(sql)) { 
 //             pstmt.setInt(1,makh);
 //    pstmt.setFetchSize(100);
@@ -32,7 +32,7 @@ public class KhachHangDAL extends connectSql {
          public  int getmakh(String name) throws SQLException {
         int makhachhang = 0;
         
-        String sql = "SELECT MaKH FROM KHTT where isDeleted=1 and HoTen Like ? ";
+        String sql = "SELECT MaKH FROM KHACHHANG where TrangThai=1 and TenKH Like ? ";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) { 
         	pstmt.setString(1,name);
             ResultSet rs = pstmt.executeQuery();
@@ -47,16 +47,16 @@ public class KhachHangDAL extends connectSql {
 		ArrayList<KhachHang> arrList = new ArrayList<KhachHang>();
                 try {
 			if (condition.equals("sapxeptheoten")) {
-				sql = "select * from KHTT where isDeleted = 1 order by HoTen";
+				sql = "select * from KHACHHANG where TrangThai = 1 order by TenKH";
 			}
 			if (condition.equals("dockhachhang")) {
-				sql = "select * from KHTT where isDeleted = 1";
+				sql = "select * from KHACHHANG where TrangThai = 1";
 			}
 			if (condition.equals("sapxeptheomakh")) {
-				sql = "select * from KHTT where isDeleted = 1 order by MaKH";
+				sql = "select * from KHACHHANG where TrangThai = 1 order by MaKH";
 			}
 			if (condition.equals("timkiem")) {
-				sql = "select * from KHTT where isDeleted = 1 and MaKH = ?";
+				sql = "select * from KHACHHANG where TrangThai = 1 and MaKH = ?";
 
 			}
 			PreparedStatement pstm = conn.prepareStatement(sql);
@@ -67,13 +67,10 @@ public class KhachHangDAL extends connectSql {
 			
 			while (rs.next()) {
 				KhachHang kh = new KhachHang();
-				kh.setMakh(rs.getInt("MaKH"));
-                                kh.setHoTen(rs.getString("HoTen"));
-				kh.setDiemThuong(rs.getFloat("DiemThuong"));
-                                kh.setDiaChi(rs.getString("DiaChi"));
-                                kh.setImg(rs.getString("img"));
-                                kh.setNgayCapThe(rs.getString("NgayCapThe"));
-                                kh.setNgayMuaGanNhat(rs.getString("NgayMuaGanNhat"));
+				kh.setMaKh(rs.getString("MaKH"));
+                                kh.setTenKh(rs.getString("TenKH"));
+                                kh.setSoDienThoai(rs.getString("SDT"));
+                                kh.setTichDiem(rs.getString("TichDiem"));
 				arrList.add(kh);
 			}
 		} catch (Exception e) {
@@ -83,7 +80,7 @@ public class KhachHangDAL extends connectSql {
 	}
         
         public boolean xoaKhachHang(String makh) throws SQLException {
-		String sql = "UPDATE KHTT SET isDeleted = " + 0 + " where MaKH = " + makh;
+		String sql = "UPDATE KHACHHANG SET TrangThai = " + 0 + " where MaKH = " + makh;
 		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
 			int rowsUpdated = pstm.executeUpdate();
 
@@ -93,22 +90,16 @@ public class KhachHangDAL extends connectSql {
         public boolean themkhachhang(KhachHang kh, String condition, String oldMaKH) throws SQLException {
 		String sql = "";
 		if (condition.equals("themkhachhang")) {
-			sql = "INSERT INTO KHTT (HoTen, DiaChi, NgayCapThe, NgayMuaGanNhat, DiemThuong, isDeleted) VALUES (?, ?, ?, ?, ?, ?)";
-		}
-		if (condition.equals("suakhachhang")) {
-			sql = "UPDATE KHTT SET HoTen = ?, DiaChi = ?, NgayCapThe = ?, NgayMuaGanNhat = ?, DiemThuong = ?, isDeleted = ? WHERE MaKH = ?";
-
+			sql = "INSERT INTO KHACHHANG (TenKH, SDT, TichDiem, TrangThai) VALUES (?, ?, ?, ?)";
 		}
 		PreparedStatement pstm = conn.prepareStatement(sql);
 
 		try {
 			
-			pstm.setString(1, kh.getHoTen());
-                        pstm.setString(2, kh.getDiaChi());
-			pstm.setString(3, kh.getNgayCapThe());
-                        pstm.setString(4, kh.getNgayMuaGanNhat());
-                        pstm.setFloat(5, kh.getDiemThuong());
-			pstm.setInt(6, 1);
+			pstm.setString(1, kh.getTenKh());
+            pstm.setString(2, kh.getSoDienThoai());
+			pstm.setString(3, kh.getTichDiem());
+			pstm.setString(4, ""+1);
 
 			if (condition.equals("suakhachhang")) {
 				pstm.setInt(7, Integer.parseInt(oldMaKH));

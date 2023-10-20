@@ -156,7 +156,7 @@ public class QuanLyKhachHangGui extends JFrame {
             table.setModel(model);
             model.setRowCount(0);
             for (KhachHang khdata : arrKh) {
-                Object[] row = new Object[]{};//khdata.getMakh(), khdata.getHoTen(), khdata.getDiaChi(), khdata.getNgayCapThe(),khdata.getNgayMuaGanNhat(), khdata.getDiemThuong()};
+                Object[] row = new Object[]{khdata.getMaKh(), khdata.getTenKh(), khdata.getSoDienThoai(), khdata.getTichDiem()};
                 model.addRow(row);
             }
         } else {
@@ -164,7 +164,7 @@ public class QuanLyKhachHangGui extends JFrame {
             table.setModel(model);
             model.setRowCount(0);
             for (KhachHang khdata : arrKh) {
-                Object[] row = new Object[]{};//khdata.getMakh(), khdata.getHoTen(), khdata.getDiaChi(), khdata.getNgayCapThe(),khdata.getNgayMuaGanNhat(), khdata.getDiemThuong()};
+                Object[] row = new Object[]{khdata.getMaKh(), khdata.getTenKh(), khdata.getSoDienThoai(), khdata.getTichDiem()};
                 model.addRow(row);
             }
 
@@ -233,7 +233,7 @@ public class QuanLyKhachHangGui extends JFrame {
             arrPro = nvd.docKhachHang("dockhachhang", null);
             if (fixbtn) {
                 for (KhachHang nv : arrPro) {
-                    if (Integer.parseInt(oldMaKH) != Integer.parseInt(textFieldMakh.getText()) && nv.getMakh() == Integer.parseInt(textFieldMakh.getText())) {
+                    if (oldMaKH != textFieldMakh.getText() && nv.getMaKh() == textFieldMakh.getText()) {
                         JOptionPane.showMessageDialog(contentPane, "Mã khách hàng đã tồn tại!");
                         textFieldMakh.requestFocus();
                         return false;
@@ -243,7 +243,7 @@ public class QuanLyKhachHangGui extends JFrame {
             }
             if (addbtn) {
                 for (KhachHang nv : arrPro) {
-                    if (nv.getMakh() == Integer.parseInt(textFieldMakh.getText())) {
+                    if (nv.getMaKh() == textFieldMakh.getText()) {
                         JOptionPane.showMessageDialog(contentPane, "Mã khách hàng đã tồn tại!");
                         textFieldMakh.requestFocus();
                         return false;
@@ -434,9 +434,9 @@ public class QuanLyKhachHangGui extends JFrame {
                                 luukh = new KhachHangDAL();
 //								int malh = luukh.layMaLoaiSP((String) (comboBox.getSelectedItem()));
 //								nv.setMaLh(malh);
-                                kh.setMakh(Integer.parseInt(textFieldMakh.getText()));
-                                kh.setHoTen(textFieldTenkh.getText());
-                                kh.setDiaChi(textFieldSDT.getText());
+                                kh.setMaKh(textFieldMakh.getText());
+                                kh.setTenKh(textFieldTenkh.getText());
+                                kh.setSoDienThoai(textFieldSDT.getText());
                                 //kh.setNgayCapThe(textFieldNgaycapthe.getText());
                                 //kh.setNgayMuaGanNhat(textFieldNgaymuagannhat.getText());
                                 //kh.setImg(selectedFile.getName());
@@ -460,9 +460,9 @@ public class QuanLyKhachHangGui extends JFrame {
                             try {
 
                                 luukh = new KhachHangDAL();
-                                kh.setMakh(Integer.parseInt(textFieldMakh.getText()));
-                                kh.setHoTen(textFieldTenkh.getText());
-                                kh.setDiaChi(textFieldSDT.getText());
+                                kh.setMaKh(textFieldMakh.getText());
+                                kh.setTenKh(textFieldTenkh.getText());
+                                kh.setSoDienThoai(textFieldSDT.getText());
                                 //kh.setNgayCapThe(textFieldNgaycapthe.getText());
                                 //kh.setNgayMuaGanNhat(textFieldNgaymuagannhat.getText());
 

@@ -9,79 +9,70 @@ package BLL;
  * @author Acer
  */
 public class NhapHang {
-    private int maPn, maNv, maSp, maNcc, soLuong, isDeleted;
-    private String thoiDiemLap, ngaySanXuat, ngayNhap;
+    private String maPn, maNv, maNcc, tongTien, ngayNhap, maSp, soLuong, thanhTien ;
 
-    public int getMaPn() {
-        return maPn;
-    }
+	public String getMaPn() {
+		return maPn;
+	}
 
-    public void setMaPn(int maPn) {
-        this.maPn = maPn;
-    }
+	public void setMaPn(String maPn) {
+		this.maPn = maPn;
+	}
 
-    public int getMaNv() {
-        return maNv;
-    }
+	public String getMaNv() {
+		return maNv;
+	}
 
-    public void setMaNv(int maNv) {
-        this.maNv = maNv;
-    }
+	public void setMaNv(String maNv) {
+		this.maNv = maNv;
+	}
 
-    public int getMaSp() {
-        return maSp;
-    }
+	public String getMaNcc() {
+		return maNcc;
+	}
 
-    public void setMaSp(int maSp) {
-        this.maSp = maSp;
-    }
+	public void setMaNcc(String maNcc) {
+		this.maNcc = maNcc;
+	}
 
-    public int getMaNcc() {
-        return maNcc;
-    }
+	public String getTongTien() {
+		return tongTien;
+	}
 
-    public void setMaNcc(int maNcc) {
-        this.maNcc = maNcc;
-    }
+	public void setTongTien(String tongTien) {
+		this.tongTien = tongTien;
+	}
 
-    public int getSoLuong() {
-        return soLuong;
-    }
+	public String getNgayNhap() {
+		return ngayNhap;
+	}
 
-    public void setSoLuong(int soLuong) {
-        this.soLuong = soLuong;
-    }
+	public void setNgayNhap(String ngayNhap) {
+		this.ngayNhap = ngayNhap;
+	}
 
-    public String getThoiDiemLap() {
-        return thoiDiemLap;
-    }
+	public String getMaSp() {
+		return maSp;
+	}
 
-    public void setThoiDiemLap(String thoiDiemLap) {
-        this.thoiDiemLap = thoiDiemLap;
-    }
+	public void setMaSp(String maSp) {
+		this.maSp = maSp;
+	}
 
-    public String getNgaySanXuat() {
-        return ngaySanXuat;
-    }
+	public String getSoLuong() {
+		return soLuong;
+	}
 
-    public void setNgaySanXuat(String ngaySanXuat) {
-        this.ngaySanXuat = ngaySanXuat;
-    }
+	public void setSoLuong(String soLuong) {
+		this.soLuong = soLuong;
+	}
 
-    public String getNgayNhap() {
-        return ngayNhap;
-    }
+	public String getThanhTien() {
+		return thanhTien;
+	}
 
-    public void setNgayNhap(String ngayNhap) {
-        this.ngayNhap = ngayNhap;
-    }
-
-    public int getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(int isDeleted) {
-        this.isDeleted = isDeleted;
-    }
+	public void setThanhTien(String thanhTien) {
+		this.thanhTien = thanhTien;
+	}
     
 }
