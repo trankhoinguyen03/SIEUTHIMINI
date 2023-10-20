@@ -111,7 +111,7 @@ public class NhapHangDAL extends connectSql {
 		ResultSet rs = pstm.executeQuery();
 		while(rs.next()) {
 			DTO.SanPham sp = new DTO.SanPham();
-			sp.setMaSp(rs.getInt("MaSP"));
+			sp.setMaSp(rs.getString("MaSP"));
 			sp.setTenSp(rs.getString(2));
 			arrSanpham.add(sp);
 		}
@@ -142,7 +142,7 @@ public class NhapHangDAL extends connectSql {
 		ResultSet rs = pstm.executeQuery();
 		while(rs.next()) {
 			DTO.NhaCungCap ncc = new DTO.NhaCungCap();
-			ncc.setMaNCC(rs.getInt("MaNCC"));
+			ncc.setMaNCC(rs.getString("MaNCC"));
 			ncc.setTenNCC(rs.getString(2));
 			arrNhacungcap.add(ncc);
 		}

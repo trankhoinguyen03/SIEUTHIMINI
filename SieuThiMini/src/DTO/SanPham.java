@@ -1,44 +1,31 @@
 package DTO;
 
 public class SanPham {
-	private int maSp,maLh,isDeleted;
-	private float giaMua,giaBan;
-	private String tenSp,hanSuDung,img,donVi;
-	public int getMaSp() {
+	private String giaMua,giaBan;
+	private String maSp,maLh,tenSp,ngaySanXuat,hanSuDung,img,donVi;
+	public String getMaSp() {
 		return maSp;
 	}
-	public void setMaSp(int maSp) {
+	public void setMaSp(String maSp) {
 		this.maSp = maSp;
 	}
-	public float getGiaMua() {
+	public String getGiaMua() {
 		return giaMua;
 	}
-	public void setGiaMua(float giaMua) {
+	public void setGiaMua(String giaMua) {
 		this.giaMua = giaMua;
 	}
-	public float getGiaBan() {
+	public String getGiaBan() {
 		return giaBan;
 	}
-	public void setGiaBan(float giaBan) {
+	public void setGiaBan(String giaBan) {
 		this.giaBan = giaBan;
 	} 
-	public int getMaLh() {
+	public String getMaLh() {
 		return maLh;
 	}
-	public void setMaLh(int maLh) {
+	public void setMaLh(String maLh) {
 		this.maLh = maLh;
-	}
-	public String getDonVi() {
-		return donVi;
-	}
-	public void setDonVi(String donVi) {
-		this.donVi = donVi;
-	}
-	public int getIsDeleted() {
-		return isDeleted;
-	}
-	public void setIsDeleted(int isDeleted) {
-		this.isDeleted = isDeleted;
 	}
 	public String getTenSp() {
 		return tenSp;
@@ -46,18 +33,19 @@ public class SanPham {
 	public void setTenSp(String tenSp) {
 		this.tenSp = tenSp;
 	}
+	public String getNgaySanXuat() {
+		return hanSuDung;
+	}
+	public void setNgaySanXuat(String ngaySanXuat) {
+		this.ngaySanXuat = ngaySanXuat;
+	}
 	public String getHanSuDung() {
 		return hanSuDung;
 	}
 	public void setHanSuDung(String hanSuDung) {
 		this.hanSuDung = hanSuDung;
 	}
-	public String getImg() {
-		return img;
-	}
-	public void setImg(String img) {
-		this.img = img;
-	}
+
 	
 
 }

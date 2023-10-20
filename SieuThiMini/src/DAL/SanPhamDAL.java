@@ -37,13 +37,13 @@ public class SanPhamDAL extends connectSql {
 		ArrayList<SanPham> arrList = new ArrayList<SanPham>();
 		try {
 			if (condition.equals("sapxeptheoten")) {
-				sql = "select * from SANPHAM where isDeleted = 1 order by TenSP";
+				sql = "select * from SANPHAM where TrangThai = 1 order by TenSP";
 			}
 			if (condition.equals("docsanpham")) {
-				sql = "select * from SANPHAM where isDeleted = 1";
+				sql = "select * from SANPHAM where TrangThai = 1";
 			}
 			if (condition.equals("sapxeptheogia")) {
-				sql = "select * from SANPHAM where isDeleted = 1 order by GiaBan";
+				sql = "select * from SANPHAM where TrangThai = 1 order by GiaBan";
 			}
 			if (condition.equals("timkiem")) {
 				String[] parts = value.split(",");
@@ -52,10 +52,10 @@ public class SanPhamDAL extends connectSql {
 				
 				 if(part2.equals("0")) {
 				
-					 sql = "select * from SANPHAM where isDeleted = 1 and TenSP LIKE ?";
+					 sql = "select * from SANPHAM where TrangThai = 1 and TenSP LIKE ?";
 				 }
 				 else {
-					 sql = "select * from SANPHAM where isDeleted = 1 and TenSP LIKE ? and MaLH = ?";
+					 sql = "select * from SANPHAM where TrangThai = 1 and TenSP LIKE ? and MaLH = ?";
 				 }
 
 			}
@@ -67,15 +67,15 @@ public class SanPhamDAL extends connectSql {
 				 partPriceTo=parts[3];
 				 if(part2.equals("0")) {
 						
-					 sql = "select * from SANPHAM where isDeleted = 1 and TenSP LIKE ? and GiaBan BETWEEN  ? AND  ? ";
+					 sql = "select * from SANPHAM where TrangThai = 1 and TenSP LIKE ? and GiaBan BETWEEN  ? AND  ? ";
 				 }
 				 else {
-					 sql = "select * from SANPHAM where isDeleted = 1 and TenSP LIKE ? and MaLH = ? and GiaBan BETWEEN  ? AND  ?";
+					 sql = "select * from SANPHAM where TrangThai = 1 and TenSP LIKE ? and MaLH = ? and GiaBan BETWEEN  ? AND  ?";
 				 }
 				 
 			}
 			if (condition.equals("docsanphamtheoid")) {
-				sql = "select * from SANPHAM where isDeleted = 1 and MaLH =" + value;
+				sql = "select * from SANPHAM where TrangThai = 1 and MaLH =" + value;
 			}
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			if (condition.equals("timkiem")) {
@@ -105,15 +105,12 @@ public class SanPhamDAL extends connectSql {
 
 			while (rs.next()) {
 				SanPham sp = new SanPham();
-				sp.setMaSp(rs.getInt("MaSP"));
+				sp.setMaSp(rs.getString("MaSP"));
 				sp.setTenSp(rs.getString("TenSP"));
-				sp.setGiaMua(rs.getInt("GiaMua"));
-				sp.setGiaBan(rs.getInt("GiaBan"));
+				sp.setGiaMua(rs.getString("GiaMua"));
+				sp.setGiaBan(rs.getString("GiaBan"));
 				sp.setHanSuDung(rs.getString("HSD"));
-				sp.setMaLh(rs.getInt("MaLH"));
-				sp.setDonVi(rs.getString("DonVi"));
-				sp.setImg(rs.getString("img"));
-				sp.setIsDeleted(rs.getInt("isDeleted"));
+				sp.setMaLh(rs.getString("MaLH"));
 				arrList.add(sp);
 			}
 		} catch (Exception e) {
@@ -122,24 +119,24 @@ public class SanPhamDAL extends connectSql {
 		return arrList;
 	}
 
-	public int layMaLoaiSP(String tenMaLoai) throws SQLException {
+	public String layMaLoaiSP(String tenMaLoai) throws SQLException {
 		String sql = "SELECT MaLH FROM LOAIHANG WHERE TenLH = ?";
 		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
 			pstm.setString(1, tenMaLoai);
 			ResultSet rs = pstm.executeQuery();
 			if (rs.next()) {
-				return rs.getInt("MaLH");
+				return rs.getString("MaLH");
 			} else {
-				return -1; // or throw an exception
+				return null; // or throw an exception
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return -1; // or throw an exception
+			return null; // or throw an exception
 		}
 	}
 
 	public boolean xoaSanPham(String masp) throws SQLException {
-		String sql = "UPDATE SANPHAM SET isDeleted = " + 0 + " where MaSP = " + masp;
+		String sql = "UPDATE SANPHAM SET TrangThai = " + 0 + " where MaSP = " + masp;
 		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
 			int rowsUpdated = pstm.executeUpdate();
 
@@ -150,10 +147,10 @@ public class SanPhamDAL extends connectSql {
 	public boolean themsanpham(SanPham sp, String condition, String oldMaSP) throws SQLException {
 		String sql = "";
 		if (condition.equals("themsanpham")) {
-			sql = "INSERT INTO SANPHAM (TenSP, GiaMua, GiaBan, HSD, MaLH, DonVi, img,isDeleted,MaSP) VALUES (?, ?, ?, ?, ?, ?, ?,?,?)";
+			sql = "INSERT INTO SANPHAM (TenSP, GiaMua, GiaBan, NSX, HSD, MaLH, TrangThai, MaSP) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		}
 		if (condition.equals("suasanpham")) {
-			sql = "UPDATE SANPHAM SET TenSP = ?, GiaMua = ?, GiaBan = ?, HSD = ?, MaLH = ?, DonVi = ?, img = ?, isDeleted = ?,MaSP = ? WHERE MaSP = ?";
+			sql = "UPDATE SANPHAM SET TenSP = ?, GiaMua = ?, GiaBan = ?, NSX = ?, HSD = ?, MaLH = ?, TrangThai = ? WHERE MaSP = ?";
 
 		}
 		PreparedStatement pstm = conn.prepareStatement(sql);
@@ -161,14 +158,12 @@ public class SanPhamDAL extends connectSql {
 		try {
 
 			pstm.setString(1, sp.getTenSp());
-			pstm.setFloat(2, sp.getGiaMua());
-			pstm.setFloat(3, sp.getGiaBan());
+			pstm.setString(2, sp.getGiaMua());
+			pstm.setString(3, sp.getGiaBan());
 			pstm.setString(4, sp.getHanSuDung());
-			pstm.setInt(5, sp.getMaLh());
-			pstm.setString(6, sp.getDonVi());
-			pstm.setString(7, ".//Image//" + sp.getImg());
-			pstm.setInt(8, 1);
-			pstm.setInt(9, sp.getMaSp());
+			pstm.setString(5, sp.getMaLh());
+			pstm.setString(7, ""+1);
+			pstm.setString(8, sp.getMaSp());
 
 			if (condition.equals("suasanpham")) {
 				pstm.setInt(10, Integer.parseInt(oldMaSP));

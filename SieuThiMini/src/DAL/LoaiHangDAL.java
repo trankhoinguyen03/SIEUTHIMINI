@@ -20,12 +20,12 @@ public class LoaiHangDAL extends connectSql {
 	public ArrayList<LoaiHang> docLoaiHang(){
 		ArrayList<LoaiHang> arrLoaihang = new ArrayList<LoaiHang>();
 		try {
-			String sql = "select * from LOAIHANG where isDeleted = 1";
+			String sql = "select * from LOAIHANG where TrangThai = 1";
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
 			while(rs.next()) {
 				LoaiHang lh = new LoaiHang();
-				lh.setMaLH(rs.getInt(1)); 
+				lh.setMaLH(rs.getString(1)); 
 				lh.setTenLH(rs.getString(2));
 				arrLoaihang.add(lh);
 			}
@@ -65,7 +65,7 @@ public class LoaiHangDAL extends connectSql {
 		 
 		while(rs.next()) {
 			LoaiHang lh = new LoaiHang();
-			lh.setMaLH(rs.getInt("MaLH"));
+			lh.setMaLH(rs.getString("MaLH"));
 			lh.setTenLH(rs.getString(2));
 			arrLoaihang.add(lh);
 		}
@@ -87,13 +87,13 @@ public class LoaiHangDAL extends connectSql {
 	    String sql = "";
 	    switch (condition) {
 	        case "themloaihang":
-	            sql = "INSERT INTO LOAIHANG (TenLH, isDeleted) VALUES (?, ?)";
+	            sql = "INSERT INTO LOAIHANG (TenLH, TrangThai) VALUES (?, ?)";
 	            break;
 	        case "sualoaihang":
 	            sql = "UPDATE LOAIHANG SET TenLH = ? WHERE MaLH = ?";
 	            break;
 	        case "xoaloaihang":
-	            sql = "UPDATE LOAIHANG SET isDeleted = 0 WHERE MaLH = ?";
+	            sql = "UPDATE LOAIHANG SET TrangThai = 0 WHERE MaLH = ?";
 	            break;
 	        default:
 	            return false;
@@ -101,10 +101,10 @@ public class LoaiHangDAL extends connectSql {
 	    try (PreparedStatement pstm = conn.prepareStatement(sql)) {
 	        if (condition.equals("sualoaihang")) {
 	            pstm.setString(1, Lh.getTenLH());
-	            pstm.setInt(2, Lh.getMaLH());
+	            pstm.setString(2, Lh.getMaLH());
 	        }
 	        if (condition.equals("xoaloaihang")) {
-	            pstm.setInt(1, Lh.getMaLH());
+	            pstm.setString(1, Lh.getMaLH());
 	        }
 	        if (condition.equals("themloaihang")) {
 	            pstm.setString(1, Lh.getTenLH());

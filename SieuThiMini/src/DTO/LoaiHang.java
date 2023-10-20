@@ -1,12 +1,11 @@
 package DTO;
 
 public class LoaiHang {
-	private int maLH;
-	private String tenLH;
-	public int getMaLH() {
+	private String maLH, tenLH;
+	public String getMaLH() {
 		return maLH;
 	}
-	public void setMaLH(int maLH) {
+	public void setMaLH(String maLH) {
 		this.maLH = maLH;
 	}
 	public String getTenLH() {

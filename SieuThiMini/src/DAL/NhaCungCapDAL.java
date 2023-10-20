@@ -17,21 +17,21 @@ public class NhaCungCapDAL extends connectSql {
 	public ArrayList<NhaCungCap> docNhaCungCap() throws SQLException{
 		ArrayList<NhaCungCap> arrNCC = new ArrayList<NhaCungCap>();
 		String sql="";
-		sql = "select * from NHACC where isDeleted = 1";
+		sql = "select * from NHACUNGCAP where TrangThai = 1";
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
 		while(rs.next()) {
 			NhaCungCap ncc = new NhaCungCap();
-			ncc.setMaNCC(rs.getInt("MaNCC"));
+			ncc.setMaNCC(rs.getString("MaNCC"));
 			ncc.setTenNCC(rs.getString("TenNCC"));
 			ncc.setDiaChi(rs.getString("DiaChi"));
-			ncc.setSoDT(rs.getString("DienThoai"));
+			ncc.setSoDT(rs.getString("SDT"));
 		arrNCC.add(ncc);
 		}
 		return arrNCC;
 	}
 	public int getLastMaNCC() throws SQLException {
-		String sql = "SELECT IDENT_CURRENT('NHACC') AS MaNCC";
+		String sql = "SELECT IDENT_CURRENT('NHACUNGCAP') AS MaNCC";
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
 		  if (rs.next()) {
@@ -43,13 +43,13 @@ public class NhaCungCapDAL extends connectSql {
 	public boolean ThemNhaCungCap(NhaCungCap Ncc,String condition) throws SQLException {
 		String sql ="";
 		if(condition.equals("themnhacungcap")) {
-			sql = "insert into NHACC (TenNCC,DiaChi,DienThoai,isDeleted) values (?,?,?,?)";
+			sql = "insert into NHACUNGCAP (TenNCC,DiaChi,SDT,TrangThai) values (?,?,?,?)";
 		}
 		if(condition.equals("suanhacungcap")) {
-			sql = "update NHACC set TenNCC = ?,DiaChi = ?,DienThoai = ?, isDeleted = ? where MaNCC = ? ";
+			sql = "update NHACUNGCAP set TenNCC = ?,DiaChi = ?,SDT = ?, TrangThai = ? where MaNCC = ? ";
 		}
 		if(condition.equals("xoanhacungcap")) {
-			sql = "update NHACC set isDeleted =" + 0 + " where MaNCC = ?";
+			sql = "update NHACUNGCAP set TrangThai =" + 0 + " where MaNCC = ?";
 		}
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		try {
@@ -58,11 +58,11 @@ public class NhaCungCapDAL extends connectSql {
 				pstm.setString(1, Ncc.getTenNCC());
 				pstm.setString(2, Ncc.getDiaChi());
 				pstm.setString(3, Ncc.getSoDT());
-				pstm.setInt(4, 1);
-				pstm.setInt(5,Ncc.getMaNCC());
+				pstm.setString(4, ""+1);
+				pstm.setString(5,Ncc.getMaNCC());
 			}
 			if(condition.equals("xoanhacungcap")) {
-				pstm.setInt(1, Ncc.getMaNCC());
+				pstm.setString(1, Ncc.getMaNCC());
 			}
 			if(condition.equals("themnhacungcap")) {
 				pstm.setString(1, Ncc.getTenNCC());

@@ -1,12 +1,11 @@
 package DTO;
 
 public class NhaCungCap {
-	private int maNCC;
-	private String tenNCC,diaChi,soDT;
-	public int getMaNCC() {
+	private String maNCC,tenNCC,diaChi,soDT;
+	public String getMaNCC() {
 		return maNCC;
 	}
-	public void setMaNCC(int maNCC) {
+	public void setMaNCC(String maNCC) {
 		this.maNCC = maNCC;
 	}
 	public String getTenNCC() {

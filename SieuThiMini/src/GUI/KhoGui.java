@@ -335,10 +335,7 @@ public class KhoGui extends JFrame {
 		table.setModel(model);
 		model.setRowCount(0);
 		for (SanPham spdata : arrSp) {
-			NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-			String formatGiaBan = numberFormat.format(spdata.getGiaBan());
-			String formatGiaMua = numberFormat.format(spdata.getGiaMua());
-			Object[] row = new Object[] { };//spdata.getMaLh(), spdata.getMaSp(), spdata.getTenSp(), spdata.getDonVi(),spdata.getHanSuDung(), formatGiaMua, formatGiaBan, spdata.getImg() };
+			Object[] row = new Object[] { spdata.getMaLh(), spdata.getMaSp(), spdata.getTenSp(), spdata.getGiaMua(), spdata.getGiaBan(), spdata.getNgaySanXuat(),spdata.getHanSuDung() };
 
 			model.addRow(row);
 		}
@@ -486,7 +483,7 @@ public class KhoGui extends JFrame {
 			if (fixbtn) {
 				for (SanPham sp : arrPro) {
 					if (Integer.parseInt(oldMaSP) != Integer.parseInt(textFieldMasp.getText())
-							&& sp.getMaSp() == Integer.parseInt(textFieldMasp.getText())) {
+							&& sp.getMaSp() == textFieldMasp.getText()) {
 						JOptionPane.showMessageDialog(contentPane, "Mã sản phẩm đã tồn tại!");
 						textFieldMasp.requestFocus();
 						return false;
@@ -496,7 +493,7 @@ public class KhoGui extends JFrame {
 			}
 			if (addbtn) {
 				for (SanPham sp : arrPro) {
-					if (sp.getMaSp() == Integer.parseInt(textFieldMasp.getText())) {
+					if (sp.getMaSp() == textFieldMasp.getText()) {
 						JOptionPane.showMessageDialog(contentPane, "Mã sản phẩm đã tồn tại!");
 						textFieldMasp.requestFocus();
 						return false;
@@ -926,17 +923,15 @@ public class KhoGui extends JFrame {
 						if (addbtn) {
 							try {
 								luusp = new SanPhamDAL();
-								int malh = luusp.layMaLoaiSP((String) (comboBox.getSelectedItem()));
+								String malh = luusp.layMaLoaiSP((String) (comboBox.getSelectedItem()));
 								sp.setMaLh(malh);
-								sp.setMaSp(Integer.parseInt(textFieldMasp.getText()));
-								sp.setDonVi(textFieldDonvi.getText());
+								sp.setMaSp(textFieldMasp.getText());
 								String inputBan = textFieldGiaban.getText().replaceAll(",", "");
-								sp.setGiaBan(Float.parseFloat(inputBan));
+								sp.setGiaBan(inputBan);
 								String inputNhap = textFieldGianhap.getText().replaceAll(",", "");
-								sp.setGiaMua(Float.parseFloat(inputNhap));
+								sp.setGiaMua(inputNhap);
 								sp.setHanSuDung(textFieldHansd.getText());
 								sp.setTenSp(textFieldTensp.getText());
-								sp.setImg(selectedFile.getName());
 								boolean checkAddPro = luusp.themsanpham(sp, "themsanpham", null);
 								if (checkAddPro) {
 									JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
@@ -958,19 +953,16 @@ public class KhoGui extends JFrame {
 								if (selectedFile == null) {
 									File file = new File(textFieldImg.getText());
 									String fileName = file.getName();
-									sp.setImg(fileName);
 								} else {
-									sp.setImg(selectedFile.getName());
 								}
 								luusp = new SanPhamDAL();
-								int malh = luusp.layMaLoaiSP((String) (comboBox.getSelectedItem()));
+								String malh = luusp.layMaLoaiSP((String) (comboBox.getSelectedItem()));
 								sp.setMaLh(malh);
-								sp.setMaSp(Integer.parseInt(textFieldMasp.getText()));
-								sp.setDonVi(textFieldDonvi.getText());
+								sp.setMaSp(textFieldMasp.getText());
 								String inputBan = textFieldGiaban.getText().replaceAll(",", "");
-								sp.setGiaBan(Float.parseFloat(inputBan));
+								sp.setGiaBan(inputBan);
 								String inputNhap = textFieldGianhap.getText().replaceAll(",", "");
-								sp.setGiaMua(Float.parseFloat(inputNhap));
+								sp.setGiaMua(inputNhap);
 								sp.setHanSuDung(textFieldHansd.getText());
 								sp.setTenSp(textFieldTensp.getText());
 
@@ -1141,14 +1133,12 @@ public class KhoGui extends JFrame {
 				// Loop through each row in the JTable and add the data to the ArrayList
 				for (int i = 0; i < numRows; i++) {
 					SanPham sp = new SanPham();
-					sp.setMaLh((int) table.getValueAt(i, 0));
-					sp.setMaSp((int) table.getValueAt(i, 1));
+					sp.setMaLh((String) table.getValueAt(i, 0));
+					sp.setMaSp((String) table.getValueAt(i, 1));
 					sp.setTenSp((String) table.getValueAt(i, 2));
-					sp.setDonVi((String) table.getValueAt(i, 3));
 					sp.setHanSuDung((String) table.getValueAt(i, 4));
-					sp.setGiaMua(Float.parseFloat(((String) table.getValueAt(i, 5)).replaceAll(",", "")));
-					sp.setGiaBan(Float.parseFloat(((String) table.getValueAt(i, 6)).replaceAll(",", "")));
-					sp.setImg((String) table.getValueAt(i, 7));
+					sp.setGiaMua(((String) table.getValueAt(i, 5)).replaceAll(",", ""));
+					sp.setGiaBan(((String) table.getValueAt(i, 6)).replaceAll(",", ""));
 					data.add(sp);
 
 				}
@@ -1164,14 +1154,13 @@ public class KhoGui extends JFrame {
 					
 					
 				}
-				if (radio2.isSelected()) {
-
-					Collections.sort(data, new Comparator<SanPham>() {
-					    public int compare(SanPham sp1, SanPham sp2) {
-					        return Float.compare(sp1.getGiaBan(), sp2.getGiaBan());
-					    }
-					});
-				}
+				/*
+				 * if (radio2.isSelected()) {
+				 * 
+				 * Collections.sort(data, new Comparator<SanPham>() { public int compare(SanPham
+				 * sp1, SanPham sp2) { return Float.compare(sp1.getGiaBan(), sp2.getGiaBan()); }
+				 * }); }
+				 */
 				
 				String[] columnNames = { "Tên Loại Hàng", "Tên Sản Phẩm", "Số Lượng" };
 				DefaultTableModel model = new DefaultTableModel(columnNames, 0);
@@ -1791,7 +1780,7 @@ public class KhoGui extends JFrame {
 				try {
 
 					LoaiHang LH = new LoaiHang();
-					LH.setMaLH(Integer.parseInt(textMaSP1.getText()));
+					LH.setMaLH(textMaSP1.getText());
 					LoaiHangDAL LHD = new LoaiHangDAL();
 					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa loại hàng này", "Confirmation",
 							JOptionPane.YES_NO_OPTION);
@@ -1824,7 +1813,7 @@ public class KhoGui extends JFrame {
 				try {
 					if (checkEmtyValueTabbed2()) {
 						LoaiHang LH = new LoaiHang();
-						LH.setMaLH(Integer.parseInt(textMaSP1.getText()));
+						LH.setMaLH(textMaSP1.getText());
 						LH.setTenLH(textTenSp.getText());
 						LoaiHangDAL LHD;
 						if (addbtn) {
@@ -2098,7 +2087,7 @@ public class KhoGui extends JFrame {
 
 					NhaCungCap NCC = new NhaCungCap();
 
-					NCC.setMaNCC(Integer.parseInt(textNhaCC.getText()));
+					NCC.setMaNCC(textNhaCC.getText());
 					NhaCungCapDAL LHD = new NhaCungCapDAL();
 					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa nhà cung cấp này", "Confirmation",
 							JOptionPane.YES_NO_OPTION);
@@ -2128,7 +2117,7 @@ public class KhoGui extends JFrame {
 				try {
 					if (checkEmtyValueTabbed3()) {
 						NhaCungCap NCC = new NhaCungCap();
-						NCC.setMaNCC(Integer.parseInt(textNhaCC.getText()));
+						NCC.setMaNCC(textNhaCC.getText());
 						NCC.setTenNCC(textTenNcc.getText());
 						NCC.setDiaChi(textDiaChiCC.getText());
 						NCC.setSoDT(textSDTNCC.getText());
