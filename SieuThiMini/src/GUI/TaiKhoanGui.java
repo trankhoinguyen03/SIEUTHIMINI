@@ -55,8 +55,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import BLL.NhanVien;
-import DAL.NhanVienDAL;
+import BLL.TaiKhoan;
+import DAL.TaiKhoanDAL;
 
 import javax.swing.JScrollPane;
 import java.awt.Color;
@@ -107,7 +107,7 @@ public class TaiKhoanGui extends JFrame {
      *
      * @throws SQLException
      */
-    JComboBox comboNhanvien, comboQuyen;
+    JComboBox comboTaiKhoan, comboQuyen;
     JLabel lbThemanh = new JLabel();
     File selectedFile;
     ImageIcon icon = new ImageIcon();
@@ -138,22 +138,22 @@ public class TaiKhoanGui extends JFrame {
     private JTextField textFieldSearch;
     boolean checkFix = false;
 
-    public void hienthinhanvien(String condition) throws SQLException {
-        NhanVienDAL nvDal = new NhanVienDAL();
-        ArrayList<NhanVien> arrNv = new ArrayList<NhanVien>();
+    public void hienthitaikhoan(String condition) throws SQLException {
+        TaiKhoanDAL tkDal = new TaiKhoanDAL();
+        ArrayList<TaiKhoan> arrTk = new ArrayList<TaiKhoan>();
         if (condition == "hien thi") {
 
-            arrNv = nvDal.docNhanVien("docnhanvien", null);
+            arrTk = tkDal.doctaikhoan("doctaikhoan", null);
         }
         if (condition == "sapxeptheoten") {
-            arrNv = nvDal.docNhanVien("sapxeptheoten", null);
+            arrTk = tkDal.doctaikhoan("sapxeptheoten", null);
         }
         if (condition == "sapxeptheoma") {
-            arrNv = nvDal.docNhanVien("sapxeptheoma", null);
+            arrTk = tkDal.doctaikhoan("sapxeptheoma", null);
         }
         if (condition == "them") {
 
-            arrNv = nvDal.docNhanVien("docnhanvien", null);
+            arrTk = tkDal.doctaikhoan("doctaikhoan", null);
             /*
 			ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
 			DefaultComboBoxModel combo = new DefaultComboBoxModel();
@@ -164,23 +164,15 @@ public class TaiKhoanGui extends JFrame {
 			}*/
         }
 
-        String[] columnNames = {"Mã Nhân Viên", "Tên Nhân Viên", "Chức Vụ", "Tài Khoản", "Mật Khẩu", "Quyền"};
+        String[] columnNames = {"Mã Nhân Viên", "Tên Đăng Nhập", "Mật Khẩu", "Quyền"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
         table.setModel(model);
         model.setRowCount(0);
-        for (NhanVien nvdata : arrNv) {
-            //NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-            String formatGioiTinh;
-            if (nvdata.getGioiTinh() == 1) {
-                formatGioiTinh = "Nam";
-            } else {
-                formatGioiTinh = "Nữ";
-            }
+        for (TaiKhoan tkdata : arrTk) {
+
             
-            Object[] row = new Object[]{};/*nvdata.getMaNv(), nvdata.getTenNv(), nvdata.getNgaySinh(), formatGioiTinh,
-                nvdata.getDiaChi(), nvdata.getCmnd(), nvdata.getSdt(), nvdata.getNgayVaoLam(),
-                nvdata.getTaiKhoan(), nvdata.getMatKhau()};*/
+            Object[] row = new Object[]{tkdata.getMaNV(), tkdata.getTenDangNhap(), tkdata.getMatKhau(), tkdata.getQuyen()};
 
             model.addRow(row);
         }
@@ -254,12 +246,12 @@ public class TaiKhoanGui extends JFrame {
 			return false;
 		}
 		if(!textFieldManv.getText().isEmpty()) {
-			NhanVienDAL nvd = new NhanVienDAL();
-			ArrayList<NhanVien> arrPro = new ArrayList<NhanVien>();
-			arrPro = nvd.docNhanVien("docnhanvien",null);
+			TaiKhoanDAL nvd = new TaiKhoanDAL();
+			ArrayList<TaiKhoan> arrPro = new ArrayList<TaiKhoan>();
+			arrPro = nvd.doctaikhoan("doctaikhoan",null);
 			if(fixbtn) {
-				for(NhanVien nv:arrPro) {
-					if(Integer.parseInt(oldMaNV)!=Integer.parseInt(textFieldManv.getText()) && nv.getMaNv()== Integer.parseInt(textFieldManv.getText())) {
+				for(TaiKhoan tk:arrPro) {
+					if(Integer.parseInt(oldMaNV)!=Integer.parseInt(textFieldManv.getText()) && tk.getMaNV()== textFieldManv.getText()) {
 						JOptionPane.showMessageDialog(contentPane, "Mã nhân viên đã tồn tại!");
 						textFieldManv.requestFocus();
 						return false;
@@ -268,8 +260,8 @@ public class TaiKhoanGui extends JFrame {
 				}
 			}
 			if(addbtn) {
-				for(NhanVien nv:arrPro) {
-					if(nv.getMaNv()== Integer.parseInt(textFieldManv.getText())) {
+				for(TaiKhoan tk:arrPro) {
+					if(tk.getMaNV()== textFieldManv.getText()) {
 						JOptionPane.showMessageDialog(contentPane, "Mã nhân viên đã tồn tại!");
 						textFieldManv.requestFocus();
 						return false;
@@ -391,8 +383,8 @@ public class TaiKhoanGui extends JFrame {
         JLabel lblNewLabel_3 = new JLabel("Nhân viên");
         lblNewLabel_3.setBounds(20, 50, 100, 25);
         
-        comboNhanvien = new JComboBox();
-        comboNhanvien.setBounds(130, 50, 200, 25);
+        comboTaiKhoan = new JComboBox();
+        comboTaiKhoan.setBounds(130, 50, 200, 25);
 		
 		JLabel lblNewLabel_9 = new JLabel("Chức vụ");
 		lblNewLabel_9.setBounds(20, 90, 100, 25);
@@ -500,29 +492,29 @@ public class TaiKhoanGui extends JFrame {
 							}
 						}
 					
-						NhanVien nv = new NhanVien();
-						NhanVienDAL luunv;
+						TaiKhoan tk = new TaiKhoan();
+						TaiKhoanDAL luunv;
 						if(addbtn) {
 							try {
-								luunv = new NhanVienDAL();
-								nv.setMaNv(Integer.parseInt(textFieldManv.getText()));
+								luunv = new TaiKhoanDAL();
+								tk.setMaNV(textFieldManv.getText());
 										/*
-										 * nv.setTenNv(textFieldTennv.getText());
-										 * nv.setNgaySinh(textFieldNgaysinh.getText()); int gioitinh;
+										 * tk.setTenNv(textFieldTennv.getText());
+										 * tk.setNgaySinh(textFieldNgaysinh.getText()); int gioitinh;
 										 * if(radioNam.isSelected()) gioitinh = 1; else gioitinh = 0;
-										 * nv.setGioiTinh(gioitinh); nv.setDiaChi(textFieldDiachi.getText());
-										 * nv.setCmnd(textFieldTaikhoan.getText()); nv.setSdt(textFieldMatkhau.getText());
-										 * nv.setNgayVaoLam(textFieldNgayvaolam.getText());
-										 * nv.setTaiKhoan(textFieldTaikhoan.getText());
-										 * nv.setMatKhau(textFieldMatkhau.getText());
+										 * tk.setGioiTinh(gioitinh); tk.setDiaChi(textFieldDiachi.getText());
+										 * tk.setCmnd(textFieldTaikhoan.getText()); tk.setSdt(textFieldMatkhau.getText());
+										 * tk.setNgayVaoLam(textFieldNgayvaolam.getText());
+										 * tk.setTaiKhoan(textFieldTaikhoan.getText());
+										 * tk.setMatKhau(textFieldMatkhau.getText());
 										 */
-								boolean checkAddPro = luunv.themnhanvien(nv,"themnhanvien",null);
+								boolean checkAddPro = luunv.themtaikhoan(tk,"themtaikhoan",null);
 								if (checkAddPro) {
 									JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
 									resetValue();
                                                                         
 									setEnable();
-									hienthinhanvien("hien thi");
+									hienthitaikhoan("hien thi");
 									addbtn = false;
 								} else {
 									JOptionPane.showMessageDialog(contentPane, "Thêm thất bại");
@@ -535,25 +527,25 @@ public class TaiKhoanGui extends JFrame {
 						if(fixbtn) {
 							
 							try {
-								luunv = new NhanVienDAL();
-								nv.setMaNv(Integer.parseInt(textFieldManv.getText()));
+								luunv = new TaiKhoanDAL();
+								tk.setMaNV(textFieldManv.getText());
 										/*
-										 * nv.setTenNv(textFieldTennv.getText());
-										 * nv.setNgaySinh(textFieldNgaysinh.getText()); int gioitinh;
+										 * tk.setTenNv(textFieldTennv.getText());
+										 * tk.setNgaySinh(textFieldNgaysinh.getText()); int gioitinh;
 										 * if(radioNam.isSelected()) gioitinh = 1; else gioitinh = 0;
-										 * nv.setGioiTinh(gioitinh); nv.setDiaChi(textFieldDiachi.getText());
-										 * nv.setCmnd(textFieldTaikhoan.getText()); nv.setSdt(textFieldMatkhau.getText());
-										 * nv.setNgayVaoLam(textFieldNgayvaolam.getText());
-										 * nv.setTaiKhoan(textFieldTaikhoan.getText());
-										 * nv.setMatKhau(textFieldMatkhau.getText());
+										 * tk.setGioiTinh(gioitinh); tk.setDiaChi(textFieldDiachi.getText());
+										 * tk.setCmnd(textFieldTaikhoan.getText()); tk.setSdt(textFieldMatkhau.getText());
+										 * tk.setNgayVaoLam(textFieldNgayvaolam.getText());
+										 * tk.setTaiKhoan(textFieldTaikhoan.getText());
+										 * tk.setMatKhau(textFieldMatkhau.getText());
 										 */
 								
-								boolean checkAddPro = luunv.themnhanvien(nv,"suanhanvien",oldMaNV);
+								boolean checkAddPro = luunv.themtaikhoan(tk,"suaTaiKhoan",oldMaNV);
 								if (checkAddPro) {
 									JOptionPane.showMessageDialog(contentPane, "Sửa thành công");
 									resetValue();
 									setEnable();
-									hienthinhanvien("hien thi");
+									hienthitaikhoan("hien thi");
 									fixbtn = false;
 								} else {
 									JOptionPane.showMessageDialog(contentPane, "Sửa thất bại");
@@ -581,16 +573,16 @@ public class TaiKhoanGui extends JFrame {
                                     resetValue();
                                     textFieldManv.setEnabled(false);
                                     textFieldSearch.setEnabled(false);
-                                    NhanVienDAL nv;
-                                    nv = new NhanVienDAL();
-                                    int lastMaHD = nv.getLastMaNV();
+                                    TaiKhoanDAL tk;
+                                    tk = new TaiKhoanDAL();
+                                    int lastMaHD = tk.getLastMaNV();
                                     textFieldManv.setText("" + (lastMaHD + 1));
                                     btnThem.setEnabled(false);
                                     btnLuu.setEnabled(true);
                                     btnXoa.setEnabled(false);
                                     btnSua.setEnabled(false);
                                     try {
-                                        hienthinhanvien("them");
+                                        hienthitaikhoan("them");
                                     } catch (SQLException e3) {
                                         // TODO Auto-generated catch block
                                         e3.printStackTrace();
@@ -621,7 +613,7 @@ public class TaiKhoanGui extends JFrame {
 				btnLuu.setEnabled(true);
 				
 				try {
-					hienthinhanvien("them");
+					hienthitaikhoan("them");
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -639,12 +631,12 @@ public class TaiKhoanGui extends JFrame {
 				int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa nhân viên này", "Confirmation",
 						JOptionPane.YES_NO_OPTION);
 				if (confirmed == JOptionPane.YES_OPTION) {
-					NhanVienDAL deleteNv;
+					TaiKhoanDAL deleteNv;
 					try {
-						deleteNv = new NhanVienDAL();
-						if (deleteNv.xoaNhanVien(textFieldManv.getText())) {
+						deleteNv = new TaiKhoanDAL();
+						if (deleteNv.xoataikhoan(textFieldManv.getText())) {
 							JOptionPane.showMessageDialog(contentPane, "Xóa thành công!");
-							hienthinhanvien("hien thi");
+							hienthitaikhoan("hien thi");
 							resetValue();
 							setEnable();
 						}
@@ -669,7 +661,7 @@ public class TaiKhoanGui extends JFrame {
         		btnDongBo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					hienthinhanvien("hien thi");
+					hienthitaikhoan("hien thi");
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -682,14 +674,14 @@ public class TaiKhoanGui extends JFrame {
         btnSapxep.setFocusPainted(false);
         		btnSapxep.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				NhanVienDAL nvd;
+				TaiKhoanDAL nvd;
 				if (radioSapxepten.isSelected()) {
 
 					
 					try {
-						nvd = new NhanVienDAL();
+						nvd = new TaiKhoanDAL();
 
-						hienthinhanvien("sapxeptheoten");
+						hienthitaikhoan("sapxeptheoten");
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -700,9 +692,9 @@ public class TaiKhoanGui extends JFrame {
 
 					
 					try {
-						nvd = new NhanVienDAL();
+						nvd = new TaiKhoanDAL();
 
-						hienthinhanvien("sapxeptheoma");
+						hienthitaikhoan("sapxeptheoma");
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -809,7 +801,7 @@ public class TaiKhoanGui extends JFrame {
         panel_5.add(lblNewLabel_1);
         panel_5.add(textFieldManv);
         panel_5.add(lblNewLabel_7);
-        panel_5.add(comboNhanvien);
+        panel_5.add(comboTaiKhoan);
         panel_5.add(textFieldTaikhoan);
         panel_5.add(lblNewLabel_3);
         panel_5.add(lblNewLabel_8);
@@ -843,9 +835,9 @@ public class TaiKhoanGui extends JFrame {
                     JOptionPane.showMessageDialog(contentPane, "Chưa nhập nội dung tìm kiếm!");
                     textFieldSearch.requestFocus();
                 } else {/*
-                    NhanVienDAL tknv;
-                    ArrayList<NhanVien> arrPro = new ArrayList<NhanVien>(); // TODO Auto-generated catch block
-                    arrPro = tknv.docNhanVien("timkiem",null);
+                    TaiKhoanDAL tknv;
+                    ArrayList<TaiKhoan> arrPro = new ArrayList<TaiKhoan>(); // TODO Auto-generated catch block
+                    arrPro = tknv.doctaikhoan("timkiem",null);
                 */
                 }
             }
@@ -924,7 +916,7 @@ public class TaiKhoanGui extends JFrame {
         contentPane.add(tabbedPane);
         contentPane.add(panel_1);
         contentPane.add(panel);
-        hienthinhanvien("hien thi");
+        hienthitaikhoan("hien thi");
 
     }
 }

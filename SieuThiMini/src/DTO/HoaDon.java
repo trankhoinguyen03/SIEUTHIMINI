@@ -1,80 +1,64 @@
-
 package DTO;
 
 public class HoaDon {
-    private int MaHd,MaNv,MaKh,isDeleted;
-    private float TienTra,MucGiam,DiemThuong;
-    public int getIsDeleted() {
-        return isDeleted;
-    }
+    private String maHD, maNV, maKH, tongTien, tongTienSauKM, thoiDiemLap, khuyenMai;
 
-    public void setIsDeleted(int isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-    private String ThoiDiem,Gio;
+	public String getMaHD() {
+		return maHD;
+	}
 
-    public int getMaHd() {
-        return MaHd;
-    }
+	public void setMaHD(String maHD) {
+		this.maHD = maHD;
+	}
 
-    public void setMaHd(int MaHd) {
-        this.MaHd = MaHd;
-    }
+	public String getMaNV() {
+		return maNV;
+	}
 
-    public float getTienTra() {
-        return TienTra;
-    }
+	public void setMaNV(String maNV) {
+		this.maNV = maNV;
+	}
 
-    public void setTienTra(float TienTra) {
-        this.TienTra = TienTra;
-    }
+	public String getMaKH() {
+		return maKH;
+	}
 
-    public float getMucGiam() {
-        return MucGiam;
-    }
+	public void setMaKH(String maKH) {
+		this.maKH = maKH;
+	}
 
-    public void setMucGiam(float MucGiam) {
-        this.MucGiam = MucGiam;
-    }
+	public String getTongTien() {
+		return tongTien;
+	}
 
-    public float getDiemThuong() {
-        return DiemThuong;
-    }
+	public void setTongTien(String tongTien) {
+		this.tongTien = tongTien;
+	}
 
-    public void setDiemThuong(float DiemThuong) {
-        this.DiemThuong = DiemThuong;
-    }
+	public String getTongTienSauKM() {
+		return tongTienSauKM;
+	}
 
-    public int getMaNv() {
-        return MaNv;
-    }
+	public void setTongTienSauKM(String tongTienSauKM) {
+		this.tongTienSauKM = tongTienSauKM;
+	}
 
-    public void setMaNv(int MaNv) {
-        this.MaNv = MaNv;
-    }
+	public String getThoiDiemLap() {
+		return thoiDiemLap;
+	}
 
-    public int getMaKh() {
-        return MaKh;
-    }
+	public void setThoiDiemLap(String thoiDiemLap) {
+		this.thoiDiemLap = thoiDiemLap;
+	}
 
-    public void setMaKh(int MaKh) {
-        this.MaKh = MaKh;
-    }
+	public String getKhuyenMai() {
+		return khuyenMai;
+	}
 
-    public String getThoiDiem() {
-        return ThoiDiem;
-    }
+	public void setKhuyenMai(String khuyenMai) {
+		this.khuyenMai = khuyenMai;
+	}
 
-    public void setThoiDiem(String ThoiDiem) {
-        this.ThoiDiem = ThoiDiem;
-    }
 
-    public String getGio() {
-        return Gio;
-    }
-
-    public void setGio(String Gio) {
-        this.Gio = Gio;
-    }
-   
+    
 }

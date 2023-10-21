@@ -3,39 +3,39 @@ package BLL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import DAL.NhanVienDAL;
-import DTO.NhanVien;
+import DAL.TaiKhoanDAL;
+import DTO.TaiKhoan;
 
 public class DangNhapBLL {
-	public NhanVien checkLogin(String TaiKhoan,String MatKhau) throws SQLException {
-		NhanVienDAL nvd = new NhanVienDAL();
-		ArrayList<NhanVien> arrNv = new ArrayList<NhanVien>();
-		arrNv = nvd.kiemTraDangNhap();
-		if(arrNv.isEmpty()) {
+	public TaiKhoan checkLogin(String TenDangNhap,String MatKhau) throws SQLException {
+		TaiKhoanDAL tkd = new TaiKhoanDAL();
+		ArrayList<TaiKhoan> arrTk = new ArrayList<TaiKhoan>();
+		arrTk = tkd.kiemTraDangNhap();
+		if(arrTk.isEmpty()) {
 			return null;
 		}
-		for(NhanVien nv:arrNv) {
-			if(nv.getTaiKhoan().equals(TaiKhoan)) {
-				if(nv.getMatKhau().equals(MatKhau)) {
+		for(TaiKhoan tk:arrTk) {
+			if(tk.getTenDangNhap().equals(TenDangNhap)) {
+				if(tk.getMatKhau().equals(MatKhau)) {
 //					if(nv.getChucVu()==1) {
 //						return "Admin";
 //					}
 //					return "Nhan Vien";
-					return nv;
+					return tk;
 				}
 				else {
-					 nv.setHoTen("Mật khẩu không chính sát, vui lòng kiểm tra lại!");
-					 return nv;
+					 tk.setTenDangNhap("Mật khẩu không chính xác, vui lòng kiểm tra lại!");
+					 return tk;
 				}
 			}
 		}
-		NhanVien nv = new NhanVien();
-		nv.setHoTen("Tài Khoản không tồn tại, vui lòng kiểm tra lại!");
+		TaiKhoan tk = new TaiKhoan();
+		tk.setTenDangNhap("Tài Khoản không tồn tại, vui lòng kiểm tra lại!");
 
-		return nv;
+		return tk;
 	}
 	public static void main(String[] args) throws SQLException {
 		DangNhapBLL dnbll = new DangNhapBLL();
-		System.out.println(dnbll.checkLogin("ChiNV", "678"));
+		System.out.println(dnbll.checkLogin("ADMIN", "123"));
 	}
 }

@@ -9,103 +9,77 @@ package BLL;
  * @author Acer
  */
 public class NhanVien {
+    private String maNv, tenNv, ngaySinh, sdt, diaChi, gioiTinh, cccd, ngayVaoLam, chucVu;
 
-    private int maNv, gioiTinh, isDeleted;
-    private String tenNv, ngaySinh, diaChi, cmnd, sdt, ngayVaoLam, taiKhoan, matKhau, img;
+	public String getMaNv() {
+		return maNv;
+	}
 
-    public int getMaNv() {
-        return maNv;
-    }
+	public void setMaNv(String maNv) {
+		this.maNv = maNv;
+	}
 
-    public void setMaNv(int maNv) {
-        this.maNv = maNv;
-    }
+	public String getTenNv() {
+		return tenNv;
+	}
 
-    public int getGioiTinh() {
-        return gioiTinh;
-    }
+	public void setTenNv(String tenNv) {
+		this.tenNv = tenNv;
+	}
 
-    public void setGioiTinh(int gioiTinh) {
-        this.gioiTinh = gioiTinh;
-    }
+	public String getNgaySinh() {
+		return ngaySinh;
+	}
 
-    public int getIsDeleted() {
-        return isDeleted;
-    }
+	public void setNgaySinh(String ngaySinh) {
+		this.ngaySinh = ngaySinh;
+	}
 
-    public void setIsDeleted(int isDeleted) {
-        this.isDeleted = isDeleted;
-    }
+	public String getSdt() {
+		return sdt;
+	}
 
-    public String getTenNv() {
-        return tenNv;
-    }
+	public void setSdt(String sdt) {
+		this.sdt = sdt;
+	}
 
-    public void setTenNv(String tenNv) {
-        this.tenNv = tenNv;
-    }
+	public String getDiaChi() {
+		return diaChi;
+	}
 
-    public String getNgaySinh() {
-        return ngaySinh;
-    }
+	public void setDiaChi(String diaChi) {
+		this.diaChi = diaChi;
+	}
 
-    public void setNgaySinh(String ngaySinh) {
-        this.ngaySinh = ngaySinh;
-    }
+	public String getGioiTinh() {
+		return gioiTinh;
+	}
 
-    public String getDiaChi() {
-        return diaChi;
-    }
+	public void setGioiTinh(String gioiTinh) {
+		this.gioiTinh = gioiTinh;
+	}
 
-    public void setDiaChi(String diaChi) {
-        this.diaChi = diaChi;
-    }
+	public String getCccd() {
+		return cccd;
+	}
 
-    public String getCmnd() {
-        return cmnd;
-    }
+	public void setCccd(String cccd) {
+		this.cccd = cccd;
+	}
 
-    public void setCmnd(String cmnd) {
-        this.cmnd = cmnd;
-    }
+	public String getNgayVaoLam() {
+		return ngayVaoLam;
+	}
 
-    public String getSdt() {
-        return sdt;
-    }
+	public void setNgayVaoLam(String ngayVaoLam) {
+		this.ngayVaoLam = ngayVaoLam;
+	}
 
-    public void setSdt(String sdt) {
-        this.sdt = sdt;
-    }
+	public String getChucVu() {
+		return chucVu;
+	}
 
-    public String getNgayVaoLam() {
-        return ngayVaoLam;
-    }
-
-    public void setNgayVaoLam(String ngayVaoLam) {
-        this.ngayVaoLam = ngayVaoLam;
-    }
-
-    public String getTaiKhoan() {
-        return taiKhoan;
-    }
-
-    public void setTaiKhoan(String taiKhoan) {
-        this.taiKhoan = taiKhoan;
-    }
-
-    public String getMatKhau() {
-        return matKhau;
-    }
-
-    public void setMatKhau(String matKhau) {
-        this.matKhau = matKhau;
-    }
-    
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
+	public void setChucVu(String chucVu) {
+		this.chucVu = chucVu;
+	}
 }

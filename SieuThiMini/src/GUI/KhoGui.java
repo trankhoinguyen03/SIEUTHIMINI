@@ -67,14 +67,10 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import BLL.SanPhamBLL;
-import DTO.LoaiHang;
-import DTO.NhaCungCap;
-import DTO.NhanVien;
-import DTO.SanPham;
-import DAL.LoaiHangDAL;
-import DAL.NhaCungCapDAL;
-import DAL.SanPhamDAL;
+
+import DTO.Kho;
+import DAL.KhoDAL;
+
 
 import javax.swing.JScrollPane;
 
@@ -99,14 +95,13 @@ public class KhoGui extends JFrame {
 	private JTextField textFieldGianhap;
 	private JTextField textFieldHansd;
 	private JTextField textFieldGiaban;
-	private JTable table;
 	private JTextField textFieldDonvi;
 
 	/**
 	 * Launch the application.
 	 */
 	
-	NhanVien nhanVien = ShareDAta.nhanVien;
+	//NhanVien nhanVien = ShareDAta.nhanVien;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -164,41 +159,11 @@ public class KhoGui extends JFrame {
 	boolean checkFix = false;
 	private JTextField textMaSP1;
 	private JTextField textTenSp;
+	private JTable table = new JTable();
 
-//	Tabbed 2
-	JButton btnThem_1 = new JButton("Thêm");
-	JButton btnSua_1 = new JButton("Sửa");
-	JButton btnXoa_1 = new JButton("Xóa");
-	JButton btnLuu_1 = new JButton("Lưu");
-	JTable table_1 = new JTable();
-	Object lastValueMaLh;
-	String oldTenMaLH = null;
 	JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-	private JTextField textNhaCC;
-	private JTextField textTenNcc;
-	private JTextField textDiaChiCC;
-	private JTextField textSDTNCC;
 
-//	Tabbed 3
-	JTable table_2 = new JTable();
-	JButton btnThem_2 = new JButton("Thêm");
-	JButton btnSua_2 = new JButton("Sửa");
-	JButton btnXoa_2 = new JButton("Xóa");
-	JButton btnLuu_2 = new JButton("Lưu");
-	String oldTenNcc = null;
 
-	public void resetValueTabbed3() {
-		textNhaCC.setText("");
-		textDiaChiCC.setText("");
-		textSDTNCC.setText("");
-		textTenNcc.setText("");
-		textDiaChiCC.setEnabled(false);
-		textSDTNCC.setEnabled(false);
-		textTenNcc.setEnabled(false);
-		btnSua_2.setEnabled(false);
-		btnXoa_2.setEnabled(false);
-		btnLuu_2.setEnabled(false);
-	}
 
 	public static boolean validatePhone(String phoneNumber) {
 		String regex = "^0[0-9]{9}$";
@@ -207,188 +172,28 @@ public class KhoGui extends JFrame {
 		return matcher.matches();
 	}
 
-	public void hienthisanpham(String condition) throws SQLException {
-		
+	public void hienThiKho() throws SQLException {
 
-		SanPhamDAL spDal = new SanPhamDAL();
-		ArrayList<SanPham> arrSp = new ArrayList<SanPham>();
-		SanPhamBLL spbll = new SanPhamBLL();
-		if (condition == "hien thi") {
-
-			arrSp = spDal.docSanPham("docsanpham", null);
-		}
-		if (condition == "hienthitheoid") {
-			arrSp = spDal.docSanPham("docsanphamtheoid", rsRenderType + "");
-		}
-		if (condition == "sapxeptheoten") {
-			arrSp = spDal.docSanPham("sapxeptheoten", null);
-		}
-		if (condition == "sapxeptheogia") {
-			arrSp = spDal.docSanPham("sapxeptheogia", null);
-		}
-		if (condition == "timkiemtheoid") {
-			arrSp = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
-
-		}
-		if (condition == "suatheoid") {
-			if (rsRenderType > 0) {
-
-				arrSp = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
-				LoaiHangDAL test = new LoaiHangDAL();
-				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
-				DefaultComboBoxModel combo = new DefaultComboBoxModel();
-				comboBox.setModel(combo);
-				for (LoaiHang malh : arrMaLH) {
-					combo.addElement(malh.getTenLH());
-
-				}
-			} else {
-
-				arrSp = spDal.docSanPham("docsanpham", null);
-				LoaiHangDAL test = new LoaiHangDAL();
-				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
-				DefaultComboBoxModel combo = new DefaultComboBoxModel();
-				comboBox.setModel(combo);
-				for (LoaiHang malh : arrMaLH) {
-					combo.addElement(malh.getTenLH());
-
-				}
-			}
-
-		}
-		if (condition == "suatheogia") {
-			if (rsRenderType > 0) {
-
-				arrSp = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
-				LoaiHangDAL test = new LoaiHangDAL();
-				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
-				DefaultComboBoxModel combo = new DefaultComboBoxModel();
-				comboBox.setModel(combo);
-				for (LoaiHang malh : arrMaLH) {
-					combo.addElement(malh.getTenLH());
-
-				}
-			} else {
-
-				arrSp = spDal.docSanPham("docsanpham", null);
-				LoaiHangDAL test = new LoaiHangDAL();
-				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
-				DefaultComboBoxModel combo = new DefaultComboBoxModel();
-				comboBox.setModel(combo);
-				for (LoaiHang malh : arrMaLH) {
-					combo.addElement(malh.getTenLH());
-
-				}
-			}
-
-		}
-		if (condition == "timkiemtheogia") {
-
-			String priceFrom = textFieldFrom.getText().replaceAll(",", "");
-			String priceTo = textFieldTo.getText().replaceAll(",", "");
-			arrSp = spbll.searchProductByPrice(textFieldSearch.getText(),
-					rsRenderType + "" + "," + priceFrom + "," + priceTo);
-//			if (rsRenderType > 0) {
-//
-//				arrSp = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
-//				LoaiHangDAL test = new LoaiHangDAL();
-//				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
-//				DefaultComboBoxModel combo = new DefaultComboBoxModel();
-//				comboBox.setModel(combo);
-//				for (LoaiHang malh : arrMaLH) {
-//					combo.addElement(malh.getTenLH());
-//
-//				}
-//			} else {
-//
-//				arrSp = spDal.docSanPham("docsanpham", null);
-//				LoaiHangDAL test = new LoaiHangDAL();
-//				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
-//				DefaultComboBoxModel combo = new DefaultComboBoxModel();
-//				comboBox.setModel(combo);
-//				for (LoaiHang malh : arrMaLH) {
-//					combo.addElement(malh.getTenLH());
-//
-//				}
-//			}
-
-		}
-		if (condition == "them") {
-			arrSp = spDal.docSanPham("docsanpham", null);
-			LoaiHangDAL test = new LoaiHangDAL();
-			ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
-			DefaultComboBoxModel combo = new DefaultComboBoxModel();
-			comboBox.setModel(combo);
-			for (LoaiHang malh : arrMaLH) {
-				combo.addElement(malh.getTenLH());
-
-			}
-		}
-		if (arrSp.isEmpty() && btnfind || arrSp.isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Không tìm thấy sản phẩm!");
-			btnfind = false;
-			return;
-		}
-		String[] columnNames = { "Tên Loại Hàng", "Tên Sản Phẩm", "Số Lượng" };
+		KhoDAL khoDal = new KhoDAL();
+		ArrayList<Kho> arrKho = new ArrayList<Kho>();
+		String[] columnNames = { "Mã Sản Phẩm", "Số Lượng" };
 		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-
 		table.setModel(model);
 		model.setRowCount(0);
-		for (SanPham spdata : arrSp) {
-			Object[] row = new Object[] { spdata.getMaLh(), spdata.getMaSp(), spdata.getTenSp(), spdata.getGiaMua(), spdata.getGiaBan(), spdata.getNgaySanXuat(),spdata.getHanSuDung() };
+		arrKho = khoDal.dockho();
+		for (Kho khodata : arrKho) {
 
+			Object[] row = new Object[] { khodata.getMaSP(), khodata.getSoLuong() };
 			model.addRow(row);
 		}
 		JTableHeader header = table.getTableHeader();
 		Font headerFont = header.getFont(); // get the current font of the header
 		header.setFont(new Font(headerFont.getName(), Font.BOLD, 14)); // set the new font for the header with size 16
 		lastRow = table.getRowCount() - 1; // get index of the last row
-		lastValueMaSp = table.getValueAt(lastRow, 1); // get the value at the last row and column n
-	}
-
-	public void hienThiMaSanPham() throws SQLException {
-
-		LoaiHangDAL lhDal = new LoaiHangDAL();
-		ArrayList<LoaiHang> arrLH = new ArrayList<LoaiHang>();
-		String[] columnNames = { "Mã Loại Hàng", "Tên Loại Hàng" };
-		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-		table_1.setModel(model);
-		model.setRowCount(0);
-		arrLH = lhDal.docLoaiHang();
-		for (LoaiHang spdata : arrLH) {
-
-			Object[] row = new Object[] { spdata.getMaLH(), spdata.getTenLH() };
-			model.addRow(row);
-		}
-		JTableHeader header = table_1.getTableHeader();
-		Font headerFont = header.getFont(); // get the current font of the header
-		header.setFont(new Font(headerFont.getName(), Font.BOLD, 14)); // set the new font for the header with size 16
-		lastRow = table_1.getRowCount() - 1; // get index of the last row
-		lastValueMaLh = table_1.getValueAt(lastRow, 0); // get the value at the last row and column n
+		lastValueMaSp = table.getValueAt(lastRow, 0); // get the value at the last row and column n
 
 	}
 
-	public void hienThiNhaCungCap() throws SQLException {
-		ArrayList<NhaCungCap> arrNCC = new ArrayList<NhaCungCap>();
-		NhaCungCapDAL ncc = new NhaCungCapDAL();
-		arrNCC = ncc.docNhaCungCap();
-		String[] columnNames = { "Mã Nhà Cung Cấp", "Tên Nhà Cung Cấp", "Địa Chỉ", "Số Điện Thoại" };
-		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-		table_2.setModel(model);
-		model.setRowCount(0);
-		for (NhaCungCap nccData : arrNCC) {
-
-			Object[] row = new Object[] { nccData.getMaNCC(), nccData.getTenNCC(), nccData.getDiaChi(),
-					nccData.getSoDT() };
-			model.addRow(row);
-		}
-		JTableHeader header = table_2.getTableHeader();
-		Font headerFont = header.getFont(); // get the current font of the header
-		header.setFont(new Font(headerFont.getName(), Font.BOLD, 14)); // set the new font for the header with size 16
-		lastRow = table_2.getRowCount() - 1; // get index of the last row
-		lastValueMaLh = table_2.getValueAt(lastRow, 0); // get the value at the last row and column n
-
-	}
 
 	public void resetValue() {
 		textFieldImg.setText("");
@@ -414,14 +219,6 @@ public class KhoGui extends JFrame {
 		btnLuu.setEnabled(false);
 		comboBox.setSelectedItem(null);
 
-//		Tabbed 2
-		textMaSP1.setText("");
-		textMaSP1.setEnabled(true);
-		textTenSp.setText("");
-		textTenSp.setEnabled(true);
-		btnXoa_1.setEnabled(false);
-		btnSua_1.setEnabled(false);
-		btnLuu_1.setEnabled(false);
 
 	}
 
@@ -440,13 +237,7 @@ public class KhoGui extends JFrame {
 		btnXoa.setEnabled(false);
 		btnSua.setEnabled(false);
 		btnLuu.setEnabled(false);
-//		Tabbed 2
-		btnThem_1.setEnabled(true);
-		btnXoa_1.setEnabled(false);
-		btnSua_1.setEnabled(false);
-		btnLuu_1.setEnabled(false);
-		textMaSP1.setEnabled(true);
-		textTenSp.setEnabled(true);
+
 
 	}
 
@@ -463,10 +254,6 @@ public class KhoGui extends JFrame {
 		textFieldTensp.setEnabled(false);
 		comboBox.setEnabled(false);
 		btnCapNhatAnh.setEnabled(false);
-//		Tabbed 2
-
-		textMaSP1.setEnabled(false);
-		textTenSp.setEnabled(false);
 	}
 
 	public Boolean checkEmtyValue() throws SQLException {
@@ -476,33 +263,7 @@ public class KhoGui extends JFrame {
 			textFieldMasp.requestFocus();
 			return false;
 		}
-		if (!textFieldMasp.getText().isEmpty()) {
-			SanPhamDAL spd = new SanPhamDAL();
-			ArrayList<SanPham> arrPro = new ArrayList<SanPham>();
-			arrPro = spd.docSanPham("docsanpham", null);
-			if (fixbtn) {
-				for (SanPham sp : arrPro) {
-					if (Integer.parseInt(oldMaSP) != Integer.parseInt(textFieldMasp.getText())
-							&& sp.getMaSp() == textFieldMasp.getText()) {
-						JOptionPane.showMessageDialog(contentPane, "Mã sản phẩm đã tồn tại!");
-						textFieldMasp.requestFocus();
-						return false;
 
-					}
-				}
-			}
-			if (addbtn) {
-				for (SanPham sp : arrPro) {
-					if (sp.getMaSp() == textFieldMasp.getText()) {
-						JOptionPane.showMessageDialog(contentPane, "Mã sản phẩm đã tồn tại!");
-						textFieldMasp.requestFocus();
-						return false;
-
-					}
-				}
-			}
-
-		}
 		if (selectedFile == null && textFieldImg.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(contentPane, "Chưa chọn ảnh cho sản phẩm");
 			return false;
@@ -573,96 +334,10 @@ public class KhoGui extends JFrame {
 	}
 
 //Tabbed 2
-	public Boolean checkEmtyValueTabbed2() throws SQLException {
-		if (textTenSp.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Tên Mã Loại Hàng Trống!");
-			textTenSp.requestFocus();
-			return false;
 
-		}
-		if (!textTenSp.getText().isEmpty()) {
-			LoaiHangDAL LHD = new LoaiHangDAL();
-			ArrayList<LoaiHang> arrLh = new ArrayList<LoaiHang>();
-			arrLh = LHD.docLoaiHang();
-
-			for (LoaiHang lh : arrLh) {
-
-				if (fixbtn && oldTenMaLH.equals(textTenSp.getText()) == false
-						&& lh.getTenLH().equals(textTenSp.getText())) {
-					JOptionPane.showMessageDialog(contentPane, "Tên Loại Hàng Đã Tồn Tại!");
-					textTenSp.requestFocus();
-					textTenSp.selectAll();
-
-					return false;
-				}
-
-				if (addbtn && lh.getTenLH().equals(textTenSp.getText())) {
-					JOptionPane.showMessageDialog(contentPane, "Tên Loại Hàng Đã Tồn Tại!");
-					textTenSp.requestFocus();
-					textTenSp.selectAll();
-
-					return false;
-				}
-			}
-
-		}
-		return true;
-	}
 
 	// Tabbed 3
-	public Boolean checkEmtyValueTabbed3() throws SQLException {
-		if (textTenNcc.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Tên Nhà Cung Cấp Trống!");
-			textTenNcc.requestFocus();
-			return false;
 
-		}
-		if (!textTenNcc.getText().isEmpty()) {
-			NhaCungCapDAL NCCD = new NhaCungCapDAL();
-			ArrayList<NhaCungCap> arrNcc = new ArrayList<NhaCungCap>();
-			arrNcc = NCCD.docNhaCungCap();
-
-			for (NhaCungCap lh : arrNcc) {
-
-				if (fixbtn && oldTenNcc.equals(textTenNcc.getText()) == false
-						&& lh.getTenNCC().equals(textTenNcc.getText())) {
-					JOptionPane.showMessageDialog(contentPane, "Tên Nhà Cung Cấp Đã Tồn Tại!");
-					textTenNcc.requestFocus();
-					textTenNcc.selectAll();
-
-					return false;
-				}
-
-				if (addbtn && lh.getTenNCC().equals(textTenNcc.getText())) {
-					JOptionPane.showMessageDialog(contentPane, "Tên Nhà Cung Cấp Đã Tồn Tại!");
-					textTenNcc.requestFocus();
-					textTenNcc.selectAll();
-
-					return false;
-				}
-			}
-
-		}
-		if (textDiaChiCC.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Địa Chỉ Nhà Cung Cấp Trống!");
-			textDiaChiCC.requestFocus();
-			return false;
-		}
-		if (textSDTNCC.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Số Điện Thoại Nhà Cung Cấp Trống!");
-			textSDTNCC.requestFocus();
-			return false;
-		}
-		if (!textSDTNCC.getText().isEmpty()) {
-			if (!validatePhone(textSDTNCC.getText())) {
-				JOptionPane.showMessageDialog(contentPane, "Số Điện Thoại Không hợp lệ,gồm 10 số và bắt đầu bằng 0");
-				textSDTNCC.requestFocus();
-				return false;
-			}
-
-		}
-		return true;
-	}
 
 	public KhoGui() throws SQLException {
 
@@ -672,45 +347,14 @@ public class KhoGui extends JFrame {
 			public void stateChanged(ChangeEvent e) {
 				int selectedIndex = tabbedPane.getSelectedIndex();
 				if (selectedIndex == 0) {
-
-					lblNewLabel.setText("QUẢN LÝ KHO");
-					LoaiHangDAL lhd;
 					try {
-						lhd = new LoaiHangDAL();
-						ArrayList<LoaiHang> arrLh = new ArrayList<LoaiHang>();
-						arrLh = lhd.docLoaiHang();
-
-						DefaultComboBoxModel combo = new DefaultComboBoxModel();
-						comboBoxSearch.setModel(combo);
-						combo.addElement("Tất cả");
-						for (LoaiHang malh : arrLh) {
-							combo.addElement(malh.getTenLH());
-
-						}
+						hienThiKho();
+						lblNewLabel.setText("QUẢN LÝ KHO");
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 
-				}
-				if (selectedIndex == 1) {
-					try {
-						hienThiMaSanPham();
-						lblNewLabel.setText("QUẢN LÝ LOẠI HÀNG");
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-
-				}
-				if (selectedIndex == 2) {
-					try {
-						hienThiNhaCungCap();
-						lblNewLabel.setText("QUẢN LÝ NHÀ CUNG CẤP");
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
 				}
 
 			}
@@ -884,217 +528,8 @@ public class KhoGui extends JFrame {
 		textFieldDonvi.setColumns(10);
 
 		//JPanel panel_6 = new JPanel();
-		btnLuu.setFont(new Font("Arial", Font.BOLD, 12));
-
-		btnLuu.setEnabled(false);
-		btnLuu.setFocusPainted(false);
-		btnLuu.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Save.png"))));
-		btnLuu.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					if (checkEmtyValue()) {
-						// -------------------Copy img vao thu muc Image cua project
-						if (selectedFile != null) {
-							Path sourcePath = selectedFile.toPath();
-							Path projectPath = Paths.get(System.getProperty("user.dir")); // get the path to the project
-																							// directory
-							Path imageDirectory = projectPath.resolve("src//GUI//Image"); // resolve the path to the
-																							// Image
-
-							try {
-								Files.createDirectories(imageDirectory);
-							} catch (IOException e2) {
-								// TODO Auto-generated catch block
-								e2.printStackTrace();
-							} // create the Image directory if it does not exist
-							Path destinationPath = imageDirectory.resolve(selectedFile.getName());
-
-							try {
-								Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-						}
-
-						SanPham sp = new SanPham();
-						SanPhamDAL luusp;
-						if (addbtn) {
-							try {
-								luusp = new SanPhamDAL();
-								String malh = luusp.layMaLoaiSP((String) (comboBox.getSelectedItem()));
-								sp.setMaLh(malh);
-								sp.setMaSp(textFieldMasp.getText());
-								String inputBan = textFieldGiaban.getText().replaceAll(",", "");
-								sp.setGiaBan(inputBan);
-								String inputNhap = textFieldGianhap.getText().replaceAll(",", "");
-								sp.setGiaMua(inputNhap);
-								sp.setHanSuDung(textFieldHansd.getText());
-								sp.setTenSp(textFieldTensp.getText());
-								boolean checkAddPro = luusp.themsanpham(sp, "themsanpham", null);
-								if (checkAddPro) {
-									JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
-									resetValue();
-									setEnable();
-									hienthisanpham("hien thi");
-									addbtn = false;
-								} else {
-									JOptionPane.showMessageDialog(contentPane, "Thêm thất bại");
-								}
-							} catch (SQLException e2) {
-								// TODO Auto-generated catch block
-								e2.printStackTrace();
-							}
-						}
-						if (fixbtn) {
-
-							try {
-								if (selectedFile == null) {
-									File file = new File(textFieldImg.getText());
-									String fileName = file.getName();
-								} else {
-								}
-								luusp = new SanPhamDAL();
-								String malh = luusp.layMaLoaiSP((String) (comboBox.getSelectedItem()));
-								sp.setMaLh(malh);
-								sp.setMaSp(textFieldMasp.getText());
-								String inputBan = textFieldGiaban.getText().replaceAll(",", "");
-								sp.setGiaBan(inputBan);
-								String inputNhap = textFieldGianhap.getText().replaceAll(",", "");
-								sp.setGiaMua(inputNhap);
-								sp.setHanSuDung(textFieldHansd.getText());
-								sp.setTenSp(textFieldTensp.getText());
-
-								boolean checkAddPro = luusp.themsanpham(sp, "suasanpham", oldMaSP);
-								if (checkAddPro) {
-									JOptionPane.showMessageDialog(contentPane, "Sửa thành công");
-									resetValue();
-									setEnable();
-									if (rsRenderType > 0) {
-										if (textFieldFrom.getText().isEmpty()) {
-											hienthisanpham("suatheoid");
-										} else if (textFieldFrom.getText().isEmpty() == false) {
-											hienthisanpham("timkiemtheogia");
-										}
-
-									} else if (rsRenderType == 0) {
-										hienthisanpham("hien thi");
-									}
-									fixbtn = false;
-								} else {
-									JOptionPane.showMessageDialog(contentPane, "Sửa thất bại");
-								}
-							} catch (SQLException e2) {
-								// TODO Auto-generated catch block
-								e2.printStackTrace();
-							}
-						}
-
-					}
-				} catch (NumberFormatException | HeadlessException | SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-		btnThem.setFont(new Font("Arial", Font.BOLD, 12));
-		btnThem.setFocusPainted(false);
-		btnThem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				addbtn = true;
-				resetValue();
-				SanPhamDAL spdDal;
-				try {
-					spdDal = new SanPhamDAL();
-					int masp = spdDal.getLastMaSP();
-					masp++;
-					textFieldMasp.setText("" + masp);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-				textFieldMasp.setEnabled(false);
-
-				btnThem.setEnabled(false);
-				btnLuu.setEnabled(true);
-				btnXoa.setEnabled(false);
-				btnSua.setEnabled(false);
-				try {
-					hienthisanpham("them");
-				} catch (SQLException e3) {
-					// TODO Auto-generated catch block
-					e3.printStackTrace();
-				}
-
-			}
-		});
-		btnThem.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
-		btnSua.setFont(new Font("Arial", Font.BOLD, 12));
-
-		btnSua.setEnabled(false);
-		btnSua.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Change.png"))));
-		btnSua.setFocusPainted(false);
-		btnSua.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				fixbtn = true;
-				addbtn = false;
-				oldMaSP = textFieldMasp.getText();
-				unSetEnable();
-				btnThem.setEnabled(false);
-				btnLuu.setEnabled(true);
-
-				try {
-					String valueSelect = comboBox.getSelectedItem().toString();
-					if (textFieldFrom.getText().isEmpty()&&textFieldFrom.getText().isEmpty()) {
-						hienthisanpham("suatheoid");
-						
-					} else if (textFieldFrom.getText().isEmpty() == false) {
-						hienthisanpham("suatheogia");
-					}
-
-					comboBox.setSelectedItem(valueSelect);
-
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-		btnXoa.setFont(new Font("Arial", Font.BOLD, 12));
-
-		btnXoa.setEnabled(false);
-		btnXoa.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Delete.png"))));
-		btnXoa.setFocusPainted(false);
-		btnXoa.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa sản phẩm này", "Confirmation",
-						JOptionPane.YES_NO_OPTION);
-				if (confirmed == JOptionPane.YES_OPTION) {
-					SanPhamDAL deleteSp;
-					try {
-						deleteSp = new SanPhamDAL();
-						if (deleteSp.xoaSanPham(textFieldMasp.getText())) {
-							JOptionPane.showMessageDialog(contentPane, "Xóa sản phẩm thành công!");
-							hienthisanpham("hien thi");
-							resetValue();
-							comboBoxSearch.setSelectedItem("Tất cả");
-							setEnable();
-
-						}
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-
-				}
-
-			}
-		});
+		
+		
 
 		JPanel panel_7 = new JPanel();
 		panel_7.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -1105,7 +540,7 @@ public class KhoGui extends JFrame {
 		btnDongBo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					hienthisanpham("hien thi");
+					hienThiKho();
 					resetValue();
 					setEnable();
 					btg.clearSelection();
@@ -1124,36 +559,29 @@ public class KhoGui extends JFrame {
 		btnSapxep.setFocusPainted(false);
 		btnSapxep.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SanPhamDAL spd;
+				KhoDAL spd;
 				// Create an ArrayList to store the data from the JTable
-				ArrayList<SanPham> data = new ArrayList<>();
+				ArrayList<Kho> data = new ArrayList<>();
 
 				// Get the number of rows and columns in the JTable
 				int numRows = table.getRowCount();
 				// Loop through each row in the JTable and add the data to the ArrayList
 				for (int i = 0; i < numRows; i++) {
-					SanPham sp = new SanPham();
-					sp.setMaLh((String) table.getValueAt(i, 0));
-					sp.setMaSp((String) table.getValueAt(i, 1));
-					sp.setTenSp((String) table.getValueAt(i, 2));
-					sp.setHanSuDung((String) table.getValueAt(i, 4));
-					sp.setGiaMua(((String) table.getValueAt(i, 5)).replaceAll(",", ""));
-					sp.setGiaBan(((String) table.getValueAt(i, 6)).replaceAll(",", ""));
+					Kho sp = new Kho();
 					data.add(sp);
 
 				}
-				if (radio1.isSelected()) {
-					
-
-					Collections.sort(data, new Comparator<SanPham>() {
-					    public int compare(SanPham sp1, SanPham sp2) {
-					        return sp1.getTenSp().compareTo(sp2.getTenSp());
-					    }
-					});
-			
-					
-					
-				}
+				/*
+				 * if (radio1.isSelected()) {
+				 * 
+				 * 
+				 * Collections.sort(data, new Comparator<SanPham>() { public int compare(SanPham
+				 * sp1, SanPham sp2) { return sp1.getTenSp().compareTo(sp2.getTenSp()); } });
+				 * 
+				 * 
+				 * 
+				 * }
+				 */
 				/*
 				 * if (radio2.isSelected()) {
 				 * 
@@ -1161,19 +589,17 @@ public class KhoGui extends JFrame {
 				 * sp1, SanPham sp2) { return Float.compare(sp1.getGiaBan(), sp2.getGiaBan()); }
 				 * }); }
 				 */
-				
-				String[] columnNames = { "Tên Loại Hàng", "Tên Sản Phẩm", "Số Lượng" };
-				DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-
-				table.setModel(model);
-				model.setRowCount(0);
-				for (SanPham sp : data) {
-					NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-					String formatGiaBan = numberFormat.format(sp.getGiaBan());
-					String formatGiaMua = numberFormat.format(sp.getGiaMua());
-					Object[] row = {};//sp.getMaLh(), sp.getMaSp(), sp.getTenSp(),sp.getDonVi(),sp.getHanSuDung(),formatGiaMua, formatGiaBan,sp.getImg() };
-					model.addRow(row);
-				}
+				/*
+				 * String[] columnNames = { "Mã Sản Phẩm", "Số Lượng" }; DefaultTableModel model
+				 * = new DefaultTableModel(columnNames, 0);
+				 * 
+				 * table.setModel(model); model.setRowCount(0); for (Kho kho : data) {
+				 * NumberFormat numberFormat = NumberFormat.getInstance(Locale.US); String
+				 * formatGiaBan = numberFormat.format(sp.getGiaBan()); String formatGiaMua =
+				 * numberFormat.format(sp.getGiaMua()); Object[] row = {};//sp.getMaLh(),
+				 * sp.getMaSp(), sp.getTenSp(),sp.getDonVi(),sp.getHanSuDung(),formatGiaMua,
+				 * formatGiaBan,sp.getImg() }; model.addRow(row); }
+				 */
 				
 			}
 		});
@@ -1206,7 +632,6 @@ public class KhoGui extends JFrame {
 		lbThongbao.setHorizontalAlignment(SwingConstants.CENTER);
 		lbThongbao.setFont(new Font("Arial", Font.BOLD, 20));
 
-		table = new JTable();
 		table.setFont(new Font("Arial", Font.PLAIN, 12));
 		table.setDefaultEditor(Object.class, null);
 		JTableHeader header = table.getTableHeader();
@@ -1276,19 +701,16 @@ public class KhoGui extends JFrame {
 
 //				g.dispose();
 
-				LoaiHangDAL test;
-				try {
-					test = new LoaiHangDAL();
-					ArrayList<LoaiHang> arrMaLH = test.docLoaiHangMaLH(Integer.parseInt(maLh));
-					DefaultComboBoxModel combo = new DefaultComboBoxModel();
-					comboBox.setModel(combo);
-
-					combo.addElement(arrMaLH.get(0).getTenLH());
-
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				/*
+				 * LoaiHangDAL test; try { test = new LoaiHangDAL(); ArrayList<LoaiHang> arrMaLH
+				 * = test.docLoaiHangMaLH(Integer.parseInt(maLh)); DefaultComboBoxModel combo =
+				 * new DefaultComboBoxModel(); comboBox.setModel(combo);
+				 * 
+				 * combo.addElement(arrMaLH.get(0).getTenLH());
+				 * 
+				 * } catch (SQLException e1) { // TODO Auto-generated catch block
+				 * e1.printStackTrace(); }
+				 */
 
 			}
 
@@ -1355,24 +777,21 @@ public class KhoGui extends JFrame {
 				textFieldFrom.setText("");
 				textFieldTo.setText("");
 				textFieldSearch.setText("");
-				try {
-					SanPhamBLL spbll = new SanPhamBLL();
-					rsRenderType = spbll.renderProType(comboBoxSearch.getSelectedItem().toString());
-
-					if (rsRenderType > 0) {
-
-						hienthisanpham("hienthitheoid");
-
-					}
-					if (rsRenderType == 0) {
-						hienthisanpham("hien thi");
-
-					}
-
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				/*
+				 * try { SanPhamBLL spbll = new SanPhamBLL(); rsRenderType =
+				 * spbll.renderProType(comboBoxSearch.getSelectedItem().toString());
+				 * 
+				 * if (rsRenderType > 0) {
+				 * 
+				 * hienthisanpham("hienthitheoid");
+				 * 
+				 * } if (rsRenderType == 0) { hienthisanpham("hien thi");
+				 * 
+				 * }
+				 * 
+				 * } catch (SQLException e1) { // TODO Auto-generated catch block
+				 * e1.printStackTrace(); }
+				 */
 
 			}
 		});
@@ -1434,75 +853,53 @@ public class KhoGui extends JFrame {
 		textFieldSearch.setColumns(10);
 
 		JButton btnTimKiem = new JButton("Tìm Kiếm");
-		btnTimKiem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			
-				btg.clearSelection();
-				if (textFieldSearch.getText().isEmpty()) {
-
-					JOptionPane.showMessageDialog(contentPane, "Nội dung tìm kiếm trống!");
-					textFieldSearch.requestFocus();
-
-				}
-				if (!textFieldSearch.getText().isEmpty()) {
-					btnfind = true;
-					SanPhamBLL spbll = new SanPhamBLL();
-					ArrayList<SanPham> arr = new ArrayList<SanPham>();
-					try {
-						arr = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
-						if (!arr.isEmpty()) {
-							if (!textFieldFrom.getText().isEmpty() || !textFieldTo.getText().isEmpty()) {
-								if (textFieldFrom.getText().isEmpty()) {
-									JOptionPane.showMessageDialog(contentPane, "Khoảng giá cần tìm trống!");
-									textFieldFrom.requestFocus();
-								} else if (textFieldTo.getText().isEmpty()) {
-									JOptionPane.showMessageDialog(contentPane, "Khoảng giá cần tìm trống!");
-									textFieldTo.requestFocus();
-								} else {
-									String inputFrom = textFieldFrom.getText().replaceAll("[\\p{Punct}\\s]", "");
-									
-									
-									String inputTo = textFieldTo.getText().replaceAll("[\\p{Punct}\\s]", "");
-									isNumber = inputFrom.matches(patternNumber);
-									boolean isNumber2 = inputTo.matches(patternNumber);
-
-									if (!isNumber) {
-										JOptionPane.showMessageDialog(contentPane, "Giá trị phải là số");
-										textFieldFrom.requestFocus();
-										textFieldFrom.selectAll();
-
-									} else if (!isNumber2) {
-										JOptionPane.showMessageDialog(contentPane, "Giá trị phải là số");
-										textFieldTo.requestFocus();
-										textFieldTo.selectAll();
-
-									} else {
-										if (Integer.parseInt(textFieldFrom.getText().replaceAll(",", "")) > Integer
-												.parseInt(textFieldTo.getText().replaceAll(",", ""))) {
-											JOptionPane.showMessageDialog(contentPane, "Khoảng giá không hợp lê!");
-											textFieldFrom.requestFocus();
-										} else {
-
-											hienthisanpham("timkiemtheogia");
-										}
-									}
-
-								}
-							} else {
-								hienthisanpham("timkiemtheoid");
-							}
-
-						} else {
-							JOptionPane.showMessageDialog(contentPane, "Không tìm thấy sản phẩm!");
-						}
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-
-			}
-		});
+		/*
+		 * btnTimKiem.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) {
+		 * 
+		 * btg.clearSelection(); if (textFieldSearch.getText().isEmpty()) {
+		 * 
+		 * JOptionPane.showMessageDialog(contentPane, "Nội dung tìm kiếm trống!");
+		 * textFieldSearch.requestFocus();
+		 * 
+		 * } if (!textFieldSearch.getText().isEmpty()) { btnfind = true; SanPhamBLL
+		 * spbll = new SanPhamBLL(); ArrayList<SanPham> arr = new ArrayList<SanPham>();
+		 * try { arr = spbll.searchProductById(textFieldSearch.getText(), rsRenderType +
+		 * ""); if (!arr.isEmpty()) { if (!textFieldFrom.getText().isEmpty() ||
+		 * !textFieldTo.getText().isEmpty()) { if (textFieldFrom.getText().isEmpty()) {
+		 * JOptionPane.showMessageDialog(contentPane, "Khoảng giá cần tìm trống!");
+		 * textFieldFrom.requestFocus(); } else if (textFieldTo.getText().isEmpty()) {
+		 * JOptionPane.showMessageDialog(contentPane, "Khoảng giá cần tìm trống!");
+		 * textFieldTo.requestFocus(); } else { String inputFrom =
+		 * textFieldFrom.getText().replaceAll("[\\p{Punct}\\s]", "");
+		 * 
+		 * 
+		 * String inputTo = textFieldTo.getText().replaceAll("[\\p{Punct}\\s]", "");
+		 * isNumber = inputFrom.matches(patternNumber); boolean isNumber2 =
+		 * inputTo.matches(patternNumber);
+		 * 
+		 * if (!isNumber) { JOptionPane.showMessageDialog(contentPane,
+		 * "Giá trị phải là số"); textFieldFrom.requestFocus();
+		 * textFieldFrom.selectAll();
+		 * 
+		 * } else if (!isNumber2) { JOptionPane.showMessageDialog(contentPane,
+		 * "Giá trị phải là số"); textFieldTo.requestFocus(); textFieldTo.selectAll();
+		 * 
+		 * } else { if (Integer.parseInt(textFieldFrom.getText().replaceAll(",", "")) >
+		 * Integer .parseInt(textFieldTo.getText().replaceAll(",", ""))) {
+		 * JOptionPane.showMessageDialog(contentPane, "Khoảng giá không hợp lê!");
+		 * textFieldFrom.requestFocus(); } else {
+		 * 
+		 * hienthisanpham("timkiemtheogia"); } }
+		 * 
+		 * } } else { hienthisanpham("timkiemtheoid"); }
+		 * 
+		 * } else { JOptionPane.showMessageDialog(contentPane,
+		 * "Không tìm thấy sản phẩm!"); } } catch (SQLException e1) { // TODO
+		 * Auto-generated catch block e1.printStackTrace(); } }
+		 * 
+		 * } });
+		 */
 		btnTimKiem.setFont(new Font("Arial", Font.BOLD, 12));
 		btnTimKiem.setFocusPainted(false);
 		GroupLayout gl_panel_7_1 = new GroupLayout(panel_7_1);
@@ -1723,139 +1120,68 @@ public class KhoGui extends JFrame {
 		JLabel lblNewLabel_5 = new JLabel("Tên Loại Hàng");
 		lblNewLabel_5.setFont(new Font("Arial", Font.BOLD, 15));
 		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
-		btnThem_1.setFont(new Font("Arial", Font.BOLD, 14));
-		btnThem_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				resetValue();
-				textTenSp.setEnabled(true);
-				btnLuu_1.setEnabled(true);
-				try {
-					LoaiHangDAL LHD = new LoaiHangDAL();
-					int maLh = LHD.getLastMaLH();
-					maLh++;
-					textMaSP1.setText("" + maLh);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+		/*
+		 * btnThem_1.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { resetValue(); textTenSp.setEnabled(true);
+		 * btnLuu_1.setEnabled(true); try { LoaiHangDAL LHD = new LoaiHangDAL(); int
+		 * maLh = LHD.getLastMaLH(); maLh++; textMaSP1.setText("" + maLh); } catch
+		 * (SQLException e1) { // TODO Auto-generated catch block e1.printStackTrace();
+		 * }
+		 * 
+		 * textMaSP1.setEnabled(false); addbtn = true; fixbtn = false;
+		 * 
+		 * } });
+		 */
+		/*
+		 * btnSua_1.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { btnThem_1.setEnabled(false);
+		 * btnLuu_1.setEnabled(true); btnXoa_1.setEnabled(false);
+		 * textTenSp.setEnabled(true); try { hienThiMaSanPham(); } catch (SQLException
+		 * e1) { // TODO Auto-generated catch block e1.printStackTrace(); } oldTenMaLH =
+		 * textTenSp.getText(); fixbtn = true; addbtn = false;
+		 * 
+		 * } });
+		 */
 
-				textMaSP1.setEnabled(false);
-				addbtn = true;
-				fixbtn = false;
+		/*
+		 * btnXoa_1.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { try {
+		 * 
+		 * LoaiHang LH = new LoaiHang(); LH.setMaLH(textMaSP1.getText()); LoaiHangDAL
+		 * LHD = new LoaiHangDAL(); int confirmed = JOptionPane.showConfirmDialog(null,
+		 * "Bạn muốn xóa loại hàng này", "Confirmation", JOptionPane.YES_NO_OPTION); if
+		 * (confirmed == JOptionPane.YES_OPTION) { if (LHD.ThemLoaiHang(LH,
+		 * "xoaloaihang")) {
+		 * 
+		 * JOptionPane.showMessageDialog(contentPane, "Xóa Loại Hàng Thành Công!");
+		 * resetValue(); hienThiMaSanPham(); btnXoa_1.setEnabled(false);
+		 * btnThem_1.setEnabled(true); } }
+		 * 
+		 * } catch (SQLException e1) { // TODO Auto-generated catch block
+		 * e1.printStackTrace(); }
+		 * 
+		 * } });
+		 */
 
-			}
-		});
+		/*
+		 * btnLuu_1.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { try { if (checkEmtyValueTabbed2()) {
+		 * LoaiHang LH = new LoaiHang(); LH.setMaLH(textMaSP1.getText());
+		 * LH.setTenLH(textTenSp.getText()); LoaiHangDAL LHD; if (addbtn) { try { LHD =
+		 * new LoaiHangDAL(); if (LHD.ThemLoaiHang(LH, "themloaihang")) {
+		 * JOptionPane.showMessageDialog(contentPane, "Thêm Thành công!"); resetValue();
+		 * hienThiMaSanPham(); addbtn = false; } } catch (SQLException e1) {
+		 * JOptionPane.showMessageDialog(contentPane, "Thêm Thất bại!"); } } if (fixbtn)
+		 * { try { LHD = new LoaiHangDAL(); if (LHD.ThemLoaiHang(LH, "sualoaihang")) {
+		 * JOptionPane.showMessageDialog(contentPane, "Sửa Thành công!"); resetValue();
+		 * btnThem_1.setEnabled(true); hienThiMaSanPham(); fixbtn = false; } } catch
+		 * (SQLException e1) { JOptionPane.showMessageDialog(contentPane,
+		 * "Sửa Thất bại!"); } }
+		 * 
+		 * } } catch (NumberFormatException | HeadlessException | SQLException e1) { //
+		 * TODO Auto-generated catch block e1.printStackTrace(); } } });
+		 */
 
-		btnThem_1.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Add.png"))));
-
-		btnThem_1.setFocusPainted(false);
-		btnSua_1.setFont(new Font("Arial", Font.BOLD, 14));
-		btnSua_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				btnThem_1.setEnabled(false);
-				btnLuu_1.setEnabled(true);
-				btnXoa_1.setEnabled(false);
-				textTenSp.setEnabled(true);
-				try {
-					hienThiMaSanPham();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				oldTenMaLH = textTenSp.getText();
-				fixbtn = true;
-				addbtn = false;
-
-			}
-		});
-
-		btnSua_1.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Change.png"))));
-		btnSua_1.setFocusPainted(false);
-		btnSua_1.setEnabled(false);
-		btnXoa_1.setFont(new Font("Arial", Font.BOLD, 14));
-		btnXoa_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-
-					LoaiHang LH = new LoaiHang();
-					LH.setMaLH(textMaSP1.getText());
-					LoaiHangDAL LHD = new LoaiHangDAL();
-					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa loại hàng này", "Confirmation",
-							JOptionPane.YES_NO_OPTION);
-					if (confirmed == JOptionPane.YES_OPTION) {
-						if (LHD.ThemLoaiHang(LH, "xoaloaihang")) {
-
-							JOptionPane.showMessageDialog(contentPane, "Xóa Loại Hàng Thành Công!");
-							resetValue();
-							hienThiMaSanPham();
-							btnXoa_1.setEnabled(false);
-							btnThem_1.setEnabled(true);
-						}
-					}
-
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-			}
-		});
-
-		btnXoa_1.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Delete.png"))));
-		btnXoa_1.setFocusPainted(false);
-		btnXoa_1.setEnabled(false);
-		btnLuu_1.setFont(new Font("Arial", Font.BOLD, 14));
-		btnLuu_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					if (checkEmtyValueTabbed2()) {
-						LoaiHang LH = new LoaiHang();
-						LH.setMaLH(textMaSP1.getText());
-						LH.setTenLH(textTenSp.getText());
-						LoaiHangDAL LHD;
-						if (addbtn) {
-							try {
-								LHD = new LoaiHangDAL();
-								if (LHD.ThemLoaiHang(LH, "themloaihang")) {
-									JOptionPane.showMessageDialog(contentPane, "Thêm Thành công!");
-									resetValue();
-									hienThiMaSanPham();
-									addbtn = false;
-								}
-							} catch (SQLException e1) {
-								JOptionPane.showMessageDialog(contentPane, "Thêm Thất bại!");
-							}
-						}
-						if (fixbtn) {
-							try {
-								LHD = new LoaiHangDAL();
-								if (LHD.ThemLoaiHang(LH, "sualoaihang")) {
-									JOptionPane.showMessageDialog(contentPane, "Sửa Thành công!");
-									resetValue();
-									btnThem_1.setEnabled(true);
-									hienThiMaSanPham();
-									fixbtn = false;
-								}
-							} catch (SQLException e1) {
-								JOptionPane.showMessageDialog(contentPane, "Sửa Thất bại!");
-							}
-						}
-
-					}
-				} catch (NumberFormatException | HeadlessException | SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-
-		btnLuu_1.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Save.png"))));
-		btnLuu_1.setFocusPainted(false);
-		btnLuu_1.setEnabled(false);
 
 		JPanel panel_9 = new JPanel();
 
@@ -1866,69 +1192,7 @@ public class KhoGui extends JFrame {
 		lblLoiHngSiu.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLoiHngSiu.setForeground(new Color(255, 128, 128));
 		lblLoiHngSiu.setFont(new Font("Arial", Font.BOLD, 20));
-		table_1.setDefaultEditor(Object.class, null);
-		JTableHeader header1 = table_1.getTableHeader();
-		scrollPane_1.setViewportView(table_1);
-		table_1.setRowHeight(30);
-		table_1.setFocusable(false);
-		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
-		gl_panel_3.setHorizontalGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_3.createSequentialGroup().addGap(140)
-						.addComponent(lblNewLabel_2, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE).addGap(10)
-						.addComponent(textMaSP1, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE).addGap(125)
-						.addComponent(lblNewLabel_5, GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE).addGap(10)
-						.addComponent(textTenSp, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE).addGap(226))
-				.addGroup(gl_panel_3.createSequentialGroup().addGap(169)
-						.addComponent(btnThem_1, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE).addGap(54)
-						.addComponent(btnSua_1, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE).addGap(73)
-						.addComponent(btnXoa_1, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE).addGap(88)
-						.addComponent(btnLuu_1, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE).addGap(151))
-				.addComponent(panel_9, GroupLayout.DEFAULT_SIZE, 1077, Short.MAX_VALUE));
-		gl_panel_3.setVerticalGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_3.createSequentialGroup().addGap(10)
-						.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textMaSP1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textTenSp, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-						.addGap(35)
-						.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnThem_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnSua_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnXoa_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnLuu_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
-						.addGap(10)
-						.addComponent(panel_9, GroupLayout.PREFERRED_SIZE, 314, GroupLayout.PREFERRED_SIZE)));
-		GroupLayout gl_panel_9 = new GroupLayout(panel_9);
-		gl_panel_9.setHorizontalGroup(gl_panel_9.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_9.createSequentialGroup().addGap(209)
-						.addComponent(lblLoiHngSiu, GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE).addGap(264))
-				.addGroup(gl_panel_9.createSequentialGroup().addGap(133)
-						.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 792, Short.MAX_VALUE).addGap(152)));
-		gl_panel_9.setVerticalGroup(gl_panel_9.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_9.createSequentialGroup().addGap(10)
-						.addComponent(lblLoiHngSiu, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
-						.addGap(6)
-						.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)));
-		panel_9.setLayout(gl_panel_9);
-		panel_3.setLayout(gl_panel_3);
-		table_1.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				int row = table_1.getSelectedRow(); // get the selected row
-				String maLh = table_1.getModel().getValueAt(row, 0).toString();
-				String tenLh = table_1.getModel().getValueAt(row, 1).toString(); // get the value of the first column
-
-				textMaSP1.setText(maLh);
-				textTenSp.setText(tenLh);
-
-				setEnable();
-				btnXoa_1.setEnabled(true);
-				btnSua_1.setEnabled(true);
-				btnThem_1.setEnabled(true);
-				btnLuu_1.setEnabled(false);
-
-			}
-		});
+		
 
 		
 		JPanel panel_4 = new JPanel();
@@ -1947,56 +1211,11 @@ public class KhoGui extends JFrame {
 		JLabel lblNewLabel_14 = new JLabel("Số Điện Thoại");
 		lblNewLabel_14.setFont(new Font("Arial", Font.BOLD, 12));
 
-		textNhaCC = new JTextField();
-		textNhaCC.setHorizontalAlignment(SwingConstants.CENTER);
-		textNhaCC.setFont(new Font("Arial", Font.BOLD, 14));
-		textNhaCC.setEnabled(false);
-		textNhaCC.setColumns(10);
-
-		textTenNcc = new JTextField();
-		textTenNcc.setFont(new Font("Arial", Font.BOLD, 14));
-		textTenNcc.setEnabled(false);
-		textTenNcc.setColumns(10);
-
-		textDiaChiCC = new JTextField();
-		textDiaChiCC.setFont(new Font("Arial", Font.BOLD, 14));
-		textDiaChiCC.setEnabled(false);
-		textDiaChiCC.setColumns(10);
-
-		textSDTNCC = new JTextField();
-		textSDTNCC.setFont(new Font("Arial", Font.BOLD, 14));
-		textSDTNCC.setEnabled(false);
-		textSDTNCC.setColumns(10);
-
 		JPanel panel_10 = new JPanel();
 
 		JScrollPane scrollPane_2 = new JScrollPane();
 		JTableHeader header2 = table.getTableHeader();
 		header2.setPreferredSize(new Dimension(header2.getWidth(), 30));
-		table_2.setDefaultEditor(Object.class, null);
-		table_2.setRowHeight(30);
-		table_2.setFocusable(false);
-		table_2.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				int row = table_2.getSelectedRow(); // get the selected row
-				String maNCC = table_2.getModel().getValueAt(row, 0).toString();
-				String tenNCC = table_2.getModel().getValueAt(row, 1).toString(); // get the value of the first column
-				String diaChi = table_2.getModel().getValueAt(row, 2).toString();
-				String dienThoai = table_2.getModel().getValueAt(row, 3).toString();
-				textNhaCC.setText(maNCC);
-				textTenNcc.setText(tenNCC);
-				textDiaChiCC.setText(diaChi);
-				textSDTNCC.setText(dienThoai);
-				textDiaChiCC.setEnabled(false);
-				textSDTNCC.setEnabled(false);
-				textTenNcc.setEnabled(false);
-				btnXoa_2.setEnabled(true);
-				btnSua_2.setEnabled(true);
-				btnThem_2.setEnabled(true);
-				btnLuu_2.setEnabled(false);
-
-			}
-		});
 
 		JLabel lblNhCungCp = new JLabel();
 		lblNhCungCp.setText("NHÀ CUNG CẤP");
@@ -2019,189 +1238,68 @@ public class KhoGui extends JFrame {
 						.addComponent(scrollPane_2, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE)
 						.addContainerGap(43, Short.MAX_VALUE)));
 
-		scrollPane_2.setViewportView(table_2);
 		panel_10.setLayout(gl_panel_10);
-		btnThem_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				textNhaCC.setText("");
-				textDiaChiCC.setText("");
-				textSDTNCC.setText("");
-				textTenNcc.setText("");
-//				textNhaCC.setEnabled(true);
-				textDiaChiCC.setEnabled(true);
-				textSDTNCC.setEnabled(true);
-				textTenNcc.setEnabled(true);
-				btnSua_2.setEnabled(false);
-				btnXoa_2.setEnabled(false);
-				btnLuu_2.setEnabled(true);
-				try {
-					NhaCungCapDAL LHD = new NhaCungCapDAL();
-					int maNcc = LHD.getLastMaNCC();
-					maNcc++;
-					textNhaCC.setText("" + maNcc);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+		/*
+		 * btnThem_2.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { textNhaCC.setText("");
+		 * textDiaChiCC.setText(""); textSDTNCC.setText(""); textTenNcc.setText(""); //
+		 * textNhaCC.setEnabled(true); textDiaChiCC.setEnabled(true);
+		 * textSDTNCC.setEnabled(true); textTenNcc.setEnabled(true);
+		 * btnSua_2.setEnabled(false); btnXoa_2.setEnabled(false);
+		 * btnLuu_2.setEnabled(true); try { NhaCungCapDAL LHD = new NhaCungCapDAL(); int
+		 * maNcc = LHD.getLastMaNCC(); maNcc++; textNhaCC.setText("" + maNcc); } catch
+		 * (SQLException e1) { // TODO Auto-generated catch block e1.printStackTrace();
+		 * }
+		 * 
+		 * addbtn = true; fixbtn = false; } });
+		 */
+		 
+		/*
+		 * btnXoa_2.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { try {
+		 * 
+		 * NhaCungCap NCC = new NhaCungCap();
+		 * 
+		 * NCC.setMaNCC(textNhaCC.getText()); NhaCungCapDAL LHD = new NhaCungCapDAL();
+		 * int confirmed = JOptionPane.showConfirmDialog(null,
+		 * "Bạn muốn xóa nhà cung cấp này", "Confirmation", JOptionPane.YES_NO_OPTION);
+		 * if (confirmed == JOptionPane.YES_OPTION) { if (LHD.ThemNhaCungCap(NCC,
+		 * "xoanhacungcap")) {
+		 * 
+		 * JOptionPane.showMessageDialog(contentPane, "Xóa Nhà Cung Cấp Thành Công!");
+		 * resetValueTabbed3(); hienThiNhaCungCap(); btnXoa_2.setEnabled(false);
+		 * btnThem_2.setEnabled(true); } }
+		 * 
+		 * } catch (SQLException e1) { // TODO Auto-generated catch block
+		 * e1.printStackTrace(); }
+		 * 
+		 * }
+		 * 
+		 * });
+		 */
 
-				addbtn = true;
-				fixbtn = false;
-			}
-		});
+		/*
+		 * btnLuu_2.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { try { if (checkEmtyValueTabbed3()) {
+		 * NhaCungCap NCC = new NhaCungCap(); NCC.setMaNCC(textNhaCC.getText());
+		 * NCC.setTenNCC(textTenNcc.getText()); NCC.setDiaChi(textDiaChiCC.getText());
+		 * NCC.setSoDT(textSDTNCC.getText()); NhaCungCapDAL NCCD; if (addbtn) { try {
+		 * NCCD = new NhaCungCapDAL(); if (NCCD.ThemNhaCungCap(NCC, "themnhacungcap")) {
+		 * JOptionPane.showMessageDialog(contentPane, "Thêm Thành công!");
+		 * resetValueTabbed3(); hienThiNhaCungCap(); addbtn = false; } } catch
+		 * (SQLException e1) { JOptionPane.showMessageDialog(contentPane,
+		 * "Thêm Thất bại!"); } } if (fixbtn) { try { NCCD = new NhaCungCapDAL(); if
+		 * (NCCD.ThemNhaCungCap(NCC, "suanhacungcap")) {
+		 * JOptionPane.showMessageDialog(contentPane, "Sửa Thành công!");
+		 * resetValueTabbed3(); btnThem_2.setEnabled(true); hienThiNhaCungCap(); fixbtn
+		 * = false; } } catch (SQLException e1) {
+		 * JOptionPane.showMessageDialog(contentPane, "Sửa Thất bại!"); } }
+		 * 
+		 * } } catch (NumberFormatException | HeadlessException | SQLException e1) { //
+		 * TODO Auto-generated catch block e1.printStackTrace(); } } });
+		 */
 
-		btnThem_2.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
-		btnThem_2.setFocusPainted(false);
-		btnSua_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				btnThem_2.setEnabled(false);
-				btnLuu_2.setEnabled(true);
-				btnXoa_2.setEnabled(false);
-				textTenNcc.setEnabled(true);
-				textDiaChiCC.setEnabled(true);
-				textSDTNCC.setEnabled(true);
-				try {
-					hienThiNhaCungCap();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				oldTenNcc = textTenNcc.getText();
-				fixbtn = true;
-				addbtn = false;
-
-			}
-
-		});
-
-		btnSua_2.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Change.png"))));
-		btnSua_2.setFocusPainted(false);
-		btnSua_2.setEnabled(false);
-
-		btnXoa_2.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Delete.png"))));
-		btnXoa_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-
-					NhaCungCap NCC = new NhaCungCap();
-
-					NCC.setMaNCC(textNhaCC.getText());
-					NhaCungCapDAL LHD = new NhaCungCapDAL();
-					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa nhà cung cấp này", "Confirmation",
-							JOptionPane.YES_NO_OPTION);
-					if (confirmed == JOptionPane.YES_OPTION) {
-						if (LHD.ThemNhaCungCap(NCC, "xoanhacungcap")) {
-
-							JOptionPane.showMessageDialog(contentPane, "Xóa Nhà Cung Cấp Thành Công!");
-							resetValueTabbed3();
-							hienThiNhaCungCap();
-							btnXoa_2.setEnabled(false);
-							btnThem_2.setEnabled(true);
-						}
-					}
-
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-			}
-
-		});
-		btnXoa_2.setFocusPainted(false);
-		btnXoa_2.setEnabled(false);
-		btnLuu_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					if (checkEmtyValueTabbed3()) {
-						NhaCungCap NCC = new NhaCungCap();
-						NCC.setMaNCC(textNhaCC.getText());
-						NCC.setTenNCC(textTenNcc.getText());
-						NCC.setDiaChi(textDiaChiCC.getText());
-						NCC.setSoDT(textSDTNCC.getText());
-						NhaCungCapDAL NCCD;
-						if (addbtn) {
-							try {
-								NCCD = new NhaCungCapDAL();
-								if (NCCD.ThemNhaCungCap(NCC, "themnhacungcap")) {
-									JOptionPane.showMessageDialog(contentPane, "Thêm Thành công!");
-									resetValueTabbed3();
-									hienThiNhaCungCap();
-									addbtn = false;
-								}
-							} catch (SQLException e1) {
-								JOptionPane.showMessageDialog(contentPane, "Thêm Thất bại!");
-							}
-						}
-						if (fixbtn) {
-							try {
-								NCCD = new NhaCungCapDAL();
-								if (NCCD.ThemNhaCungCap(NCC, "suanhacungcap")) {
-									JOptionPane.showMessageDialog(contentPane, "Sửa Thành công!");
-									resetValueTabbed3();
-									btnThem_2.setEnabled(true);
-									hienThiNhaCungCap();
-									fixbtn = false;
-								}
-							} catch (SQLException e1) {
-								JOptionPane.showMessageDialog(contentPane, "Sửa Thất bại!");
-							}
-						}
-
-					}
-				} catch (NumberFormatException | HeadlessException | SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-
-		btnLuu_2.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Save.png"))));
-		btnLuu_2.setFocusPainted(false);
-		btnLuu_2.setEnabled(false);
-		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
-		gl_panel_4.setHorizontalGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_4.createSequentialGroup().addGap(10)
-						.addComponent(lblNewLabel_11, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE).addGap(3)
-						.addComponent(textNhaCC, GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE).addGap(10)
-						.addComponent(lblNewLabel_12, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE).addGap(10)
-						.addComponent(textTenNcc, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE).addGap(20)
-						.addComponent(lblNewLabel_13, GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE).addGap(10)
-						.addComponent(textDiaChiCC, GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE).addGap(29)
-						.addComponent(lblNewLabel_14, GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE).addGap(13)
-						.addComponent(textSDTNCC, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE).addGap(10))
-				.addGroup(gl_panel_4.createSequentialGroup().addGap(100)
-						.addComponent(btnThem_2, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE).addGap(100)
-						.addComponent(btnSua_2, GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE).addGap(98)
-						.addComponent(btnXoa_2, GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE).addGap(90)
-						.addComponent(btnLuu_2, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE).addGap(165))
-				.addGroup(gl_panel_4.createSequentialGroup().addGap(61)
-						.addComponent(panel_10, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addGap(70)));
-		gl_panel_4.setVerticalGroup(gl_panel_4.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_4
-				.createSequentialGroup().addGap(10)
-				.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNewLabel_11, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textNhaCC, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel_12, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textTenNcc, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel_13, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_panel_4.createSequentialGroup().addGap(1).addComponent(textDiaChiCC,
-								GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-						.addComponent(lblNewLabel_14, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textSDTNCC, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
-				.addGap(34)
-				.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnThem_2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnSua_2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnXoa_2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnLuu_2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
-				.addGap(7).addComponent(panel_10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-						GroupLayout.PREFERRED_SIZE)));
-		panel_4.setLayout(gl_panel_4);
+		
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
 		gl_panel_1
 				.setHorizontalGroup(gl_panel_1.createParallelGroup(Alignment.LEADING).addGap(0, 1082, Short.MAX_VALUE));
@@ -2259,8 +1357,7 @@ public class KhoGui extends JFrame {
 					.addGap(0))
 		);
 		contentPane.setLayout(gl_contentPane);
-		hienthisanpham("hien thi");
-		hienThiMaSanPham();
+		hienThiKho();
 
 	}
 }

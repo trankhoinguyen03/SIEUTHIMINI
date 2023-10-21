@@ -169,17 +169,10 @@ public class QuanLyNhanVienGui extends JFrame {
         table.setModel(model);
         model.setRowCount(0);
         for (NhanVien nvdata : arrNv) {
-            //NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-            String formatGioiTinh;
-            if (nvdata.getGioiTinh() == 1) {
-                formatGioiTinh = "Nam";
-            } else {
-                formatGioiTinh = "Nữ";
-            }
             
-            Object[] row = new Object[]{};/*nvdata.getMaNv(), nvdata.getTenNv(), nvdata.getNgaySinh(), formatGioiTinh,
-                nvdata.getDiaChi(), nvdata.getCmnd(), nvdata.getSdt(), nvdata.getNgayVaoLam(),
-                nvdata.getTaiKhoan(), nvdata.getMatKhau()};*/
+            Object[] row = new Object[]{nvdata.getMaNv(), nvdata.getTenNv(), nvdata.getNgaySinh(), nvdata.getGioiTinh(),
+                nvdata.getDiaChi(), nvdata.getSdt(), nvdata.getCccd(), nvdata.getNgayVaoLam(),
+                nvdata.getChucVu()};
 
             model.addRow(row);
         }
@@ -268,7 +261,7 @@ public class QuanLyNhanVienGui extends JFrame {
 			arrPro = nvd.docNhanVien("docnhanvien",null);
 			if(fixbtn) {
 				for(NhanVien nv:arrPro) {
-					if(Integer.parseInt(oldMaNV)!=Integer.parseInt(textFieldManv.getText()) && nv.getMaNv()== Integer.parseInt(textFieldManv.getText())) {
+					if(Integer.parseInt(oldMaNV)!=Integer.parseInt(textFieldManv.getText()) && nv.getMaNv()== textFieldManv.getText()) {
 						JOptionPane.showMessageDialog(contentPane, "Mã nhân viên đã tồn tại!");
 						textFieldManv.requestFocus();
 						return false;
@@ -278,7 +271,7 @@ public class QuanLyNhanVienGui extends JFrame {
 			}
 			if(addbtn) {
 				for(NhanVien nv:arrPro) {
-					if(nv.getMaNv()== Integer.parseInt(textFieldManv.getText())) {
+					if(nv.getMaNv()== textFieldManv.getText()) {
 						JOptionPane.showMessageDialog(contentPane, "Mã nhân viên đã tồn tại!");
 						textFieldManv.requestFocus();
 						return false;
@@ -539,15 +532,15 @@ public class QuanLyNhanVienGui extends JFrame {
 						if(addbtn) {
 							try {
 								luunv = new NhanVienDAL();
-								nv.setMaNv(Integer.parseInt(textFieldManv.getText()));
+								nv.setMaNv(textFieldManv.getText());
                                                                 nv.setTenNv(textFieldTennv.getText());
                                                                 nv.setNgaySinh(textFieldNgaysinh.getText());
-                                                                int gioitinh;
-                                                                if(radioNam.isSelected()) gioitinh = 1;
-                                                                else gioitinh = 0;
+                                                                String gioitinh;
+                                                                if(radioNam.isSelected()) gioitinh = "Nam";
+                                                                else gioitinh = "Nữ";
                                                                 nv.setGioiTinh(gioitinh);
                                                                 nv.setDiaChi(textFieldDiachi.getText());
-								nv.setCmnd(textFieldCmnd.getText());
+								nv.setCccd(textFieldCmnd.getText());
                                                                 nv.setSdt(textFieldDienthoai.getText());
 								nv.setNgayVaoLam(textFieldNgayvaolam.getText());
 								//nv.setTaiKhoan(textFieldTaikhoan.getText());
@@ -572,15 +565,15 @@ public class QuanLyNhanVienGui extends JFrame {
 							
 							try {
 								luunv = new NhanVienDAL();
-								nv.setMaNv(Integer.parseInt(textFieldManv.getText()));
+								nv.setMaNv(textFieldManv.getText());
                                                                 nv.setTenNv(textFieldTennv.getText());
                                                                 nv.setNgaySinh(textFieldNgaysinh.getText());
-                                                                int gioitinh;
-                                                                if(radioNam.isSelected()) gioitinh = 1;
-                                                                else gioitinh = 0;
+                                                                String gioitinh;
+                                                                if(radioNam.isSelected()) gioitinh = "Nam";
+                                                                else gioitinh = "Nữ";
                                                                 nv.setGioiTinh(gioitinh);
                                                                 nv.setDiaChi(textFieldDiachi.getText());
-								nv.setCmnd(textFieldCmnd.getText());
+								nv.setCccd(textFieldCmnd.getText());
                                                                 nv.setSdt(textFieldDienthoai.getText());
 								nv.setNgayVaoLam(textFieldNgayvaolam.getText());
 								//nv.setTaiKhoan(textFieldTaikhoan.getText());

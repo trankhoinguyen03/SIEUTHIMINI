@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 
 import BLL.DangNhapBLL;
 import DTO.NhanVien;
+import DTO.TaiKhoan;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -27,6 +28,7 @@ import java.awt.Toolkit;
 
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+import javax.swing.JPasswordField;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Component;
@@ -40,8 +42,8 @@ public class LoginGui extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	JTextField textField_1 = new JTextField();
 	JTextField textField = new JTextField();
+	JPasswordField textField_1 = new JPasswordField();
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -61,31 +63,31 @@ public class LoginGui extends JFrame {
 	 * Create the frame.
 	 * @throws SQLException 
 	 */
-	public NhanVien getNv() throws SQLException {
-		DangNhapBLL dn = new DangNhapBLL();
-		NhanVien nv = new NhanVien();
-		
-			nv = dn.checkLogin(textField.getText(), textField_1.getText());
-			if(nv.getChucVu()==1 &&nv.getHoTen().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!")==false &&nv.getHoTen().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
-				 AdminHome admin=new AdminHome();
-	             setVisible(false);
-	             
-	             admin.setVisible(true);
-				admin.setLocationRelativeTo(null);
-			}
-			else if(nv.getChucVu()!=1 &&nv.getHoTen().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!")==false &&nv.getHoTen().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
-			
-				QuanLyHome hnv = new QuanLyHome();
-				setVisible(false);
-				hnv.setVisible(true);
-				hnv.setLocationRelativeTo(null);
-			}
-			else {
-				JOptionPane.showMessageDialog(contentPane,nv.getHoTen());
-					
-			
-			}
-			return nv;};
+	/*
+	 * public TaiKhoan getTk() throws SQLException { DangNhapBLL dn = new
+	 * DangNhapBLL(); TaiKhoan tk = new TaiKhoan();
+	 * 
+	 * tk = dn.checkLogin(textField.getText(), textField_1.getText());
+	 * if(tk.getQuyen().equals("RL1") &&
+	 * tk.getTenDangNhap().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!"
+	 * )==false &&
+	 * tk.getTenDangNhap().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")
+	 * ==false) { AdminHome admin=new AdminHome(); setVisible(false);
+	 * 
+	 * admin.setVisible(true); admin.setLocationRelativeTo(null); } else
+	 * if(tk.getQuyen().equals("RL2") &&
+	 * tk.getTenDangNhap().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!"
+	 * )==false &&
+	 * tk.getTenDangNhap().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")
+	 * ==false) {
+	 * 
+	 * QuanLyHome quanly = new QuanLyHome(); setVisible(false);
+	 * quanly.setVisible(true); quanly.setLocationRelativeTo(null); } else {
+	 * JOptionPane.showMessageDialog(contentPane,tk.getTenDangNhap());
+	 * 
+	 * 
+	 * } return tk;};
+	 */
 	public LoginGui() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 509, 306);
@@ -154,30 +156,47 @@ public class LoginGui extends JFrame {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DangNhapBLL dn = new DangNhapBLL();
-				NhanVien nv = new NhanVien();
+				TaiKhoan tk = new TaiKhoan();
 				try {
 					
-					nv = dn.checkLogin(textField.getText(), textField_1.getText());
+					tk = dn.checkLogin(textField.getText(), textField_1.getText());
 					
-					if(nv.getChucVu()==1 &&nv.getHoTen().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!")==false &&nv.getHoTen().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
+					if(tk.getQuyen().equals("RL1") && tk.getTenDangNhap().equals("Mật khẩu không chính xác, vui lòng kiểm tra lại!")==false && tk.getTenDangNhap().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
 						 AdminHome admin=new AdminHome();
 			             setVisible(false);
 			             
 			             admin.setVisible(true);
 						admin.setLocationRelativeTo(null);
 					}
-					else if(nv.getChucVu()!=1 &&nv.getHoTen().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!")==false &&nv.getHoTen().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
+					else if(tk.getQuyen().equals("RL2") && tk.getTenDangNhap().equals("Mật khẩu không chính xác, vui lòng kiểm tra lại!")==false && tk.getTenDangNhap().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
 					
-						QuanLyHome hnv = new QuanLyHome();
+						QuanLyHome home = new QuanLyHome();
 						setVisible(false);
-						ShareDAta.nhanVien = nv;
+						ShareDAta.taiKhoan = tk;
 					
-						hnv.setVisible(true);
-						hnv.setLocationRelativeTo(null);
+						home.setVisible(true);
+						home.setLocationRelativeTo(null);
+					}
+					else if(tk.getQuyen().equals("RL3") && tk.getTenDangNhap().equals("Mật khẩu không chính xác, vui lòng kiểm tra lại!")==false && tk.getTenDangNhap().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
+						
+						NhanVienBanHangHome home = new NhanVienBanHangHome();
+						setVisible(false);
+						ShareDAta.taiKhoan = tk;
+					
+						home.setVisible(true);
+						home.setLocationRelativeTo(null);
+					}
+					else if(tk.getQuyen().equals("RL4") && tk.getTenDangNhap().equals("Mật khẩu không chính xác, vui lòng kiểm tra lại!")==false && tk.getTenDangNhap().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
+						
+						NhanVienKhoHome home = new NhanVienKhoHome();
+						setVisible(false);
+						ShareDAta.taiKhoan = tk;
+					
+						home.setVisible(true);
+						home.setLocationRelativeTo(null);
 					}
 					else {
-						JOptionPane.showMessageDialog(contentPane,nv.getHoTen());
-							
+						JOptionPane.showMessageDialog(contentPane,tk.getTenDangNhap());
 					};
 					
 					

@@ -106,7 +106,7 @@ public class QuanLySanPhamGui extends JFrame {
 	 * Launch the application.
 	 */
 	
-	NhanVien nhanVien = ShareDAta.nhanVien;
+	//NhanVien nhanVien = ShareDAta.nhanVien;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

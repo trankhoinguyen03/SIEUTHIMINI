@@ -55,13 +55,13 @@ public class NhapHangDAL extends connectSql {
         return arrList;
     }
 
-    public String layMaNv(String tenMaNv) throws SQLException {
-        String sql = "SELECT MaNV FROM NHANVIEN WHERE HoTen = ?";
+    public String layTenNV(String MaNV) throws SQLException {
+        String sql = "SELECT TenNV FROM NHANVIEN WHERE MaNV = ?";
         try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
-            pstm.setString(1, tenMaNv);
+            pstm.setString(1, MaNV);
             ResultSet rs = pstm.executeQuery();
             if (rs.next()) {
-                return rs.getString("MaNV");
+                return rs.getString("TenNV");
             } else {
                 return null; // or throw an exception
             }
@@ -78,7 +78,7 @@ public class NhapHangDAL extends connectSql {
 		ResultSet rs = pstm.executeQuery();
 		while(rs.next()) {
 			NhanVien nv = new NhanVien();
-			nv.setMaNv(rs.getInt("MaNV"));
+			nv.setMaNv(rs.getString("MaNV"));
 			nv.setTenNv(rs.getString(2));
 			arrNhanvien.add(nv);
 		}
@@ -116,14 +116,13 @@ public class NhapHangDAL extends connectSql {
 	
 	return arrSanpham;
 	}
-    
-    public String layMaNcc(String tenMaNcc) throws SQLException {
-        String sql = "SELECT MaNCC FROM NHACC WHERE TenNCC = ?";
+    public String layTenNCC(String MaNCC) throws SQLException {
+        String sql = "SELECT TenNCC FROM NHACUNGCAP WHERE MaNCC = ?";
         try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
-            pstm.setString(1, tenMaNcc);
+            pstm.setString(1, MaNCC);
             ResultSet rs = pstm.executeQuery();
             if (rs.next()) {
-                return rs.getString("MaNCC");
+                return rs.getString("NCC");
             } else {
                 return null; // or throw an exception
             }

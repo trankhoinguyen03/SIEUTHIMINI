@@ -1,7 +1,8 @@
 package GUI;
 
 import DTO.NhanVien;
+import DTO.TaiKhoan;
 
 public class ShareDAta {
-	 public static NhanVien nhanVien;
+	 public static TaiKhoan taiKhoan;
 }

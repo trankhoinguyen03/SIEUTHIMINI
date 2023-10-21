@@ -11,23 +11,7 @@ public class NhanVienDAL extends connectSql {
 	public NhanVienDAL() throws SQLException {
 		super();	
 	}
-	public ArrayList<DTO.NhanVien> kiemTraDangNhap() throws SQLException{
-		ArrayList<DTO.NhanVien> arrNv = new ArrayList<DTO.NhanVien>();
-		String sql ="select * from NHANVIEN where isDeleted = 1";
-		PreparedStatement pstm = conn.prepareStatement(sql);
-		ResultSet rs = pstm.executeQuery();
-		while(rs.next()) {
-			DTO.NhanVien nv = new DTO.NhanVien();
-			nv.setTaiKhoan(rs.getString("TaiKhoan"));
-			nv.setMatKhau(rs.getString("MatKhau"));
-			nv.setChucVu(rs.getInt("ChucVu"));
-			nv.setMaNv(rs.getInt("MaNV"));
-			nv.setHoTen(rs.getString("HoTen"));
-			
-			arrNv.add(nv);
-		}
-		return arrNv;
-	}
+
 
 	
 
@@ -36,32 +20,30 @@ public class NhanVienDAL extends connectSql {
 	        ArrayList<NhanVien> arrList = new ArrayList<NhanVien>();
 	        try {
 	            if (condition.equals("sapxeptheoten")) {
-	                sql = "select * from NHANVIEN where isDeleted = 1 order by HoTen";
+	                sql = "select * from NHANVIEN where TrangThai = 1 order by TenNV";
 	            }
 	            if (condition.equals("docnhanvien")) {
-	                sql = "select * from NHANVIEN where isDeleted = 1";
+	                sql = "select * from NHANVIEN where TrangThai = 1";
 	            }
 	            if (condition.equals("sapxeptheoma")) {
-	                sql = "select * from NHANVIEN where isDeleted = 1 order by MaNV";
+	                sql = "select * from NHANVIEN where TrangThai = 1 order by MaNV";
 	            }
 	            if (condition.equals("timkiem")) {
-	                sql = "select * from NHANVIEN where isDeleted = 1 and MaNV LIKE %" + value + "% ";
+	                sql = "select * from NHANVIEN where TrangThai = 1 and MaNV LIKE %" + value + "% ";
 	            }
 	            PreparedStatement pstm = conn.prepareStatement(sql);
 	            ResultSet rs = pstm.executeQuery();
 	            while (rs.next()) {
 	                NhanVien nv = new NhanVien();
-	                nv.setMaNv(rs.getInt("MaNV"));
-	                nv.setTenNv(rs.getString("HoTen"));
+	                nv.setMaNv(rs.getString("MaNV"));
+	                nv.setTenNv(rs.getString("TenNV"));
 	                nv.setNgaySinh(rs.getString("NgaySinh"));
-	                nv.setGioiTinh(rs.getInt("GioiTinh"));
+	                nv.setSdt(rs.getString("SDT"));
 	                nv.setDiaChi(rs.getString("DiaChi"));
-	                nv.setCmnd(rs.getString("CMND"));
-	                nv.setSdt(rs.getString("DienThoai"));
+	                nv.setGioiTinh(rs.getString("GioiTinh"));
+	                nv.setCccd(rs.getString("CCCD"));
 	                nv.setNgayVaoLam(rs.getString("NgayVaoLam"));
-	                nv.setTaiKhoan(rs.getString("TaiKhoan"));
-	                nv.setMatKhau(rs.getString("MatKhau"));
-	                nv.setIsDeleted(rs.getInt("isDeleted"));
+	                nv.setChucVu(rs.getString("MaCV"));
 	                arrList.add(nv);
 	            }
 	        } catch (Exception e) {
@@ -83,7 +65,7 @@ public class NhanVienDAL extends connectSql {
 	    }
 
 	    public boolean xoaNhanVien(String manv) throws SQLException {
-	        String sql = "UPDATE NHANVIEN SET isDeleted = " + 0 + " where MaNV = " + manv;
+	        String sql = "UPDATE NHANVIEN SET TrangThai = " + 0 + " where MaNV = " + manv;
 	        try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
 	            int rowsUpdated = pstm.executeUpdate();
 
@@ -94,11 +76,7 @@ public class NhanVienDAL extends connectSql {
 	    public boolean themnhanvien(NhanVien nv, String condition, String oldMaNV) throws SQLException {
 	        String sql = "";
 	        if (condition.equals("themnhanvien")) {
-	            sql = "INSERT INTO NHANVIEN (HoTen, NgaySinh, GioiTinh, DiaChi, CMND, DienThoai, NgayVaoLam, TaiKhoan, MatKhau, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	        }
-	        if (condition.equals("suanhanvien")) {
-	            sql = "UPDATE NHANVIEN SET HoTen = ?, NgaySinh = ?, GioiTinh = ?, DiaChi = ?, CMND = ?, DienThoai = ?, NgayVaoLam = ?, TaiKhoan = ?, MatKhau = ?, isDeleted = ? WHERE MaNV = ?";
-
+	            sql = "INSERT INTO NHANVIEN (TenNV, NgaySinh, SDT, DiaChi, GioiTinh, CCCD, NgayVaoLam, MaCV, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	        }
 	        PreparedStatement pstm = conn.prepareStatement(sql);
 
@@ -106,18 +84,14 @@ public class NhanVienDAL extends connectSql {
 	            
 	            pstm.setString(1, nv.getTenNv());
 	            pstm.setString(2, nv.getNgaySinh());
-	            pstm.setInt(3, nv.getGioiTinh());
+	            pstm.setString(3, nv.getGioiTinh());
 	            pstm.setString(4, nv.getDiaChi());
-	            pstm.setString(5, nv.getCmnd());
+	            pstm.setString(5, nv.getCccd());
 	            pstm.setString(6, nv.getSdt());
 	            pstm.setString(7, nv.getNgayVaoLam());
-	            pstm.setString(8, nv.getTaiKhoan());
-	            pstm.setString(9, nv.getMatKhau());
-	            pstm.setInt(10, 1);
+	            pstm.setString(8, nv.getChucVu());
+	            pstm.setString(9, ""+1);
 
-	            if (condition.equals("suanhanvien")) {
-	                pstm.setInt(11, Integer.parseInt(oldMaNV));
-	            }
 	            pstm.executeUpdate();
 	            System.out.println(sql);
 	            return true;
@@ -128,9 +102,5 @@ public class NhanVienDAL extends connectSql {
 	    }
 	
 
-	
-	public static void main(String[] args) throws SQLException {
-		NhanVienDAL nvd = new NhanVienDAL();
-		System.out.println(nvd.kiemTraDangNhap());
-	}
+
 }

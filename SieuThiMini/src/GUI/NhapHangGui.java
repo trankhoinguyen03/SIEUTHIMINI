@@ -206,14 +206,14 @@ public class NhapHangGui extends JFrame {
             lastRow = table_chitiet.getRowCount() - 1; // get index of the last row
             lastValueMaPn = table_chitiet.getValueAt(lastRow, 0); // get the value at the last row and column n
         	
-            String[] columnNames = {"Mã Phiếu Nhập", "Tên Nhân Viên", "Nhà Cung Cấp", "Tổng Tiền", "Ngày Nhập"};
+            String[] columnNames = {"Mã Phiếu Nhập", "Nhân Viên", "Nhà Cung Cấp", "Tổng Tiền", "Ngày Nhập"};
             DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
             table.setModel(model);
             model.setRowCount(0);
             for (NhapHang nhdata : arrNh) {
                 //NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-                Object[] row = new Object[]{};//nhdata.getMaPn(), nhdata.getMaNv(), nhdata.getThoiDiemLap()};
+                Object[] row = new Object[]{nhdata.getMaPn(), nhdata.getMaNv(), nhdata.getMaNcc(), nhdata.getTongTien(), nhdata.getNgayNhap()};
                 model.addRow(row);
             }
 
@@ -581,7 +581,7 @@ public class NhapHangGui extends JFrame {
                             try {
                                 luunh = new NhapHangDAL();
                                 nh.setMaPn(textFieldMapn.getText());
-                                String manv = luunh.layMaNv((String) (comboBoxNhanVien.getSelectedItem()));
+                                String manv = luunh.layTenNV((String) (comboBoxNhanVien.getSelectedItem()));
                                 nh.setMaNv(manv);
                                 //nh.setThoiDiemLap(textFieldNgaylap.getText());
                                 boolean checkAddPro = luunh.themphieunhap(nh, "themphieunhap", null, null, null);
@@ -593,28 +593,6 @@ public class NhapHangGui extends JFrame {
                                     addbtn = false;
                                 } else {
                                     JOptionPane.showMessageDialog(contentPane, "Thêm thất bại");
-                                }
-                            } catch (SQLException e2) {
-                                // TODO Auto-generated catch block
-                                e2.printStackTrace();
-                            }
-                        }
-                        if (fixbtn) {
-                            try {
-                                luunh = new NhapHangDAL();
-                                nh.setMaPn(textFieldMapn.getText());
-                                String manv = luunh.layMaNv((String) (comboBoxNhanVien.getSelectedItem()));
-                                nh.setMaNv(manv);
-                                //nh.setThoiDiemLap(textFieldNgaylap.getText());
-                                boolean checkAddPro = luunh.themphieunhap(nh, "suaphieunhap", oldMaPN, null, null);
-                                if (checkAddPro) {
-                                    JOptionPane.showMessageDialog(contentPane, "Sửa thành công");
-                                    resetValue("themphieunhap");
-                                    setEnable();
-                                    hienthiphieunhap("phieunhap");
-                                    fixbtn = false;
-                                } else {
-                                    JOptionPane.showMessageDialog(contentPane, "Sửa thất bại");
                                 }
                             } catch (SQLException e2) {
                                 // TODO Auto-generated catch block
@@ -653,7 +631,7 @@ public class NhapHangGui extends JFrame {
                             try {
                                 luunh = new NhapHangDAL();
                                 nh.setMaPn(textFieldMapn.getText());
-                                String mancc = luunh.layMaNcc((String) (comboBoxNhaCC.getSelectedItem()));
+                                String mancc = luunh.layTenNCC((String) (comboBoxNhaCC.getSelectedItem()));
                                 nh.setMaNcc(mancc);
                                 nh.setSoLuong(textFieldSoluong.getText());
                                 //nh.setNgaySanXuat(textFieldNgaysx.getText());
@@ -673,30 +651,7 @@ public class NhapHangGui extends JFrame {
                                 e2.printStackTrace();
                             }
                         }
-                        if (fixifbtn) {
-                            try {
-                                luunh = new NhapHangDAL();
-                                nh.setMaPn(textFieldMapn.getText());
-                                String mancc = luunh.layMaNcc((String) (comboBoxNhaCC.getSelectedItem()));
-                                nh.setMaNcc(mancc);
-                                nh.setSoLuong(textFieldSoluong.getText());
-                                //nh.setNgaySanXuat(textFieldNgaysx.getText());
-                                nh.setNgayNhap(textFieldNgaynhap.getText());
-                                boolean checkAddPro = luunh.themphieunhap(nh, "suachitiet", oldMaPN, oldMaSP, oldMaNCC);
-                                if (checkAddPro) {
-                                    JOptionPane.showMessageDialog(contentPane, "Sửa thành công");
-                                    resetValue("themchitiet");
-                                    setEnable();
-                                    hienthiphieunhap("chitiet");
-                                    fixifbtn = false;
-                                } else {
-                                    JOptionPane.showMessageDialog(contentPane, "Sửa thất bại");
-                                }
-                            } catch (SQLException e2) {
-                                // TODO Auto-generated catch block
-                                e2.printStackTrace();
-                            }
-                        }
+
                     }
                 } catch (NumberFormatException | HeadlessException | SQLException e1) {
                     // TODO Auto-generated catch block

@@ -21,30 +21,27 @@ public class HoaDonDAL extends connectSql{
         ArrayList<HoaDon> arr =new ArrayList<HoaDon>();
         try{
             if(condition.equals("docHoaDon")){
-                sql="sql=select* from HOADON WHERE isDeleted=1";
+                sql="sql=select* from DSHOADON WHERE TrangThai=1";
             }
             
             PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
 			while(rs.next()) {
 				HoaDon hd = new HoaDon(); 
-				hd.setMaHd(rs.getInt("MaHD"));
-				hd.setMucGiam(rs.getFloat("MucGiam"));
-				hd.setMaNv(rs.getInt("MaNV"));
-				hd.setMaKh(rs.getInt("MaKH"));
-				hd.setThoiDiem(rs.getString("ThoiDiemLap"));
-				hd.setGio(rs.getString("GioMua"));
-				hd.setTienTra(rs.getFloat("TienTra"));
-                                hd.setDiemThuong(rs.getFloat("DiemThuong"));
-				hd.setIsDeleted(rs.getInt("isDeleted"));
-				arr.add(hd);
+				hd.setMaHD(rs.getString("MaHD"));
+				hd.setMaNV(rs.getString("MaNV"));
+				hd.setMaKH(rs.getString("MaKH"));
+				hd.setTongTien(rs.getString("TongTien"));
+				hd.setTongTienSauKM(rs.getString("TongTienSauKM"));
+				hd.setThoiDiemLap(rs.getString("ThoiDiemLap"));
+				hd.setKhuyenMai(rs.getString("MaKM"));
 			}
         }catch (Exception e){
 }
     return arr;
 }
  public int LayMaHd (String mahd) throws SQLException{
-     String sql = "SELECT MaLH FROM HOADONCHITIET WHERE MaSP = ?,SoLuong=?;";
+     String sql = "SELECT MaHD FROM HOADONCHITIET WHERE MaSP = ?,SoLuong=?;";
 		    try (PreparedStatement pstm = conn.prepareStatement(sql)) {
 		        pstm.setString(1, mahd);
 		        ResultSet rs = pstm.executeQuery();
@@ -70,31 +67,21 @@ public boolean xoaHoaDon(String maHoaDon) throws SQLException {
  public boolean themhoadon(HoaDon hd,String condition,String MaHDcu) throws SQLException {
 		String sql = "";
 		if(condition.equals("themhoadon")) {
-			sql =  "INSERT INTO HOADON ( ThoiDiemLap, TongTienTra, MucGiam, DiemThuong, MaNV, MaKH,GioMua,isDeleted) VALUES (?, ?, ?, ?, ?, ?,?,?)";
-		}
-		if(condition.equals("suahoadon")) {
-		sql = "UPDATE HOADON SET MaHd = ?, ThoiDiemLap = ?, TongTienTra = ?, MucGiam = ?, DiemThuong = ?, MaNV = ?, MaKH = ?, isDeleted = ?,GioMua = ? WHERE MaHD = ?";
-
+			sql =  "INSERT INTO HOADON ( MaNV, MaKH, TongTien, TongTienSauKM, ThoiDiemLap, MaKM, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		}
 		PreparedStatement pstm = conn.prepareStatement(sql);
 			
 		try {
 
 //			pstm.setInt(1,hd.getMaHd());
-			pstm.setString(1, hd.getThoiDiem());
-			pstm.setFloat(2, hd.getTienTra());
-			pstm.setFloat(3, hd.getMucGiam());
-			pstm.setFloat(4,hd.getDiemThuong());
-			pstm.setInt(5, hd.getMaNv());
-			pstm.setInt(6,hd.getMaKh());
-			pstm.setString(7,hd.getGio());
-			pstm.setInt(8, 1);
+			pstm.setString(1, hd.getMaNV());
+			pstm.setString(2, hd.getMaKH());
+			pstm.setString(3, hd.getTongTien());
+			pstm.setString(4,hd.getTongTienSauKM());
+			pstm.setString(5, hd.getThoiDiemLap());
+			pstm.setString(6,hd.getKhuyenMai());
+			pstm.setString(7, ""+1);
 			
-			if(condition.equals("suahoadon")) {
-				System.out.println(hd.getMaHd());
-				System.out.println(MaHDcu);
-				pstm.setInt(10, Integer.parseInt(MaHDcu));
-			}
 			
 			pstm.executeUpdate();
 			return true;
@@ -114,10 +101,10 @@ public boolean xoaHoaDon(String maHoaDon) throws SQLException {
         }
         return lastMaHD;
     }
- public  int getmahd(int isdeleted) throws SQLException {
+ public  int getmahd(int TrangThai) throws SQLException {
         int mahoadon = 0;
         
-        String sql = "SELECT MaHD FROM HOADON where isDeleted=1";
+        String sql = "SELECT MaHD FROM HOADON where TrangThai=1";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) { 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
