@@ -101,7 +101,6 @@ public class QuanLyKhachHangGui extends JFrame {
     ImageIcon icon = new ImageIcon();
     Object lastValueMaKh;
     JButton btnXoa = new JButton("Ẩn");
-    JButton btnSua = new JButton("Sửa");
     boolean isNumber = true;
     JButton btnThem = new JButton("Thêm");
     JButton btnLuu = new JButton("Lưu");
@@ -190,7 +189,6 @@ public class QuanLyKhachHangGui extends JFrame {
         
         btnThem.setEnabled(true);
         btnXoa.setEnabled(false);
-        btnSua.setEnabled(false);
         btnLuu.setEnabled(false);
     }
 
@@ -205,7 +203,6 @@ public class QuanLyKhachHangGui extends JFrame {
         textFieldSDT.setEnabled(true);
         btnThem.setEnabled(true);
         btnXoa.setEnabled(false);
-        btnSua.setEnabled(false);
         btnLuu.setEnabled(false);
     }
 
@@ -517,18 +514,6 @@ public class QuanLyKhachHangGui extends JFrame {
         btnThem.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
 		
-		  btnSua.setBounds(283, 10, 104, 53); btnSua.setEnabled(false);
-		  btnSua.setIcon(new ImageIcon(
-		  Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
-		  ".\\Image\\Change.png")))); btnSua.setFocusPainted(false);
-		  btnSua.addActionListener(new ActionListener() { public void
-		  actionPerformed(ActionEvent e) { fixbtn = true; oldMaKH =
-		  textFieldMakh.getText(); unSetEnable(); btnThem.setEnabled(false);
-		  btnLuu.setEnabled(true);
-		  
-		  try { hienthikhachhang("them"); } catch (SQLException e1) { // TODO
-		  //Auto-generated catch block e1.printStackTrace(); 
-			  } } });
 		  btnXoa.setBounds(419, 10, 104, 53);
 		  
 		  btnXoa.setEnabled(false); btnXoa.setIcon(new ImageIcon(
@@ -656,7 +641,6 @@ public class QuanLyKhachHangGui extends JFrame {
 
                 setEnable();
                 btnXoa.setEnabled(true);
-                btnSua.setEnabled(true);
                 btnThem.setEnabled(true);
                 btnLuu.setEnabled(false);
             }
@@ -671,7 +655,6 @@ public class QuanLyKhachHangGui extends JFrame {
         panel_6.setLayout(null);
         panel_6.add(btnLuu);
         panel_6.add(btnThem);
-        panel_6.add(btnSua);
         panel_6.add(btnXoa);
         panel_6.add(btnDongBo);
         panel_6.add(panel_7);

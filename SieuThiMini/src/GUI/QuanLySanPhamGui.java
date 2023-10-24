@@ -136,7 +136,6 @@ public class QuanLySanPhamGui extends JFrame {
 	//JButton btnCapNhatAnh = new JButton();
 	Object lastValueMaSp;
 	JButton btnXoa = new JButton("Ẩn");
-	JButton btnSua = new JButton("Sửa");
 	boolean isNumber = true;
 	//JButton btnThem = new JButton("Thêm");
 	JButton btnLuu = new JButton("Lưu");
@@ -168,7 +167,6 @@ public class QuanLySanPhamGui extends JFrame {
 
 //	Tabbed 2
 	JButton btnThem_1 = new JButton("Thêm");
-	JButton btnSua_1 = new JButton("Sửa");
 	JButton btnXoa_1 = new JButton("Ẩn");
 	JButton btnLuu_1 = new JButton("Lưu");
 	JTable table_1 = new JTable();
@@ -183,7 +181,6 @@ public class QuanLySanPhamGui extends JFrame {
 //	Tabbed 3
 	JTable table_2 = new JTable();
 	JButton btnThem_2 = new JButton("Thêm");
-	JButton btnSua_2 = new JButton("Sửa");
 	JButton btnXoa_2 = new JButton("Ẩn");
 	JButton btnLuu_2 = new JButton("Lưu");
 	String oldTenNcc = null;
@@ -196,7 +193,6 @@ public class QuanLySanPhamGui extends JFrame {
 		textDiaChiCC.setEnabled(false);
 		textSDTNCC.setEnabled(false);
 		textTenNcc.setEnabled(false);
-		btnSua_2.setEnabled(false);
 		btnXoa_2.setEnabled(false);
 		btnLuu_2.setEnabled(false);
 	}
@@ -414,7 +410,6 @@ public class QuanLySanPhamGui extends JFrame {
 		//btnCapNhatAnh.setEnabled(true);
 		//btnThem.setEnabled(true);
 		btnXoa.setEnabled(false);
-		btnSua.setEnabled(false);
 		btnLuu.setEnabled(false);
 		comboBox.setSelectedItem(null);
 
@@ -424,7 +419,6 @@ public class QuanLySanPhamGui extends JFrame {
 		textTenSp.setText("");
 		textTenSp.setEnabled(true);
 		btnXoa_1.setEnabled(false);
-		btnSua_1.setEnabled(false);
 		btnLuu_1.setEnabled(false);
 
 	}
@@ -442,12 +436,10 @@ public class QuanLySanPhamGui extends JFrame {
 		//btnCapNhatAnh.setEnabled(true);
 		//btnThem.setEnabled(true);
 		btnXoa.setEnabled(false);
-		btnSua.setEnabled(false);
 		btnLuu.setEnabled(false);
 //		Tabbed 2
 		btnThem_1.setEnabled(true);
 		btnXoa_1.setEnabled(false);
-		btnSua_1.setEnabled(false);
 		btnLuu_1.setEnabled(false);
 		textMaSP1.setEnabled(true);
 		textTenSp.setEnabled(true);
@@ -1017,38 +1009,6 @@ public class QuanLySanPhamGui extends JFrame {
 		 * Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
 		 * ".\\Image\\Add.png"))));
 		 */
-		btnSua.setFont(new Font("Arial", Font.BOLD, 12));
-
-		btnSua.setEnabled(false);
-		btnSua.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Change.png"))));
-		btnSua.setFocusPainted(false);
-		btnSua.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				fixbtn = true;
-				addbtn = false;
-				oldMaSP = textFieldMasp.getText();
-				unSetEnable();
-				//btnThem.setEnabled(false);
-				btnLuu.setEnabled(true);
-
-				try {
-					String valueSelect = comboBox.getSelectedItem().toString();
-					if (textFieldFrom.getText().isEmpty()&&textFieldFrom.getText().isEmpty()) {
-						hienthisanpham("suatheoid");
-						
-					} else if (textFieldFrom.getText().isEmpty() == false) {
-						hienthisanpham("suatheogia");
-					}
-
-					comboBox.setSelectedItem(valueSelect);
-
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
 		btnXoa.setFont(new Font("Arial", Font.BOLD, 12));
 
 		btnXoa.setEnabled(false);
@@ -1220,7 +1180,6 @@ public class QuanLySanPhamGui extends JFrame {
 
 				setEnable();
 				btnXoa.setEnabled(true);
-				btnSua.setEnabled(true);
 				//btnThem.setEnabled(true);
 				btnLuu.setEnabled(false);
 
@@ -1579,8 +1538,6 @@ public class QuanLySanPhamGui extends JFrame {
 					.addGap(32)
 					//.addComponent(btnThem, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
 					//.addGap(33)
-					.addComponent(btnSua, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
-					.addGap(32)
 					.addComponent(btnXoa, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
 					.addGap(40)
 					.addComponent(btnDongBo, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
@@ -1594,7 +1551,6 @@ public class QuanLySanPhamGui extends JFrame {
 					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnLuu, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
 						//.addComponent(btnThem, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-						.addComponent(btnSua, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
 						.addComponent(btnXoa, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
 						.addComponent(btnDongBo, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
 						.addComponent(panel_7, GroupLayout.PREFERRED_SIZE, 53, Short.MAX_VALUE))
@@ -1774,30 +1730,7 @@ public class QuanLySanPhamGui extends JFrame {
 				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Add.png"))));
 
 		btnThem_1.setFocusPainted(false);
-		btnSua_1.setFont(new Font("Arial", Font.BOLD, 14));
-		btnSua_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				btnThem_1.setEnabled(false);
-				btnLuu_1.setEnabled(true);
-				btnXoa_1.setEnabled(false);
-				textTenSp.setEnabled(true);
-				try {
-					hienThiLoaiHang();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				oldTenMaLH = textTenSp.getText();
-				fixbtn = true;
-				addbtn = false;
 
-			}
-		});
-
-		btnSua_1.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Change.png"))));
-		btnSua_1.setFocusPainted(false);
-		btnSua_1.setEnabled(false);
 		btnXoa_1.setFont(new Font("Arial", Font.BOLD, 14));
 		btnXoa_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1904,7 +1837,6 @@ public class QuanLySanPhamGui extends JFrame {
 						.addComponent(textTenSp, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE).addGap(226))
 				.addGroup(gl_panel_3.createSequentialGroup().addGap(169)
 						.addComponent(btnThem_1, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE).addGap(54)
-						.addComponent(btnSua_1, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE).addGap(73)
 						.addComponent(btnXoa_1, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE).addGap(88)
 						.addComponent(btnLuu_1, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE).addGap(151))
 				.addComponent(panel_9, GroupLayout.DEFAULT_SIZE, 1077, Short.MAX_VALUE));
@@ -1918,7 +1850,6 @@ public class QuanLySanPhamGui extends JFrame {
 						.addGap(35)
 						.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
 								.addComponent(btnThem_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnSua_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
 								.addComponent(btnXoa_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
 								.addComponent(btnLuu_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
 						.addGap(10)
@@ -1947,16 +1878,16 @@ public class QuanLySanPhamGui extends JFrame {
 
 				setEnable();
 				btnXoa_1.setEnabled(true);
-				btnSua_1.setEnabled(true);
 				btnThem_1.setEnabled(true);
 				btnLuu_1.setEnabled(false);
 
 			}
 		});
-
 		
 		JPanel panel_4 = new JPanel();
-		tabbedPane.addTab("Thông Tin Nhà Cung Cấp",null, panel_4, null);
+		if(!taiKhoan.getQuyen().equals("RL3")) {
+			tabbedPane.addTab("Thông Tin Nhà Cung Cấp",null, panel_4, null);
+		}
 		 
 
 		JLabel lblNewLabel_11 = new JLabel("Mã Nhà Cung Cấp");
@@ -2015,7 +1946,6 @@ public class QuanLySanPhamGui extends JFrame {
 				textSDTNCC.setEnabled(false);
 				textTenNcc.setEnabled(false);
 				btnXoa_2.setEnabled(true);
-				btnSua_2.setEnabled(true);
 				btnThem_2.setEnabled(true);
 				btnLuu_2.setEnabled(false);
 
@@ -2055,7 +1985,6 @@ public class QuanLySanPhamGui extends JFrame {
 				textDiaChiCC.setEnabled(true);
 				textSDTNCC.setEnabled(true);
 				textTenNcc.setEnabled(true);
-				btnSua_2.setEnabled(false);
 				btnXoa_2.setEnabled(false);
 				btnLuu_2.setEnabled(true);
 				try {
@@ -2076,32 +2005,7 @@ public class QuanLySanPhamGui extends JFrame {
 		btnThem_2.setIcon(new ImageIcon(
 				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
 		btnThem_2.setFocusPainted(false);
-		btnSua_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				btnThem_2.setEnabled(false);
-				btnLuu_2.setEnabled(true);
-				btnXoa_2.setEnabled(false);
-				textTenNcc.setEnabled(true);
-				textDiaChiCC.setEnabled(true);
-				textSDTNCC.setEnabled(true);
-				try {
-					hienThiNhaCungCap();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				oldTenNcc = textTenNcc.getText();
-				fixbtn = true;
-				addbtn = false;
 
-			}
-
-		});
-
-		btnSua_2.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Change.png"))));
-		btnSua_2.setFocusPainted(false);
-		btnSua_2.setEnabled(false);
 
 		btnXoa_2.setIcon(new ImageIcon(
 				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Delete.png"))));
@@ -2199,7 +2103,6 @@ public class QuanLySanPhamGui extends JFrame {
 						.addComponent(textSDTNCC, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE).addGap(10))
 				.addGroup(gl_panel_4.createSequentialGroup().addGap(100)
 						.addComponent(btnThem_2, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE).addGap(100)
-						.addComponent(btnSua_2, GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE).addGap(98)
 						.addComponent(btnXoa_2, GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE).addGap(90)
 						.addComponent(btnLuu_2, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE).addGap(165))
 				.addGroup(gl_panel_4.createSequentialGroup().addGap(61)
@@ -2220,7 +2123,6 @@ public class QuanLySanPhamGui extends JFrame {
 				.addGap(34)
 				.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnThem_2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnSua_2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnXoa_2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnLuu_2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
 				.addGap(7).addComponent(panel_10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,

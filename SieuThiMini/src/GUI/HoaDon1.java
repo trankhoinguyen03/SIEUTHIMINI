@@ -235,6 +235,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 		TFtongtien = new javax.swing.JTextField();
 		TFtongtien.setEnabled(false);
 		btnxoa = new javax.swing.JButton();
+		btnxoa.setText("Ẩn Hóa Đơn");
 		btnsua = new javax.swing.JButton();
 		btnluu = new javax.swing.JButton();
 		jButton6 = new javax.swing.JButton();
@@ -529,8 +530,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 		});
 
 		btnxoa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-		btnxoa.setIcon(new ImageIcon(HoaDon1.class.getResource("/GUI/Image/Delete.png"))); // NOI18N
-		btnxoa.setText("Hóa Đơn");
+		btnxoa.setIcon(new ImageIcon(HoaDon1.class.getResource("/GUI/Image/Delete.png")));
 		btnxoa.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				btnxoaActionPerformed(evt);
