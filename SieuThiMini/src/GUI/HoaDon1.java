@@ -1238,9 +1238,17 @@ public class HoaDon1 extends javax.swing.JFrame {
 	}
 
 	private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
-		QuanLyHome home = new QuanLyHome();
-		this.setVisible(false);
-		home.setVisible(true);
+		setVisible(false);
+		if(taiKhoan.getQuyen().equals("RL2")) {
+				QuanLyHome hnv = new QuanLyHome();
+				hnv.setLocationRelativeTo(null);
+				hnv.setVisible(true);
+			}
+			if(taiKhoan.getQuyen().equals("RL3")) {
+				NhanVienBanHangHome hnv = new NhanVienBanHangHome();
+				hnv.setLocationRelativeTo(null);
+				hnv.setVisible(true);
+			}
 	}
 
 	private void TFtienkhachActionPerformed(java.awt.event.ActionEvent evt) {

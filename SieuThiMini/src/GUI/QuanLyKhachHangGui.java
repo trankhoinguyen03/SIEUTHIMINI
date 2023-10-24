@@ -57,6 +57,7 @@ import javax.swing.table.TableColumn;
 
 import BLL.KhachHang;
 import DAL.KhachHangDAL;
+import DTO.TaiKhoan;
 
 import javax.swing.JScrollPane;
 import java.awt.Color;
@@ -316,7 +317,8 @@ public class QuanLyKhachHangGui extends JFrame {
 
         return true;
     }
-
+    
+    TaiKhoan taiKhoan = ShareDAta.taiKhoan;
     public QuanLyKhachHangGui() throws SQLException {
 
         setTitle("Quản lý Khách Hàng");
@@ -733,11 +735,17 @@ public class QuanLyKhachHangGui extends JFrame {
         JButton btnNewButton = new JButton("Hệ Thống");
         btnNewButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		QuanLyHome home=new QuanLyHome();
                 setVisible(false);
-             
-                home.setVisible(true);
-                home.setLocationRelativeTo(null);
+        		if(taiKhoan.getQuyen().equals("RL2")) {
+    				QuanLyHome hnv = new QuanLyHome();
+    				hnv.setLocationRelativeTo(null);
+    				hnv.setVisible(true);
+    			}
+    			if(taiKhoan.getQuyen().equals("RL3")) {
+    				NhanVienBanHangHome hnv = new NhanVienBanHangHome();
+    				hnv.setLocationRelativeTo(null);
+    				hnv.setVisible(true);
+    			}
         	}
         });
         btnNewButton.setBounds(10, 8, 95, 37);

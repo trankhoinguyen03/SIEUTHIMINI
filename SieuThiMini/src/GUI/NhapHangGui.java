@@ -64,6 +64,7 @@ import DAL.SanPhamDAL;
 import DTO.NhaCungCap;
 import DTO.PhieuNhapChiTiet;
 import DTO.SanPham;
+import DTO.TaiKhoan;
 import DAL.NhaCungCapDAL;
 
 import javax.swing.JScrollPane;
@@ -419,7 +420,7 @@ public class NhapHangGui extends JFrame {
         }
         return true;
     }
-
+    TaiKhoan taiKhoan = ShareDAta.taiKhoan;
     public NhapHangGui() throws SQLException {
 
         setTitle("Quản lý nhập");
@@ -1044,11 +1045,17 @@ public class NhapHangGui extends JFrame {
         JButton btnNewButton = new JButton("Hệ Thống");
         btnNewButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		 QuanLyHome home=new QuanLyHome();
-                 setVisible(false);
-              
-                 home.setVisible(true);
-                 home.setLocationRelativeTo(null);
+                setVisible(false);
+                if(taiKhoan.getQuyen().equals("RL2")) {
+ 					QuanLyHome hnv = new QuanLyHome();
+ 					hnv.setLocationRelativeTo(null);
+ 					hnv.setVisible(true);
+ 				}
+ 				if(taiKhoan.getQuyen().equals("RL4")) {
+ 					NhanVienKhoHome hnv = new NhanVienKhoHome();
+ 					hnv.setLocationRelativeTo(null);
+ 					hnv.setVisible(true);
+ 				}
         	}
         });
         btnNewButton.setBounds(934, 10, 123, 41);

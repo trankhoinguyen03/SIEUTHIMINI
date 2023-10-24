@@ -72,6 +72,7 @@ import DTO.LoaiHang;
 import DTO.NhaCungCap;
 import DTO.NhanVien;
 import DTO.SanPham;
+import DTO.TaiKhoan;
 import DAL.LoaiHangDAL;
 import DAL.NhaCungCapDAL;
 import DAL.SanPhamDAL;
@@ -667,7 +668,8 @@ public class QuanLySanPhamGui extends JFrame {
 		}
 		return true;
 	}
-
+	
+	TaiKhoan taiKhoan = ShareDAta.taiKhoan;
 	public QuanLySanPhamGui() throws SQLException {
 
 		
@@ -1294,9 +1296,21 @@ public class QuanLySanPhamGui extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				QuanLyHome hnv = new QuanLyHome();
-				hnv.setLocationRelativeTo(null);
-				hnv.setVisible(true);
+				if(taiKhoan.getQuyen().equals("RL2")) {
+ 					QuanLyHome hnv = new QuanLyHome();
+ 					hnv.setLocationRelativeTo(null);
+ 					hnv.setVisible(true);
+ 				}
+				if(taiKhoan.getQuyen().equals("RL3")) {
+ 					NhanVienBanHangHome hnv = new NhanVienBanHangHome();
+ 					hnv.setLocationRelativeTo(null);
+ 					hnv.setVisible(true);
+ 				}
+ 				if(taiKhoan.getQuyen().equals("RL4")) {
+ 					NhanVienKhoHome hnv = new NhanVienKhoHome();
+ 					hnv.setLocationRelativeTo(null);
+ 					hnv.setVisible(true);
+ 				}
 			}
 		});
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);

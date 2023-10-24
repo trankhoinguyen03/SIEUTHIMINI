@@ -69,6 +69,7 @@ import javax.swing.table.TableColumn;
 
 
 import DTO.Kho;
+import DTO.TaiKhoan;
 import DAL.KhoDAL;
 
 
@@ -338,7 +339,7 @@ public class KhoGui extends JFrame {
 
 	// Tabbed 3
 
-
+	TaiKhoan taiKhoan = ShareDAta.taiKhoan;
 	public KhoGui() throws SQLException {
 
 		
@@ -733,9 +734,16 @@ public class KhoGui extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				QuanLyHome hnv = new QuanLyHome();
-				hnv.setLocationRelativeTo(null);
-				hnv.setVisible(true);
+				if(taiKhoan.getQuyen().equals("RL2")) {
+					QuanLyHome hnv = new QuanLyHome();
+					hnv.setLocationRelativeTo(null);
+					hnv.setVisible(true);
+				}
+				if(taiKhoan.getQuyen().equals("RL4")) {
+					NhanVienKhoHome hnv = new NhanVienKhoHome();
+					hnv.setLocationRelativeTo(null);
+					hnv.setVisible(true);
+				}
 			}
 		});
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
