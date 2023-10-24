@@ -27,9 +27,6 @@ public class NhapHangDAL extends connectSql {
             if (condition.equals("docphieunhap")) {
                 sql = "select * from DSPHIEUNHAP where TrangThai = 1";
             }
-            if (condition.equals("docchitiet")) {
-                sql = "select * from CHITIETPHIEUNHAP where TrangThai = 1 and MaPN ="+value;
-            }
             PreparedStatement pstm = conn.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
@@ -40,12 +37,6 @@ public class NhapHangDAL extends connectSql {
                     nh.setMaNcc(rs.getString("MaNCC"));
                     nh.setTongTien(rs.getString("TongTien"));
                     nh.setNgayNhap(rs.getString("NgayNhap"));
-                }
-                if (condition.equals("docchitiet")) {
-                    nh.setMaPn(rs.getString("MaPN"));
-                    nh.setMaSp(rs.getString("MaSP"));
-                    nh.setSoLuong(rs.getString("SoLuong"));
-                    nh.setThanhTien(rs.getString("ThanhTien"));
                 }
                 arrList.add(nh);
             }
@@ -193,13 +184,6 @@ public class NhapHangDAL extends connectSql {
                 pstm.setString(2, nh.getMaNcc());
                 pstm.setString(3, nh.getTongTien());
                 pstm.setString(4, nh.getNgayNhap());
-                pstm.setString(5, ""+1);
-            }
-            if (condition.equals("themchitiet")) {
-                pstm.setString(1, nh.getMaPn());
-                pstm.setString(2, nh.getMaSp());
-                pstm.setString(3, nh.getSoLuong());
-                pstm.setString(4, nh.getThanhTien());
                 pstm.setString(5, ""+1);
             }
             pstm.executeUpdate();

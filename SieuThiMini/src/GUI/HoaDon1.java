@@ -1208,9 +1208,10 @@ public class HoaDon1 extends javax.swing.JFrame {
 				ChiTietHoaDonDAL hdctdal = new ChiTietHoaDonDAL();
 				ChiTietHoaDon hdct = new ChiTietHoaDon();
 
-				hdct.setMaHd(Integer.parseInt(TFmahd.getText()));
-				hdct.setMaSp(Integer.parseInt(TFmahh.getText()));
-				hdct.setSl(Integer.parseInt(TFsoluong.getText()));
+				hdct.setMaHd(TFmahd.getText());
+				hdct.setMaSp(TFmahh.getText());
+				hdct.setSoLuong(TFsoluong.getText());
+				hdct.setThanhTien(TFthanhtien.getText());
 				boolean kiemtra2 = hdctdal.themhoadon(hdct, "themhoadon");
 				int soluong = Integer.parseInt(TFsoluong.getText());
 				if (kiemtra2 && soluong > 0) {

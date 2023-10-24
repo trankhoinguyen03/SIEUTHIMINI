@@ -62,6 +62,7 @@ import BLL.NhanVien;
 
 import DAL.SanPhamDAL;
 import DTO.NhaCungCap;
+import DTO.PhieuNhapChiTiet;
 import DTO.SanPham;
 import DAL.NhaCungCapDAL;
 
@@ -155,6 +156,7 @@ public class NhapHangGui extends JFrame {
     public void hienthiphieunhap(String condition) throws SQLException {
         NhapHangDAL nhDal = new NhapHangDAL();
         ArrayList<NhapHang> arrNh = new ArrayList<NhapHang>();
+        ArrayList<PhieuNhapChiTiet> arrCt = new ArrayList<PhieuNhapChiTiet>();
         if (condition == "phieunhap") {
             arrNh = nhDal.docNhapHang("docphieunhap", null);
         }
@@ -226,10 +228,10 @@ public class NhapHangGui extends JFrame {
 
             table.setModel(model);
             model.setRowCount(0);
-            for (NhapHang nhdata : arrNh) {
+            for (PhieuNhapChiTiet ctdata : arrCt) {
                 //NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-                Object[] row = new Object[]{nhdata.getMaPn(), nhdata.getMaSp(), nhdata.getSoLuong(),
-                    nhdata.getThanhTien()};
+                Object[] row = new Object[]{ctdata.getMaPN(), ctdata.getMaSP(), ctdata.getSoLuong(),
+                		ctdata.getThanhTien()};
                 model.addRow(row);
             }
 
@@ -576,6 +578,7 @@ public class NhapHangGui extends JFrame {
                         }
 
                         NhapHang nh = new NhapHang();
+                        
                         NhapHangDAL luunh;
                         if (addbtn) {
                             try {
@@ -626,6 +629,7 @@ public class NhapHangGui extends JFrame {
                         }
 
                         NhapHang nh = new NhapHang();
+                        PhieuNhapChiTiet ct = new PhieuNhapChiTiet();
                         NhapHangDAL luunh;
                         if (addifbtn) {
                             try {
@@ -633,7 +637,7 @@ public class NhapHangGui extends JFrame {
                                 nh.setMaPn(textFieldMapn.getText());
                                 String mancc = luunh.layTenNCC((String) (comboBoxNhaCC.getSelectedItem()));
                                 nh.setMaNcc(mancc);
-                                nh.setSoLuong(textFieldSoluong.getText());
+                                ct.setSoLuong(textFieldSoluong.getText());
                                 //nh.setNgaySanXuat(textFieldNgaysx.getText());
                                 nh.setNgayNhap(textFieldNgaynhap.getText());
                                 boolean checkAddPro = luunh.themphieunhap(nh, "themchitiet", oldMaPN, oldMaSP, oldMaNCC);

@@ -3,29 +3,38 @@ package DTO;
 
 
 public class ChiTietHoaDon {
-    private int MaHd,MaSp,Sl;
+    private String MaHd,MaSp, SoLuong, ThanhTien;
 
-    public int getMaHd() {
-        return MaHd;
-    }
+	public String getMaHd() {
+		return MaHd;
+	}
 
-    public void setMaHd(int MaHd) {
-        this.MaHd = MaHd;
-    }
+	public void setMaHd(String maHd) {
+		MaHd = maHd;
+	}
 
-    public int getMaSp() {
-        return MaSp;
-    }
+	public String getMaSp() {
+		return MaSp;
+	}
 
-    public void setMaSp(int MaSp) {
-        this.MaSp = MaSp;
-    }
+	public void setMaSp(String maSp) {
+		MaSp = maSp;
+	}
 
-    public int getSl() {
-        return Sl;
-    }
+	public String getSoLuong() {
+		return SoLuong;
+	}
 
-    public void setSl(int Sl) {
-        this.Sl = Sl;
-    }
+	public void setSoLuong(String soLuong) {
+		SoLuong = soLuong;
+	}
+
+	public String getThanhTien() {
+		return ThanhTien;
+	}
+
+	public void setThanhTien(String thanhTien) {
+		ThanhTien = thanhTien;
+	}
+
 }

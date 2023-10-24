@@ -20,15 +20,15 @@ public class ChiTietHoaDonDAL extends connectSql {
 	public ArrayList<ChiTietHoaDon> docCtHoaDon(){
 		ArrayList<ChiTietHoaDon> arrHd = new ArrayList<ChiTietHoaDon>();
 		try {
-			String sql = "select * from HOADONCHITIET";
+			String sql = "select * from CHITIETHOADON";
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
 			while(rs.next()) {
 				ChiTietHoaDon cthd = new ChiTietHoaDon();
-				cthd.setMaHd(rs.getInt(1)); 
-				cthd.setMaSp(rs.getInt(2));
-                                cthd.setSl(rs.getInt(3));
-                                
+				cthd.setMaHd(rs.getString(1)); 
+				cthd.setMaSp(rs.getString(2));
+                cthd.setSoLuong(rs.getString(3));
+                cthd.setThanhTien(rs.getString(4));
 				arrHd.add(cthd);
 				
 			}
@@ -41,17 +41,18 @@ public class ChiTietHoaDonDAL extends connectSql {
 	public boolean themhoadon(ChiTietHoaDon hdct,String condition) throws SQLException {
 		String sql = "";
 		if(condition.equals("themhoadon")) {
-			sql =  "INSERT INTO HOADONCHITIET( MaHD,MaSP, SoLuong) VALUES (?,?, ?)";
+			sql =  "INSERT INTO CHITIETHOADON( MaHD, MaSP, SoLuong, ThanhTien, TrangThai) VALUES (?, ?, ?, ?, ?)";
 		}
 	
 		PreparedStatement pstm = conn.prepareStatement(sql);
 			
 		try {
 
-                       pstm.setInt(1,hdct.getMaHd());
-			pstm.setInt(2,hdct.getMaSp());
-			pstm.setInt(3, hdct.getSl());
-			
+            pstm.setString(1,hdct.getMaHd());
+			pstm.setString(2,hdct.getMaSp());
+			pstm.setString(3, hdct.getSoLuong());
+			pstm.setString(4, hdct.getThanhTien());
+			pstm.setString(5, ""+1);
 //			if(condition.equals("suahoadon")) {
 //				System.out.println(hd.getMaHd());
 //				System.out.println(MaHDcu);
@@ -66,7 +67,7 @@ public class ChiTietHoaDonDAL extends connectSql {
 		}
 } 
        public boolean xoaSanPham(String masp, String mahd) throws SQLException {
-    String sql = "DELETE FROM HANDONCHITIET WHERE MaSP = ? AND MaHD = ?";
+    String sql = "UPDATE CHITIETHOADON SET TrangThai = 0 WHERE MaSP = ? AND MaHD = ?";
     try (PreparedStatement pstm = conn.prepareStatement(sql)) {
         pstm.setString(1, masp);
         pstm.setString(2, mahd);
@@ -76,7 +77,7 @@ public class ChiTietHoaDonDAL extends connectSql {
 }
 
          public boolean xoaHoaDon(String maHoaDon) throws SQLException {
-    String sql = "DELETE FROM HOADONCHITIET WHERE MaHD = ?";
+    String sql = "UPDATE HOADONCHITIET SET TrangThai = 0 WHERE MaHD = ?";
     try (PreparedStatement pstm = conn.prepareStatement(sql)) {
         pstm.setString(1, maHoaDon);
         int rowsDeleted = pstm.executeUpdate();

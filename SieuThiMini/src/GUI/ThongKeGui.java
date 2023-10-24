@@ -12,6 +12,7 @@ import com.google.common.collect.Table.Cell;
 import com.orsoncharts.plot.PiePlot3D;
 import com.toedter.calendar.JDateChooser;
 
+import BLL.NhapHang;
 import BLL.SanPhamBLL;
 import BLL.ThongKeBLL;
 import DAL.LoaiHangDAL;
@@ -141,7 +142,7 @@ public class ThongKeGui extends JFrame {
 		String[] columnNames = { "Mã Phiếu Nhập", "Nhân Viên", "Nhà Cung Cấp", "Tổng Tiền", "Ngày Nhập" };
 		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 		ThongKeBLL tkbll = new ThongKeBLL();
-		ArrayList<PhieuNhapChiTiet> arr = new ArrayList<PhieuNhapChiTiet>();
+		ArrayList<NhapHang> arr = new ArrayList<NhapHang>();
 		arr = tkbll.renderPurchaseOrder(condition);
 		if(arr.isEmpty()) {
 			JOptionPane.showMessageDialog(contentPane, "Không tồn tại Phiếu nhập cho loại hàng này!");
@@ -149,9 +150,9 @@ public class ThongKeGui extends JFrame {
 		}
 		table_1.setModel(model);
 		model.setRowCount(0);
-		for (PhieuNhapChiTiet spdata : arr) {
+		for (NhapHang nhdata : arr) {
 			
-			Object[] row = new Object[] {};//spdata.getMaPN(),spdata.getMaSP(),spdata.getSoLuong(),spdata.getNgayNhap() };
+			Object[] row = new Object[] {nhdata.getMaPn(),nhdata.getMaNv(),nhdata.getMaNcc(),nhdata.getTongTien(),nhdata.getNgayNhap() };
 
 			model.addRow(row);
 		}
@@ -165,22 +166,22 @@ public class ThongKeGui extends JFrame {
 		String[] columnNames = { "Mã Hóa Đơn", "Nhân Viên", "Khách Hàng", "Tổng Tiền", "Ngày Lập" };
 		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 		ThongKeBLL tkbll = new ThongKeBLL();
-		/*
-		 * ArrayList<PhieuXuatChiTiet> arr = new ArrayList<PhieuXuatChiTiet>();
-		 * 
-		 * arr = tkbll.renderTableOutput(condition); if(arr.isEmpty()) {
-		 * JOptionPane.showMessageDialog(contentPane,
-		 * "Không tồn tại phiếu xuất cho loại hàng này!"); return; }
-		 * 
-		 * table.setModel(model); model.setRowCount(0); for (PhieuXuatChiTiet spdata :
-		 * arr) {
-		 * 
-		 * Object[] row = new Object[]
-		 * {};//spdata.getMaPX(),spdata.getMaSP(),spdata.getSoLuongBan(),spdata.
-		 * getNgayXuat() };
-		 * 
-		 * model.addRow(row); }
-		 */
+		
+		  ArrayList<HoaDon> arr = new ArrayList<HoaDon>();
+		  
+		  arr = tkbll.RenderOrders();
+		  if(arr.isEmpty()) {
+			  JOptionPane.showMessageDialog(contentPane,
+			  "Không tồn tại hóa đơn cho loại hàng này!"); return; }
+		  
+		  table.setModel(model); model.setRowCount(0); for (HoaDon hddata :
+		  arr) {
+		  
+		  Object[] row = new Object[]{hddata.getMaHD(),hddata.getMaNV(),hddata.getMaKH(),hddata.getTongTienSauKM(),
+				  hddata.getThoiDiemLap() };
+		  
+		  model.addRow(row); }
+		 
 		JTableHeader header = table.getTableHeader();
 		Font headerFont = header.getFont(); // get the current font of the header
 		header.setFont(new Font(headerFont.getName(), Font.BOLD, 14)); // set the new font for the header with size 16

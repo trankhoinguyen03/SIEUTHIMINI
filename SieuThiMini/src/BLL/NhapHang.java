@@ -9,7 +9,7 @@ package BLL;
  * @author Acer
  */
 public class NhapHang {
-    private String maPn, maNv, maNcc, tongTien, ngayNhap, maSp, soLuong, thanhTien ;
+    private String maPn, maNv, maNcc, tongTien, ngayNhap ;
 
 	public String getMaPn() {
 		return maPn;
@@ -49,30 +49,6 @@ public class NhapHang {
 
 	public void setNgayNhap(String ngayNhap) {
 		this.ngayNhap = ngayNhap;
-	}
-
-	public String getMaSp() {
-		return maSp;
-	}
-
-	public void setMaSp(String maSp) {
-		this.maSp = maSp;
-	}
-
-	public String getSoLuong() {
-		return soLuong;
-	}
-
-	public void setSoLuong(String soLuong) {
-		this.soLuong = soLuong;
-	}
-
-	public String getThanhTien() {
-		return thanhTien;
-	}
-
-	public void setThanhTien(String thanhTien) {
-		this.thanhTien = thanhTien;
 	}
     
 }

@@ -12,12 +12,12 @@ import DTO.PhieuNhapChiTiet;
 public class ThongKeBLL {
 	public ArrayList<HoaDon> RenderOrders () throws SQLException{
 		ArrayList<HoaDon> arrHd = new ArrayList<HoaDon>();
-		HoaDonDAL hdDal = new HoaDonDAL();
-		arrHd = hdDal.docHoaDon("docHoaDon", null);
+		ThongKeDAL tkd = new ThongKeDAL();
+		arrHd = tkd.RenderOrders();
 		return arrHd;
 	}
-	public ArrayList<PhieuNhapChiTiet> renderPurchaseOrder(String conditon) throws SQLException{
-		ArrayList<PhieuNhapChiTiet> arr = new ArrayList<PhieuNhapChiTiet>();
+	public ArrayList<NhapHang> renderPurchaseOrder(String conditon) throws SQLException{
+		ArrayList<NhapHang> arr = new ArrayList<NhapHang>();
 		ThongKeDAL tkd = new ThongKeDAL();
 		if(conditon.equals("0")) {
 			return arr = tkd.readPurchaseOrder("readall");
