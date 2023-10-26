@@ -1104,14 +1104,7 @@ public class QuanLySanPhamGui extends JFrame {
 					.addGap(37)
 					.addComponent(comboBoxSearch, 0, 189, Short.MAX_VALUE)
 					.addGap(49)
-					//.addComponent(lblNewLabel_15, GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
-					//.addGap(18)
-					//.addComponent(textFieldFrom, GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-					//.addGap(10)
-					//.addComponent(lblNewLabel_16, GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					//.addComponent(textFieldTo)
-					//.addGap(66))
 		));
 		gl_panel_7_1.setVerticalGroup(
 			gl_panel_7_1.createParallelGroup(Alignment.LEADING)
@@ -1127,15 +1120,7 @@ public class QuanLySanPhamGui extends JFrame {
 									.addGap(4)
 									.addComponent(comboBoxSearch, GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))
 								.addGroup(gl_panel_7_1.createSequentialGroup()
-									.addGap(5))
-									//.addComponent(lblNewLabel_15, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
-								.addGroup(gl_panel_7_1.createSequentialGroup()
 									.addGap(3))))))
-									//.addGroup(gl_panel_7_1.createParallelGroup(Alignment.BASELINE)
-										//.addComponent(lblNewLabel_16, GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
-										//.addComponent(textFieldTo, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-										//.addComponent(textFieldFrom, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))))))
-					//.addGap(9))
 		);
 		panel_7_1.setLayout(gl_panel_7_1);
 		GroupLayout gl_panel_8 = new GroupLayout(panel_8);
