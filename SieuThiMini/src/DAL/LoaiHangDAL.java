@@ -57,20 +57,16 @@ public class LoaiHangDAL extends connectSql {
 		  closeConnection();
 		  return 0;
 	}
-	public ArrayList<LoaiHang> docLoaiHangMaLH(int maLh) throws SQLException{
-		ArrayList<LoaiHang> arrLoaihang = new ArrayList<LoaiHang>();
-		String sql = "select * from LOAIHANG where MaLH =" + maLh;
+	public String docLoaiHangMaLH(String value) throws SQLException{
+		String sql = "select TenLH from LOAIHANG where MaLH = ?";
 		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, value);
 		ResultSet rs = pstm.executeQuery();
-		 
 		while(rs.next()) {
-			LoaiHang lh = new LoaiHang();
-			lh.setMaLH(rs.getString("MaLH"));
-			lh.setTenLH(rs.getString(2));
-			arrLoaihang.add(lh);
+			return rs.getString(1);
 		}
-	closeConnection();
-	return arrLoaihang;
+		closeConnection();
+		return null;
 	}
 	public int getMaLh(String value) throws SQLException {
 		String sql = "";

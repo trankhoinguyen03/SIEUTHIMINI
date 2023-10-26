@@ -58,36 +58,6 @@ public class LoginGui extends JFrame {
 			}
 		});
 	}
-
-	/**
-	 * Create the frame.
-	 * @throws SQLException 
-	 */
-	/*
-	 * public TaiKhoan getTk() throws SQLException { DangNhapBLL dn = new
-	 * DangNhapBLL(); TaiKhoan tk = new TaiKhoan();
-	 * 
-	 * tk = dn.checkLogin(textField.getText(), textField_1.getText());
-	 * if(tk.getQuyen().equals("RL1") &&
-	 * tk.getTenDangNhap().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!"
-	 * )==false &&
-	 * tk.getTenDangNhap().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")
-	 * ==false) { AdminHome admin=new AdminHome(); setVisible(false);
-	 * 
-	 * admin.setVisible(true); admin.setLocationRelativeTo(null); } else
-	 * if(tk.getQuyen().equals("RL2") &&
-	 * tk.getTenDangNhap().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!"
-	 * )==false &&
-	 * tk.getTenDangNhap().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")
-	 * ==false) {
-	 * 
-	 * QuanLyHome quanly = new QuanLyHome(); setVisible(false);
-	 * quanly.setVisible(true); quanly.setLocationRelativeTo(null); } else {
-	 * JOptionPane.showMessageDialog(contentPane,tk.getTenDangNhap());
-	 * 
-	 * 
-	 * } return tk;};
-	 */
 	public LoginGui() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 509, 306);
@@ -140,71 +110,66 @@ public class LoginGui extends JFrame {
 		JLabel lblNewLabel_4 = new JLabel("");
 		lblNewLabel_4.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Key.png"))));
 		
-		/*
-		 * //JButton btnNewButton = new JButton("Đổi Mật Khẩu"); ImageIcon icon = new
-		 * ImageIcon(new
-		 * ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
-		 * ".\\Image\\Key.png"))).getImage().getScaledInstance(20, 20,
-		 * Image.SCALE_DEFAULT)); btnNewButton.setIcon(icon);
-		 * btnNewButton.setHorizontalAlignment(SwingConstants.RIGHT);
-		 * btnNewButton.addActionListener(new ActionListener() { public void
-		 * actionPerformed(ActionEvent e) { } }); btnNewButton.setFont(new Font("Arial",
-		 * Font.PLAIN, 13));
-		 */
-		
 		JButton btnNewButton_1 = new JButton("Đăng Nhập");
 		btnNewButton_1.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
-				DangNhapBLL dn = new DangNhapBLL();
-				TaiKhoan tk = new TaiKhoan();
-				try {
-					
-					tk = dn.checkLogin(textField.getText(), textField_1.getText());
-					
-					if(tk.getQuyen().equals("RL1") && tk.getTenDangNhap().equals("Mật khẩu không chính xác, vui lòng kiểm tra lại!")==false && tk.getTenDangNhap().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
-						 AdminHome admin=new AdminHome();
-			             setVisible(false);
-			             
-			             admin.setVisible(true);
-						admin.setLocationRelativeTo(null);
-					}
-					else if(tk.getQuyen().equals("RL2") && tk.getTenDangNhap().equals("Mật khẩu không chính xác, vui lòng kiểm tra lại!")==false && tk.getTenDangNhap().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
-					
-						QuanLyHome home = new QuanLyHome();
-						setVisible(false);
-						ShareDAta.taiKhoan = tk;
-					
-						home.setVisible(true);
-						home.setLocationRelativeTo(null);
-					}
-					else if(tk.getQuyen().equals("RL3") && tk.getTenDangNhap().equals("Mật khẩu không chính xác, vui lòng kiểm tra lại!")==false && tk.getTenDangNhap().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
+				if(textField.getText().isEmpty() || textField_1.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(contentPane, "Chưa nhập tài khoản hoặc mật khẩu");
+				}
+				else {
+					DangNhapBLL dn = new DangNhapBLL();
+					TaiKhoan tk = new TaiKhoan();
+					try {
 						
-						NhanVienBanHangHome home = new NhanVienBanHangHome();
-						setVisible(false);
-						ShareDAta.taiKhoan = tk;
-					
-						home.setVisible(true);
-						home.setLocationRelativeTo(null);
-					}
-					else if(tk.getQuyen().equals("RL4") && tk.getTenDangNhap().equals("Mật khẩu không chính xác, vui lòng kiểm tra lại!")==false && tk.getTenDangNhap().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
+						tk = dn.checkLogin(textField.getText(), textField_1.getText());
+						if(tk.getTenDangNhap().equals("Mật khẩu không chính xác, vui lòng kiểm tra lại!")==false && tk.getTenDangNhap().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
+							if(tk.getQuyen().equals("RL1")) {
+								AdminHome admin=new AdminHome();
+					            setVisible(false);
+					             
+					            admin.setVisible(true);
+								admin.setLocationRelativeTo(null);
+							}
+							else if(tk.getQuyen().equals("RL2")) {
+							
+								QuanLyHome home = new QuanLyHome();
+								setVisible(false);
+								ShareDAta.taiKhoan = tk;
+							
+								home.setVisible(true);
+								home.setLocationRelativeTo(null);
+							}
+							else if(tk.getQuyen().equals("RL3")) {
+								
+								NhanVienBanHangHome home = new NhanVienBanHangHome();
+								setVisible(false);
+								ShareDAta.taiKhoan = tk;
+							
+								home.setVisible(true);
+								home.setLocationRelativeTo(null);
+							}
+							else if(tk.getQuyen().equals("RL4")) {
+								
+								NhanVienKhoHome home = new NhanVienKhoHome();
+								setVisible(false);
+								ShareDAta.taiKhoan = tk;
+							
+								home.setVisible(true);
+								home.setLocationRelativeTo(null);
+							}
+						}
+						else {
+							JOptionPane.showMessageDialog(contentPane,tk.getTenDangNhap());
+						};
 						
-						NhanVienKhoHome home = new NhanVienKhoHome();
-						setVisible(false);
-						ShareDAta.taiKhoan = tk;
-					
-						home.setVisible(true);
-						home.setLocationRelativeTo(null);
+						
+						
+						
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-					else {
-						JOptionPane.showMessageDialog(contentPane,tk.getTenDangNhap());
-					};
-					
-					
-					
-					
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
 				
 			}
@@ -256,8 +221,6 @@ public class LoginGui extends JFrame {
 								.addComponent(textField_1, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)))
 						.addGroup(gl_panel_1.createSequentialGroup()
 							.addContainerGap()
-							//.addComponent(btnNewButton)
-							//.addGap(18)
 							.addComponent(btnNewButton_1)
 							.addGap(18)
 							.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)))
@@ -287,7 +250,6 @@ public class LoginGui extends JFrame {
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
-						//.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE))
 					.addGap(23))
 		);
 		panel_1.setLayout(gl_panel_1);
