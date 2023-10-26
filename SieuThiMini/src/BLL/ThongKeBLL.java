@@ -8,6 +8,7 @@ import DAL.ThongKeDAL;
 import DTO.DoanhThu;
 import DTO.HoaDon;
 import DTO.PhieuNhapChiTiet;
+import DTO.NhapHang;
 
 public class ThongKeBLL {
 	public ArrayList<HoaDon> RenderOrders () throws SQLException{

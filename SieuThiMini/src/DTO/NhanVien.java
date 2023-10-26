@@ -1,63 +1,85 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package DTO;
 
+/**
+ *
+ * @author Acer
+ */
 public class NhanVien {
-	private String MaNv,ChucVu;
-	private String HoTen,NgaySinh,DiaChi,CMND,DienThoai,NgayVaoLam;
-	private String GioiTinh;
+    private String maNv, tenNv, ngaySinh, sdt, diaChi, gioiTinh, cccd, ngayVaoLam, chucVu;
+
 	public String getMaNv() {
-		return MaNv;
+		return maNv;
 	}
+
 	public void setMaNv(String maNv) {
-		MaNv = maNv;
+		this.maNv = maNv;
 	}
-	public String getChucVu() {
-		return ChucVu;
+
+	public String getTenNv() {
+		return tenNv;
 	}
-	public void setChucVu(String chucVu) {
-		ChucVu = chucVu;
+
+	public void setTenNv(String tenNv) {
+		this.tenNv = tenNv;
 	}
-	public String getHoTen() {
-		return HoTen;
-	}
-	public void setHoTen(String hoTen) {
-		HoTen = hoTen;
-	}
+
 	public String getNgaySinh() {
-		return NgaySinh;
+		return ngaySinh;
 	}
+
 	public void setNgaySinh(String ngaySinh) {
-		NgaySinh = ngaySinh;
+		this.ngaySinh = ngaySinh;
 	}
+
+	public String getSdt() {
+		return sdt;
+	}
+
+	public void setSdt(String sdt) {
+		this.sdt = sdt;
+	}
+
 	public String getDiaChi() {
-		return DiaChi;
+		return diaChi;
 	}
+
 	public void setDiaChi(String diaChi) {
-		DiaChi = diaChi;
+		this.diaChi = diaChi;
 	}
-	public String getCMND() {
-		return CMND;
-	}
-	public void setCMND(String cMND) {
-		CMND = cMND;
-	}
-	public String getDienThoai() {
-		return DienThoai;
-	}
-	public void setDienThoai(String dienThoai) {
-		DienThoai = dienThoai;
-	}
-	public String getNgayVaoLam() {
-		return NgayVaoLam;
-	}
-	public void setNgayVaoLam(String ngayVaoLam) {
-		NgayVaoLam = ngayVaoLam;
-	}
+
 	public String getGioiTinh() {
-		return GioiTinh;
+		return gioiTinh;
 	}
+
 	public void setGioiTinh(String gioiTinh) {
-		GioiTinh = gioiTinh;
+		this.gioiTinh = gioiTinh;
 	}
-	
-	
+
+	public String getCccd() {
+		return cccd;
+	}
+
+	public void setCccd(String cccd) {
+		this.cccd = cccd;
+	}
+
+	public String getNgayVaoLam() {
+		return ngayVaoLam;
+	}
+
+	public void setNgayVaoLam(String ngayVaoLam) {
+		this.ngayVaoLam = ngayVaoLam;
+	}
+
+	public String getChucVu() {
+		return chucVu;
+	}
+
+	public void setChucVu(String chucVu) {
+		this.chucVu = chucVu;
+	}
 }

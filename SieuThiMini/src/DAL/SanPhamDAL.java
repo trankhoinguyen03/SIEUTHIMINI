@@ -47,8 +47,8 @@ public class SanPhamDAL extends connectSql {
 				 else if(value.contains("SP")) {
 					 sql = "select * from SANPHAM where TrangThai = 1 and MaSP LIKE ?";
 				 }
-				 else if(Integer.parseInt(value)>0) {
-					 sql = "select * from SANPHAM where TrangThai = 1 and MaSP LIKE ?";
+				 else {
+					 sql = "select * from SANPHAM where TrangThai = 1 and GiaBan LIKE ?";
 				 }
 
 			}
@@ -63,14 +63,7 @@ public class SanPhamDAL extends connectSql {
 			}
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			if (condition.equals("timkiem")) {
-				if(part2.equals("0")) {
-					pstm.setString(1, "%" + part1 + "%");
-				}
-				if(part2.equals("0")==false) {
-					pstm.setString(1, "%" + part1 + "%");
-					pstm.setString(2, part2);
-				}
-				
+				pstm.setString(1, value);
 			}
 			if(condition.equals("timkiemtheoloaihang")) {
 				if(!value.equals("Tất cả")) {

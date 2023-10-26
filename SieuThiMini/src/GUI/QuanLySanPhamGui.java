@@ -204,24 +204,14 @@ public class QuanLySanPhamGui extends JFrame {
 	public void hienthisanpham(String condition) throws SQLException {
 		
 
-		SanPhamDAL spDal = new SanPhamDAL();
 		ArrayList<SanPham> arrSp = new ArrayList<SanPham>();
 		SanPhamBLL spbll = new SanPhamBLL();
 		if (condition == "hien thi") {
 
-			arrSp = spDal.docSanPham("docsanpham", null);
+			arrSp = spbll.getSanPham();
 		}
-		if (condition == "hienthitheoid") {
-			arrSp = spDal.docSanPham("docsanphamtheoid", rsRenderType + "");
-		}
-		if (condition == "sapxeptheoten") {
-			arrSp = spDal.docSanPham("sapxeptheoten", null);
-		}
-		if (condition == "sapxeptheogia") {
-			arrSp = spDal.docSanPham("sapxeptheogia", null);
-		}
-		if (condition == "timkiemtheoid") {
-			arrSp = spbll.search(textFieldSearch.getText());
+		if (condition == "timkiem") {
+			arrSp = spbll.searchSanPham(textFieldSearch.getText());
 
 		}
 		if (condition == "timkiemtheoloaihang") {
@@ -1046,20 +1036,9 @@ public class QuanLySanPhamGui extends JFrame {
 			}
 		});
 
-
-		/*
-		 * JLabel lblNewLabel_15 = new JLabel("Từ");
-		 * lblNewLabel_15.setHorizontalAlignment(SwingConstants.CENTER);
-		 * lblNewLabel_15.setFont(new Font("Arial", Font.BOLD, 14));
-		 * 
-		 * JLabel lblNewLabel_16 = new JLabel("Tới");
-		 * lblNewLabel_16.setHorizontalAlignment(SwingConstants.CENTER);
-		 * lblNewLabel_16.setFont(new Font("Arial", Font.BOLD, 14));
-		 */
-
 		textFieldSearch.setColumns(10);
 
-		JButton btnTimKiem = new JButton("Tìm Kiếm");
+		JButton btnTimKiem = new JButton("Tìm Kiếm (theo mã/giá bán)");
 		btnTimKiem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
@@ -1072,17 +1051,8 @@ public class QuanLySanPhamGui extends JFrame {
 				}
 				if (!textFieldSearch.getText().isEmpty()) {
 					btnfind = true;
-					SanPhamBLL spbll = new SanPhamBLL();
-					ArrayList<SanPham> arr = new ArrayList<SanPham>();
 					try {
-						arr = spbll.search(textFieldSearch.getText());
-						if (!arr.isEmpty()) {
-								hienthisanpham("timkiemtheoid");
-						}
-
-							else {
-							JOptionPane.showMessageDialog(contentPane, "Không tìm thấy sản phẩm!");
-							}
+					hienthisanpham("timkiem");
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

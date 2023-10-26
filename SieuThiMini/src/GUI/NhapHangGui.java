@@ -55,10 +55,10 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import BLL.NhapHang;
+import DTO.NhapHang;
 import DAL.NhapHangDAL;
 import DAL.NhanVienDAL;
-import BLL.NhanVien;
+import DTO.NhanVien;
 
 import DAL.SanPhamDAL;
 import DTO.NhaCungCap;

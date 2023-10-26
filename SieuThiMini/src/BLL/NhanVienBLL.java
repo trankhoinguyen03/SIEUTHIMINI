@@ -8,7 +8,7 @@ package BLL;
  *
  * @author Acer
  */
-public class NhanVien {
+public class NhanVienBLL {
     private String maNv, tenNv, ngaySinh, sdt, diaChi, gioiTinh, cccd, ngayVaoLam, chucVu;
 
 	public String getMaNv() {

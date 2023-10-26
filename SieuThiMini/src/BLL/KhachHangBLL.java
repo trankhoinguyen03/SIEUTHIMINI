@@ -1,7 +1,7 @@
 
 package BLL;
 
-public class KhachHang {
+public class KhachHangBLL {
     private String maKh, tenKh, soDienThoai, tichDiem;
 
 	public String getMaKh() {

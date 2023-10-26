@@ -1,6 +1,6 @@
 package BLL;
 
-public class TaiKhoan {
+public class TaiKhoanBLL {
 	private String maNV, tenDangNhap, matKhau, quyen;
 
 	public String getMaNV() {

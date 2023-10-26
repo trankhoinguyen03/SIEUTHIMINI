@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import BLL.NhanVien;
+import DTO.NhanVien;
 public class NhanVienDAL extends connectSql {
 
 	public NhanVienDAL() throws SQLException {
@@ -38,7 +38,7 @@ public class NhanVienDAL extends connectSql {
 	                nv.setMaNv(rs.getString("MaNV"));
 	                nv.setTenNv(rs.getString("TenNV"));
 	                nv.setNgaySinh(rs.getString("NgaySinh"));
-	                nv.setSdt(rs.getString("SDT"));
+	                nv.setSdt(sql);
 	                nv.setDiaChi(rs.getString("DiaChi"));
 	                nv.setGioiTinh(rs.getString("GioiTinh"));
 	                nv.setCccd(rs.getString("CCCD"));

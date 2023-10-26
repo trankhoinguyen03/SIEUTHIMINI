@@ -55,7 +55,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import BLL.KhachHang;
+import DTO.KhachHang;
 import DAL.KhachHangDAL;
 import DTO.TaiKhoan;
 

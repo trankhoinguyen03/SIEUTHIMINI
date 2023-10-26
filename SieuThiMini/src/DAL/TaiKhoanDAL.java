@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import BLL.TaiKhoan;
+import DTO.TaiKhoan;
 public class TaiKhoanDAL extends connectSql {
 
 	public TaiKhoanDAL() throws SQLException {

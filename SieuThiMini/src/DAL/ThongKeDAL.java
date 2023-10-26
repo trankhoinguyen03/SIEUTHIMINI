@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import BLL.NhapHang;
+import DTO.NhapHang;
 import DTO.DoanhThu;
 import DTO.HoaDon;
 import DTO.PhieuNhapChiTiet;

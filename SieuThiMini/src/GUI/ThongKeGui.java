@@ -12,7 +12,7 @@ import com.google.common.collect.Table.Cell;
 import com.orsoncharts.plot.PiePlot3D;
 import com.toedter.calendar.JDateChooser;
 
-import BLL.NhapHang;
+import DTO.NhapHang;
 import BLL.SanPhamBLL;
 import BLL.ThongKeBLL;
 import DAL.LoaiHangDAL;

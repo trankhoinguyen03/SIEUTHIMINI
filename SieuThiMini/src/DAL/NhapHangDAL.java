@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import BLL.NhapHang;
-import BLL.NhanVien;
+import DTO.NhapHang;
+import DTO.NhanVien;
 
 
 public class NhapHangDAL extends connectSql {

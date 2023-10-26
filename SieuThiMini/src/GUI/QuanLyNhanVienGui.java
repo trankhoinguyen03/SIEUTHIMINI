@@ -55,8 +55,9 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import BLL.NhanVien;
+import DTO.NhanVien;
 import DAL.NhanVienDAL;
+
 
 import javax.swing.JScrollPane;
 import java.awt.Color;

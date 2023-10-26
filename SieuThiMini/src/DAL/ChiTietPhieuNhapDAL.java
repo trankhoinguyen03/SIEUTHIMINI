@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import BLL.NhapHang;
+import DTO.NhapHang;
 import DTO.PhieuNhapChiTiet;
 
 public class ChiTietPhieuNhapDAL extends connectSql {

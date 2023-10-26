@@ -55,7 +55,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import BLL.TaiKhoan;
+import DTO.TaiKhoan;
 import DAL.TaiKhoanDAL;
 
 import javax.swing.JScrollPane;
