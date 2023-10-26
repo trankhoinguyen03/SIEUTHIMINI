@@ -68,16 +68,16 @@ public class LoaiHangDAL extends connectSql {
 		closeConnection();
 		return null;
 	}
-	public int getMaLh(String value) throws SQLException {
+	public String getMaLh(String value) throws SQLException {
 		String sql = "";
 		sql ="select MaLH from LOAIHANG where TenLH = ?";
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		pstm.setString(1, value);
 		ResultSet rs = pstm.executeQuery();
 		while(rs.next()) {
-			return rs.getInt("MaLH");
+			return rs.getString(1);
 		}
-		return 0;
+		return null;
 	}
 	public boolean ThemLoaiHang(LoaiHang Lh, String condition) throws SQLException {
 	    String sql = "";

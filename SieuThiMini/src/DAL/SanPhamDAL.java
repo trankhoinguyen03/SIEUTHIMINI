@@ -28,6 +28,7 @@ public class SanPhamDAL extends connectSql {
 		  closeConnection();
 		  return 0;
 	}
+	
 	public ArrayList<SanPham> docSanPham(String condition, String value) {
 		String sql = "";
 		String part2="";
@@ -36,14 +37,8 @@ public class SanPhamDAL extends connectSql {
 		String partPriceTo="";
 		ArrayList<SanPham> arrList = new ArrayList<SanPham>();
 		try {
-			if (condition.equals("sapxeptheoten")) {
-				sql = "select * from SANPHAM where TrangThai = 1 order by TenSP";
-			}
 			if (condition.equals("docsanpham")) {
-				sql = "select * from SANPHAM where TrangThai = 1";
-			}
-			if (condition.equals("sapxeptheogia")) {
-				sql = "select * from SANPHAM where TrangThai = 1 order by GiaBan";
+				sql = "select * from SANPHAM where TrangThai = 1 order by MaSP";
 			}
 			if (condition.equals("timkiem")) {
 				String[] parts = value.split(",");
@@ -59,20 +54,11 @@ public class SanPhamDAL extends connectSql {
 				 }
 
 			}
-			if(condition.equals("timkiemgia")) {
-				String[] parts = value.split(",");
-				 part1 = parts[0];
-				 part2 = parts[1]; 
-				 partPriceFrom = parts[2];
-				 partPriceTo=parts[3];
-				 if(part2.equals("0")) {
-						
-					 sql = "select * from SANPHAM where TrangThai = 1 and TenSP LIKE ? and GiaBan BETWEEN  ? AND  ? ";
-				 }
-				 else {
-					 sql = "select * from SANPHAM where TrangThai = 1 and TenSP LIKE ? and MaLH = ? and GiaBan BETWEEN  ? AND  ?";
-				 }
-				 
+			if(condition.equals("timkiemtheoloaihang")) {
+				if(value.equals("Tất cả")) {
+					sql = "select * from SANPHAM where TrangThai = 1 order by MaSP";
+				}
+				else sql = "select * from SANPHAM where TrangThai = 1 and MaLH LIKE ?";
 			}
 			if (condition.equals("docsanphamtheoid")) {
 				sql = "select * from SANPHAM where TrangThai = 1 and MaLH =" + value;
@@ -88,17 +74,10 @@ public class SanPhamDAL extends connectSql {
 				}
 				
 			}
-			if(condition.equals("timkiemgia")) {
-				if(part2.equals("0")) {
-					pstm.setString(1, "%" + part1 + "%");
-					pstm.setInt(2, Integer.parseInt(partPriceFrom));
-					pstm.setInt(3, Integer.parseInt(partPriceTo));
-				}
-				if(part2.equals("0")==false) {
-					pstm.setString(1, "%" + part1 + "%");
-					pstm.setString(2, part2);
-					pstm.setInt(3, Integer.parseInt(partPriceFrom));
-					pstm.setInt(4, Integer.parseInt(partPriceTo));
+			if(condition.equals("timkiemtheoloaihang")) {
+				if(!value.equals("Tất cả")) {
+					LoaiHangDAL lh = new LoaiHangDAL();
+					pstm.setString(1, lh.getMaLh(value));
 				}
 			}
 			ResultSet rs = pstm.executeQuery();
@@ -118,7 +97,6 @@ public class SanPhamDAL extends connectSql {
 		}
 		return arrList;
 	}
-
 	public String layMaLoaiSP(String tenMaLoai) throws SQLException {
 		String sql = "SELECT MaLH FROM LOAIHANG WHERE TenLH = ?";
 		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
@@ -135,7 +113,7 @@ public class SanPhamDAL extends connectSql {
 		}
 	}
 
-	public boolean xoaSanPham(String masp) throws SQLException {
+	public boolean anSanPham(String masp) throws SQLException {
 		String sql = "UPDATE SANPHAM SET TrangThai = " + 0 + " where MaSP = " + masp;
 		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
 			int rowsUpdated = pstm.executeUpdate();

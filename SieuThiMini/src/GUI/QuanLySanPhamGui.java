@@ -139,17 +139,15 @@ public class QuanLySanPhamGui extends JFrame {
 	boolean isNumber = true;
 	//JButton btnThem = new JButton("Thêm");
 	int lastRow = 0;
-	JRadioButton radio1 = new JRadioButton("Tên sản phẩm");
+	JRadioButton radio1 = new JRadioButton("Loại hàng");
 	JLabel lblNewLabel = new JLabel("QUẢN LÝ SẢN PHẨM");
-	JRadioButton radio2 = new JRadioButton("Giá sản phẩm");
+	JRadioButton radio2 = new JRadioButton("Giá bán");
 	ButtonGroup btg = new ButtonGroup();
 	JScrollPane scrollPane = new JScrollPane();
 	boolean addbtn, fixbtn = false;
 	JComboBox comboBoxSearch = new JComboBox();
 	int rsRenderType = 0;
 	JTextField textFieldSearch = new JTextField();
-	JTextField textFieldTo = new JTextField();
-	JTextField textFieldFrom = new JTextField();
 	boolean btnfind = false;
 //	dung grap 2d tao size cho anh
 	int newWidth = 130;
@@ -226,35 +224,9 @@ public class QuanLySanPhamGui extends JFrame {
 			arrSp = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
 
 		}
-		if (condition == "timkiemtheogia") {
+		if (condition == "timkiemtheoloaihang") {
 
-			String priceFrom = textFieldFrom.getText().replaceAll(",", "");
-			String priceTo = textFieldTo.getText().replaceAll(",", "");
-			arrSp = spbll.searchProductByPrice(textFieldSearch.getText(),
-					rsRenderType + "" + "," + priceFrom + "," + priceTo);
-//			if (rsRenderType > 0) {
-//
-//				arrSp = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
-//				LoaiHangDAL test = new LoaiHangDAL();
-//				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
-//				DefaultComboBoxModel combo = new DefaultComboBoxModel();
-//				comboBox.setModel(combo);
-//				for (LoaiHang malh : arrMaLH) {
-//					combo.addElement(malh.getTenLH());
-//
-//				}
-//			} else {
-//
-//				arrSp = spDal.docSanPham("docsanpham", null);
-//				LoaiHangDAL test = new LoaiHangDAL();
-//				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
-//				DefaultComboBoxModel combo = new DefaultComboBoxModel();
-//				comboBox.setModel(combo);
-//				for (LoaiHang malh : arrMaLH) {
-//					combo.addElement(malh.getTenLH());
-//
-//				}
-//			}
+			arrSp = spbll.findByLoaiHang(comboBoxSearch.getSelectedItem().toString());
 
 		}
 		if (arrSp.isEmpty() && btnfind || arrSp.isEmpty()) {
@@ -262,16 +234,14 @@ public class QuanLySanPhamGui extends JFrame {
 			btnfind = false;
 			return;
 		}
-		String[] columnNames = { "Tên Loại Hàng", "Mã Sản Phẩm", "Tên Sản Phẩm", "Giá Mua", "Giá Bán", "Ngày Sản Xuất", "Hạn Sử Dụng" };
+		String[] columnNames = { "Loại Hàng", "Mã Sản Phẩm", "Tên Sản Phẩm", "Giá Mua", "Giá Bán", "Ngày Sản Xuất", "Hạn Sử Dụng" };
 		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
 		table.setModel(model);
 		model.setRowCount(0);
 		for (SanPham spdata : arrSp) {
-			String formatGiaBan = spdata.getGiaBan();
-			String formatGiaMua = spdata.getGiaMua();
 			Object[] row = new Object[] {spdata.getMaLh(), spdata.getMaSp(), spdata.getTenSp(),
-					formatGiaMua, formatGiaBan, spdata.getNgaySanXuat() ,spdata.getHanSuDung() };
+					spdata.getGiaMua(), spdata.getGiaBan(), spdata.getNgaySanXuat() ,spdata.getHanSuDung() };
 
 			model.addRow(row);
 		}
@@ -329,6 +299,8 @@ public class QuanLySanPhamGui extends JFrame {
 	public void resetValue() {
 		//textFieldImg.setText("");
 		//textFieldImg.setEnabled(true);
+		textFieldLoaiHang.setText("");
+		textFieldLoaiHang.setEnabled(true);
 		textFieldMasp.setText("");
 		textFieldMasp.setEnabled(true);
 		textFieldHsd.setText("");
@@ -341,7 +313,6 @@ public class QuanLySanPhamGui extends JFrame {
 		textFieldNsx.setEnabled(true);
 		textFieldTensp.setText("");
 		textFieldTensp.setEnabled(true);
-		lbThemanh.setIcon(null);
 		//btnCapNhatAnh.setEnabled(true);
 		//btnThem.setEnabled(true);
 		btnAn.setEnabled(false);
@@ -358,6 +329,7 @@ public class QuanLySanPhamGui extends JFrame {
 
 	public void unSetEnable() {
 		//textFieldImg.setEnabled(true);
+		textFieldLoaiHang.setEnabled(true);
 		textFieldMasp.setEnabled(true);
 		textFieldHsd.setEnabled(true);
 		textFieldGiaban.setEnabled(true);
@@ -380,15 +352,14 @@ public class QuanLySanPhamGui extends JFrame {
 	public void setEnable() {
 
 		//textFieldImg.setEnabled(false);
-
+		textFieldLoaiHang.setEnabled(false);
 		textFieldMasp.setEnabled(false);
-
 		textFieldHsd.setEnabled(false);
 		textFieldGiaban.setEnabled(false);
 		textFieldGianhap.setEnabled(false);
 		textFieldNsx.setEnabled(false);
 		textFieldTensp.setEnabled(false);
-		//btnCapNhatAnh.setEnabled(false);
+		btnAn.setEnabled(false);
 //		Tabbed 2
 
 		textMaSP1.setEnabled(false);
@@ -703,7 +674,7 @@ public class QuanLySanPhamGui extends JFrame {
 		lblNewLabel_1.setFont(new Font("Arial", Font.BOLD, 12));
 
 		textFieldMasp = new JTextField();
-		textFieldMasp.setFont(new Font("Arial", Font.BOLD, 14));
+		textFieldMasp.setFont(new Font("Arial", Font.BOLD, 12));
 		textFieldMasp.setEnabled(false);
 		textFieldMasp.setColumns(10);
 
@@ -712,7 +683,7 @@ public class QuanLySanPhamGui extends JFrame {
 		lblNewLabel_3.setFont(new Font("Arial", Font.BOLD, 12));
 
 		textFieldTensp = new JTextField();
-		textFieldTensp.setFont(new Font("Arial", Font.BOLD, 14));
+		textFieldTensp.setFont(new Font("Arial", Font.BOLD, 12));
 		textFieldTensp.setEnabled(false);
 		textFieldTensp.setColumns(10);
 
@@ -721,7 +692,7 @@ public class QuanLySanPhamGui extends JFrame {
 		lblNewLabel_4.setFont(new Font("Arial", Font.BOLD, 12));
 
 		textFieldGianhap = new JTextField();
-		textFieldGianhap.setFont(new Font("Arial", Font.BOLD, 14));
+		textFieldGianhap.setFont(new Font("Arial", Font.BOLD, 12));
 		textFieldGianhap.setEnabled(false);
 		textFieldGianhap.setColumns(10);
 
@@ -754,7 +725,7 @@ public class QuanLySanPhamGui extends JFrame {
 		lblNewLabel_6.setFont(new Font("Arial", Font.BOLD, 12));
 
 		textFieldLoaiHang = new JTextField();
-		textFieldLoaiHang.setFont(new Font("Arial", Font.BOLD, 14));
+		textFieldLoaiHang.setFont(new Font("Arial", Font.BOLD, 10));
 		textFieldLoaiHang.setEnabled(false);
 		textFieldLoaiHang.setColumns(10);
 
@@ -767,7 +738,7 @@ public class QuanLySanPhamGui extends JFrame {
 		lblNewLabel_8.setFont(new Font("Arial", Font.BOLD, 12));
 
 		textFieldNsx = new JTextField();
-		textFieldNsx.setFont(new Font("Arial", Font.BOLD, 14));
+		textFieldNsx.setFont(new Font("Arial", Font.BOLD, 12));
 		textFieldNsx.setEnabled(false);
 		textFieldNsx.setColumns(10);
 
@@ -776,7 +747,7 @@ public class QuanLySanPhamGui extends JFrame {
 		lblNewLabel_9.setFont(new Font("Arial", Font.BOLD, 12));
 
 		textFieldGiaban = new JTextField();
-		textFieldGiaban.setFont(new Font("Arial", Font.BOLD, 14));
+		textFieldGiaban.setFont(new Font("Arial", Font.BOLD, 12));
 		textFieldGiaban.setEnabled(false);
 		textFieldGiaban.setColumns(10);
 		textFieldGiaban.addKeyListener(new KeyAdapter() {
@@ -801,7 +772,7 @@ public class QuanLySanPhamGui extends JFrame {
 			}
 		});
 		textFieldHsd = new JTextField();
-		textFieldHsd.setFont(new Font("Arial", Font.BOLD, 14));
+		textFieldHsd.setFont(new Font("Arial", Font.BOLD, 12));
 		textFieldHsd.setEnabled(false);
 		textFieldHsd.setColumns(10);
 
@@ -815,14 +786,14 @@ public class QuanLySanPhamGui extends JFrame {
 		btnAn.setFocusPainted(false);
 		btnAn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa sản phẩm này", "Confirmation",
+				int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn sản phẩm này", "Confirmation",
 						JOptionPane.YES_NO_OPTION);
 				if (confirmed == JOptionPane.YES_OPTION) {
 					SanPhamDAL deleteSp;
 					try {
 						deleteSp = new SanPhamDAL();
-						if (deleteSp.xoaSanPham(textFieldMasp.getText())) {
-							JOptionPane.showMessageDialog(contentPane, "Xóa sản phẩm thành công!");
+						if (deleteSp.anSanPham(textFieldMasp.getText())) {
+							JOptionPane.showMessageDialog(contentPane, "Ẩn sản phẩm thành công!");
 							hienthisanpham("hien thi");
 							resetValue();
 							comboBoxSearch.setSelectedItem("Tất cả");
@@ -879,10 +850,10 @@ public class QuanLySanPhamGui extends JFrame {
 					sp.setMaLh((String) table.getValueAt(i, 0));
 					sp.setMaSp((String) table.getValueAt(i, 1));
 					sp.setTenSp((String) table.getValueAt(i, 2));
-					sp.setNgaySanXuat((String) table.getValueAt(i, 3));
-					sp.setHanSuDung((String) table.getValueAt(i, 4));
-					sp.setGiaMua(((String) table.getValueAt(i, 5)).replaceAll(",", ""));
-					sp.setGiaBan(((String) table.getValueAt(i, 6)).replaceAll(",", ""));
+					sp.setGiaMua(((String) table.getValueAt(i, 3)));
+					sp.setGiaBan(((String) table.getValueAt(i, 4)));
+					sp.setNgaySanXuat((String) table.getValueAt(i, 5));
+					sp.setHanSuDung((String) table.getValueAt(i, 6));
 					data.add(sp);
 
 				}
@@ -891,30 +862,28 @@ public class QuanLySanPhamGui extends JFrame {
 
 					Collections.sort(data, new Comparator<SanPham>() {
 					    public int compare(SanPham sp1, SanPham sp2) {
-					        return sp1.getTenSp().compareTo(sp2.getTenSp());
+					        return sp1.getMaLh().compareTo(sp2.getMaLh());
 					    }
 					});
-			
-					
-					
 				}
-				/*
-				 * if (radio2.isSelected()) {
-				 * 
-				 * Collections.sort(data, new Comparator<SanPham>() { public int compare(SanPham
-				 * sp1, SanPham sp2) { return compare(sp1.getGiaBan(), sp2.getGiaBan()); } }); }
-				 */
 				
-				String[] columnNames = { "MaLH", "MaSP", "TenSP", "DonVi", "HSD", "GiaMua", "GiaBan", "Image" };
+				if (radio2.isSelected()) {
+				  
+					Collections.sort(data, new Comparator<SanPham>(){
+						public int compare(SanPham sp1, SanPham sp2) {
+							return Integer.parseInt(sp1.getGiaBan()) - Integer.parseInt(sp2.getGiaBan());
+						}
+					});
+				}
+				 
+				
+				String[] columnNames = { "Loại Hàng", "Mã Sản Phẩm", "Tên Sản Phẩm", "Giá Mua", "Giá Bán", "Ngày Sản Xuất", "Hạn Sử Dụng" };
 				DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
 				table.setModel(model);
 				model.setRowCount(0);
 				for (SanPham sp : data) {
-					NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-					String formatGiaBan = numberFormat.format(sp.getGiaBan());
-					String formatGiaMua = numberFormat.format(sp.getGiaMua());
-					Object[] row = {sp.getMaLh(), sp.getMaSp(), sp.getTenSp(),sp.getNgaySanXuat(),sp.getHanSuDung(),formatGiaMua, formatGiaBan };
+					Object[] row = {sp.getMaLh(), sp.getMaSp(), sp.getTenSp(), sp.getGiaMua(), sp.getGiaBan(),sp.getNgaySanXuat(),sp.getHanSuDung() };
 					model.addRow(row);
 				}
 				
@@ -1066,23 +1035,9 @@ public class QuanLySanPhamGui extends JFrame {
 
 			public void actionPerformed(ActionEvent e) {
 				btg.clearSelection();
-				textFieldFrom.setText("");
-				textFieldTo.setText("");
 				textFieldSearch.setText("");
 				try {
-					SanPhamBLL spbll = new SanPhamBLL();
-					rsRenderType = spbll.renderProType(comboBoxSearch.getSelectedItem().toString());
-
-					if (rsRenderType > 0) {
-
-						hienthisanpham("hienthitheoid");
-
-					}
-					if (rsRenderType == 0) {
-						hienthisanpham("hien thi");
-
-					}
-
+					hienthisanpham("timkiemtheoloaihang");
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -1091,51 +1046,6 @@ public class QuanLySanPhamGui extends JFrame {
 			}
 		});
 
-		textFieldFrom.setColumns(10);
-		textFieldFrom.addKeyListener(new KeyAdapter() {
-			public void keyReleased(KeyEvent e) {
-				formatInput();
-			}
-
-			private void formatInput() {
-				String input = textFieldFrom.getText().replaceAll("[\\p{Punct}\\s]", "");
-				
-				if (input.isEmpty()) {
-					return;
-				}
-				try {
-					int number = Integer.parseInt(input);
-					NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-					String formattedNumber = numberFormat.format(number);
-					textFieldFrom.setText(formattedNumber);
-				} catch (NumberFormatException ex) {
-					// Ignore invalid input
-				}
-			}
-		});
-
-		textFieldTo.setColumns(10);
-		textFieldTo.addKeyListener(new KeyAdapter() {
-			public void keyReleased(KeyEvent e) {
-				formatInput();
-			}
-
-			private void formatInput() {
-				String input = textFieldTo.getText().replaceAll("[\\p{Punct}\\s]", "");
-				
-				if (input.isEmpty()) {
-					return;
-				}
-				try {
-					int number = Integer.parseInt(input);
-					NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-					String formattedNumber = numberFormat.format(number);
-					textFieldTo.setText(formattedNumber);
-				} catch (NumberFormatException ex) {
-					// Ignore invalid input
-				}
-			}
-		});
 
 		/*
 		 * JLabel lblNewLabel_15 = new JLabel("Từ");
@@ -1167,50 +1077,12 @@ public class QuanLySanPhamGui extends JFrame {
 					try {
 						arr = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
 						if (!arr.isEmpty()) {
-							if (!textFieldFrom.getText().isEmpty() || !textFieldTo.getText().isEmpty()) {
-								if (textFieldFrom.getText().isEmpty()) {
-									JOptionPane.showMessageDialog(contentPane, "Khoảng giá cần tìm trống!");
-									textFieldFrom.requestFocus();
-								} else if (textFieldTo.getText().isEmpty()) {
-									JOptionPane.showMessageDialog(contentPane, "Khoảng giá cần tìm trống!");
-									textFieldTo.requestFocus();
-								} else {
-									String inputFrom = textFieldFrom.getText().replaceAll("[\\p{Punct}\\s]", "");
-									
-									
-									String inputTo = textFieldTo.getText().replaceAll("[\\p{Punct}\\s]", "");
-									isNumber = inputFrom.matches(patternNumber);
-									boolean isNumber2 = inputTo.matches(patternNumber);
-
-									if (!isNumber) {
-										JOptionPane.showMessageDialog(contentPane, "Giá trị phải là số");
-										textFieldFrom.requestFocus();
-										textFieldFrom.selectAll();
-
-									} else if (!isNumber2) {
-										JOptionPane.showMessageDialog(contentPane, "Giá trị phải là số");
-										textFieldTo.requestFocus();
-										textFieldTo.selectAll();
-
-									} else {
-										if (Integer.parseInt(textFieldFrom.getText().replaceAll(",", "")) > Integer
-												.parseInt(textFieldTo.getText().replaceAll(",", ""))) {
-											JOptionPane.showMessageDialog(contentPane, "Khoảng giá không hợp lê!");
-											textFieldFrom.requestFocus();
-										} else {
-
-											hienthisanpham("timkiemtheogia");
-										}
-									}
-
-								}
-							} else {
 								hienthisanpham("timkiemtheoid");
-							}
-
-						} else {
-							JOptionPane.showMessageDialog(contentPane, "Không tìm thấy sản phẩm!");
 						}
+
+							else {
+							JOptionPane.showMessageDialog(contentPane, "Không tìm thấy sản phẩm!");
+							}
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -1318,16 +1190,10 @@ public class QuanLySanPhamGui extends JFrame {
 					.addGap(10)
 					.addGroup(gl_panel_5.createParallelGroup(Alignment.TRAILING)
 						.addComponent(lblNewLabel_6, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
-						//.addComponent(btnCapNhatAnh, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
 					.addGroup(gl_panel_5.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_5.createSequentialGroup()
-							.addGap(10)
-							//.addComponent(textFieldImg, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
-							.addGap(10))
-						.addGroup(gl_panel_5.createSequentialGroup()
-							.addGap(9)
-							.addComponent(textFieldLoaiHang, 0, 127, Short.MAX_VALUE)
-							.addGap(11)))
+							.addComponent(textFieldLoaiHang, 0, 170, Short.MAX_VALUE)
+							.addGap(5)))
 					.addGroup(gl_panel_5.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblNewLabel_7, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(lblNewLabel_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE))
@@ -1448,7 +1314,7 @@ public class QuanLySanPhamGui extends JFrame {
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 
 		textTenSp = new JTextField();
-		textTenSp.setFont(new Font("Arial", Font.BOLD, 14));
+		textTenSp.setFont(new Font("Arial", Font.BOLD, 10));
 		textTenSp.setEnabled(false);
 		textTenSp.setColumns(10);
 
@@ -1656,17 +1522,17 @@ public class QuanLySanPhamGui extends JFrame {
 
 		textNhaCC = new JTextField();
 		textNhaCC.setHorizontalAlignment(SwingConstants.CENTER);
-		textNhaCC.setFont(new Font("Arial", Font.BOLD, 14));
+		textNhaCC.setFont(new Font("Arial", Font.BOLD, 13));
 		textNhaCC.setEnabled(false);
 		textNhaCC.setColumns(10);
 
 		textTenNcc = new JTextField();
-		textTenNcc.setFont(new Font("Arial", Font.BOLD, 14));
+		textTenNcc.setFont(new Font("Arial", Font.BOLD, 10));
 		textTenNcc.setEnabled(false);
 		textTenNcc.setColumns(10);
 
 		textDiaChiCC = new JTextField();
-		textDiaChiCC.setFont(new Font("Arial", Font.BOLD, 14));
+		textDiaChiCC.setFont(new Font("Arial", Font.BOLD, 12));
 		textDiaChiCC.setEnabled(false);
 		textDiaChiCC.setColumns(10);
 

@@ -13,12 +13,9 @@ public class SanPhamBLL {
 		return "";
 	}
 
-	public int renderProType(String value) throws SQLException {
+	public ArrayList<SanPham> findByLoaiHang(String value) throws SQLException {
 		SanPhamDAL spd = new SanPhamDAL();
-		LoaiHangDAL lhd = new LoaiHangDAL();
-		int rs = lhd.getMaLh(value);
-		return rs;
-
+		return spd.docSanPham("timkiemtheoloaihang", value);
 	}
 
 	public ArrayList<SanPham> searchProductById(String value, String id) throws SQLException {
