@@ -18,20 +18,14 @@ public class SanPhamBLL {
 		return spd.docSanPham("timkiemtheoloaihang", value);
 	}
 
-	public ArrayList<SanPham> searchProductById(String value, String id) throws SQLException {
+	public ArrayList<SanPham> search(String value) throws SQLException {
 		SanPhamDAL spd = new SanPhamDAL();
 		ArrayList<SanPham> arr = new ArrayList<SanPham>();
-		arr = spd.docSanPham("timkiem", value + "," + id);
-		return arr;
-	}
-	public ArrayList<SanPham> searchProductByPrice(String value, String id) throws SQLException {
-		SanPhamDAL spd = new SanPhamDAL();
-		ArrayList<SanPham> arr = new ArrayList<SanPham>();
-		arr = spd.docSanPham("timkiemgia", value + "," + id);
+		arr = spd.docSanPham("timkiem", value);
 		return arr;
 	}
 	public static void main(String[] args) throws SQLException {
 		SanPhamBLL test = new SanPhamBLL();
-		System.out.println(test.searchProductById("a", "0"));
+		System.out.println(test.search("a"));
 	}
 }

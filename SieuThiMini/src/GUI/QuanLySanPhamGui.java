@@ -221,7 +221,7 @@ public class QuanLySanPhamGui extends JFrame {
 			arrSp = spDal.docSanPham("sapxeptheogia", null);
 		}
 		if (condition == "timkiemtheoid") {
-			arrSp = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
+			arrSp = spbll.search(textFieldSearch.getText());
 
 		}
 		if (condition == "timkiemtheoloaihang") {
@@ -1075,7 +1075,7 @@ public class QuanLySanPhamGui extends JFrame {
 					SanPhamBLL spbll = new SanPhamBLL();
 					ArrayList<SanPham> arr = new ArrayList<SanPham>();
 					try {
-						arr = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
+						arr = spbll.search(textFieldSearch.getText());
 						if (!arr.isEmpty()) {
 								hienthisanpham("timkiemtheoid");
 						}

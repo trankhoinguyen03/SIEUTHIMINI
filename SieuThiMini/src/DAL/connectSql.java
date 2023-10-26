@@ -12,7 +12,7 @@ public class connectSql {
 	
 
 	public connectSql() throws SQLException {
-		String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=SieuThiMini;user=sa;password=sa;encrypt=true;trustServerCertificate=true;";
+		String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=SIEUTHIMINI;user=sa;password=sa;encrypt=true;trustServerCertificate=true;";
 		conn = DriverManager.getConnection(connectionUrl);
 	}
 	public void closeConnection() {

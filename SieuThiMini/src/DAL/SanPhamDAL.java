@@ -33,24 +33,22 @@ public class SanPhamDAL extends connectSql {
 		String sql = "";
 		String part2="";
 		String part1 ="";
-		String partPriceFrom = "";
-		String partPriceTo="";
 		ArrayList<SanPham> arrList = new ArrayList<SanPham>();
 		try {
 			if (condition.equals("docsanpham")) {
 				sql = "select * from SANPHAM where TrangThai = 1 order by MaSP";
 			}
 			if (condition.equals("timkiem")) {
-				String[] parts = value.split(",");
-				 part1 = parts[0];
-				 part2 = parts[1]; 
 				
-				 if(part2.equals("0")) {
+				 if(value.contains("LH")) {
 				
-					 sql = "select * from SANPHAM where TrangThai = 1 and TenSP LIKE ?";
+					 sql = "select * from SANPHAM where TrangThai = 1 and MaLH LIKE ?";
 				 }
-				 else {
-					 sql = "select * from SANPHAM where TrangThai = 1 and TenSP LIKE ? and MaLH = ?";
+				 else if(value.contains("SP")) {
+					 sql = "select * from SANPHAM where TrangThai = 1 and MaSP LIKE ?";
+				 }
+				 else if(Integer.parseInt(value)>0) {
+					 sql = "select * from SANPHAM where TrangThai = 1 and MaSP LIKE ?";
 				 }
 
 			}
