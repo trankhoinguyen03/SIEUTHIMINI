@@ -79,7 +79,7 @@ public class LoaiHangDAL extends connectSql {
 		}
 		return null;
 	}
-	public boolean ThemLoaiHang(LoaiHang Lh, String condition) throws SQLException {
+	public boolean BtnLoaiHang(LoaiHang Lh, String condition) throws SQLException {
 	    String sql = "";
 	    switch (condition) {
 	        case "themloaihang":
@@ -104,7 +104,7 @@ public class LoaiHangDAL extends connectSql {
 	        }
 	        if (condition.equals("themloaihang")) {
 	            pstm.setString(1, Lh.getTenLH());
-	            pstm.setInt(2, 1);
+	            pstm.setString(2, ""+1);
 	        }
 
 	        int result = pstm.executeUpdate();

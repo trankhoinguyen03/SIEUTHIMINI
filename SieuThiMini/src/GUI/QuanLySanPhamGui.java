@@ -67,6 +67,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import BLL.LoaiHangBLL;
 import BLL.SanPhamBLL;
 import DTO.LoaiHang;
 import DTO.NhaCungCap;
@@ -244,13 +245,13 @@ public class QuanLySanPhamGui extends JFrame {
 
 	public void hienThiLoaiHang() throws SQLException {
 
-		LoaiHangDAL lhDal = new LoaiHangDAL();
+		LoaiHangBLL lhb = new LoaiHangBLL();
 		ArrayList<LoaiHang> arrLH = new ArrayList<LoaiHang>();
 		String[] columnNames = { "Mã Loại Hàng", "Tên Loại Hàng" };
 		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 		table_1.setModel(model);
 		model.setRowCount(0);
-		arrLH = lhDal.docLoaiHang();
+		arrLH = lhb.getLoaiHang();
 		for (LoaiHang spdata : arrLH) {
 
 			Object[] row = new Object[] { spdata.getMaLH(), spdata.getTenLH() };
@@ -469,9 +470,9 @@ public class QuanLySanPhamGui extends JFrame {
 
 		}
 		if (!textTenSp.getText().isEmpty()) {
-			LoaiHangDAL LHD = new LoaiHangDAL();
+			LoaiHangBLL lhb = new LoaiHangBLL();
 			ArrayList<LoaiHang> arrLh = new ArrayList<LoaiHang>();
-			arrLh = LHD.docLoaiHang();
+			arrLh = lhb.getLoaiHang();
 
 			for (LoaiHang lh : arrLh) {
 
@@ -563,11 +564,11 @@ public class QuanLySanPhamGui extends JFrame {
 				if (selectedIndex == 0) {
 
 					lblNewLabel.setText("QUẢN LÝ SẢN PHẨM");
-					LoaiHangDAL lhd;
+					LoaiHangBLL lhb;
 					try {
-						lhd = new LoaiHangDAL();
+						lhb = new LoaiHangBLL();
 						ArrayList<LoaiHang> arrLh = new ArrayList<LoaiHang>();
-						arrLh = lhd.docLoaiHang();
+						arrLh = lhb.getLoaiHang();
 
 						DefaultComboBoxModel combo = new DefaultComboBoxModel();
 						comboBoxSearch.setModel(combo);
@@ -779,10 +780,10 @@ public class QuanLySanPhamGui extends JFrame {
 				int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn sản phẩm này", "Confirmation",
 						JOptionPane.YES_NO_OPTION);
 				if (confirmed == JOptionPane.YES_OPTION) {
-					SanPhamDAL deleteSp;
+					SanPhamBLL deleteSp;
 					try {
-						deleteSp = new SanPhamDAL();
-						if (deleteSp.anSanPham(textFieldMasp.getText())) {
+						deleteSp = new SanPhamBLL();
+						if (deleteSp.hideSanPham(textFieldMasp.getText())) {
 							JOptionPane.showMessageDialog(contentPane, "Ẩn sản phẩm thành công!");
 							hienthisanpham("hien thi");
 							resetValue();
@@ -828,7 +829,6 @@ public class QuanLySanPhamGui extends JFrame {
 		btnSapxep.setFocusPainted(false);
 		btnSapxep.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SanPhamDAL spd;
 				// Create an ArrayList to store the data from the JTable
 				ArrayList<SanPham> data = new ArrayList<>();
 
@@ -940,10 +940,10 @@ public class QuanLySanPhamGui extends JFrame {
 
 //				g.dispose();
 
-				LoaiHangDAL test;
+				LoaiHangBLL test;
 				try {
-					test = new LoaiHangDAL();
-					String loaiHang = test.docLoaiHangMaLH(maLh);
+					test = new LoaiHangBLL();
+					String loaiHang = test.getTenLoaiHang(maLh);
 					textFieldLoaiHang.setText(loaiHang);
 
 				} catch (SQLException e1) {
@@ -1283,8 +1283,8 @@ public class QuanLySanPhamGui extends JFrame {
 				textTenSp.setEnabled(true);
 				btnLuu_1.setEnabled(true);
 				try {
-					LoaiHangDAL LHD = new LoaiHangDAL();
-					int maLh = LHD.getLastMaLH();
+					LoaiHangBLL lhb = new LoaiHangBLL();
+					int maLh = lhb.getLastMaLH();
 					maLh++;
 					textMaSP1.setText("" + maLh);
 				} catch (SQLException e1) {
@@ -1311,11 +1311,11 @@ public class QuanLySanPhamGui extends JFrame {
 
 					LoaiHang LH = new LoaiHang();
 					LH.setMaLH(textMaSP1.getText());
-					LoaiHangDAL LHD = new LoaiHangDAL();
+					LoaiHangBLL lhb = new LoaiHangBLL();
 					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa loại hàng này", "Confirmation",
 							JOptionPane.YES_NO_OPTION);
 					if (confirmed == JOptionPane.YES_OPTION) {
-						if (LHD.ThemLoaiHang(LH, "xoaloaihang")) {
+						if (lhb.BtnLoaiHang(LH, "xoaloaihang")) {
 
 							JOptionPane.showMessageDialog(contentPane, "Xóa Loại Hàng Thành Công!");
 							resetValue();
@@ -1345,11 +1345,11 @@ public class QuanLySanPhamGui extends JFrame {
 						LoaiHang LH = new LoaiHang();
 						LH.setMaLH(textMaSP1.getText());
 						LH.setTenLH(textTenSp.getText());
-						LoaiHangDAL LHD;
+						LoaiHangBLL LHD;
 						if (addbtn) {
 							try {
-								LHD = new LoaiHangDAL();
-								if (LHD.ThemLoaiHang(LH, "themloaihang")) {
+								LHD = new LoaiHangBLL();
+								if (LHD.BtnLoaiHang(LH, "themloaihang")) {
 									JOptionPane.showMessageDialog(contentPane, "Thêm Thành công!");
 									resetValue();
 									hienThiLoaiHang();
@@ -1361,8 +1361,8 @@ public class QuanLySanPhamGui extends JFrame {
 						}
 						if (fixbtn) {
 							try {
-								LHD = new LoaiHangDAL();
-								if (LHD.ThemLoaiHang(LH, "sualoaihang")) {
+								LHD = new LoaiHangBLL();
+								if (LHD.BtnLoaiHang(LH, "sualoaihang")) {
 									JOptionPane.showMessageDialog(contentPane, "Sửa Thành công!");
 									resetValue();
 									btnThem_1.setEnabled(true);
