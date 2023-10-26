@@ -20,7 +20,7 @@ import DTO.TaiKhoan;
 
 import com.sun.jdi.connect.spi.Connection;
 
-import BLL.XuatHoaDon;
+import BLL.XuatHoaDonBLL;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

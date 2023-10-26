@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class XuatHoaDon {
+public class XuatHoaDonBLL {
 
 	
 	
@@ -108,11 +108,5 @@ public class XuatHoaDon {
             }
         }
     }
-	
-
-	public static void main(String[] args) {
-		XuatHoaDon xhd = new XuatHoaDon();
-		
-	}
 
 }
