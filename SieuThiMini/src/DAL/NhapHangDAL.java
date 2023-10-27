@@ -20,24 +20,20 @@ public class NhapHangDAL extends connectSql {
         // TODO Auto-generated constructor stub
     }
 
-    public ArrayList<NhapHang> docNhapHang(String condition, String value) {
+    public ArrayList<NhapHang> docNhapHang() {
         String sql = "";
         ArrayList<NhapHang> arrList = new ArrayList<NhapHang>();
         try {
-            if (condition.equals("docphieunhap")) {
-                sql = "select * from DSPHIEUNHAP where TrangThai = 1";
-            }
+            sql = "select * from DSPHIEUNHAP where TrangThai = 1";
             PreparedStatement pstm = conn.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
                 NhapHang nh = new NhapHang();
-                if (condition.equals("docphieunhap")) {
-                    nh.setMaPn(rs.getString("MaPN"));
-                    nh.setMaNv(rs.getString("MaNV"));
-                    nh.setMaNcc(rs.getString("MaNCC"));
-                    nh.setTongTien(rs.getString("TongTien"));
-                    nh.setNgayNhap(rs.getString("NgayNhap"));
-                }
+                nh.setMaPn(rs.getString("MaPN"));
+                nh.setMaNv(rs.getString("MaNV"));
+                nh.setMaNcc(rs.getString("MaNCC"));
+                nh.setTongTien(rs.getString("TongTien"));
+                nh.setNgayNhap(rs.getString("NgayNhap"));
                 arrList.add(nh);
             }
         } catch (Exception e) {
@@ -168,24 +164,17 @@ public class NhapHangDAL extends connectSql {
         return lastMaPN;
     }
 
-    public boolean themphieunhap(NhapHang nh, String condition, String oldMaPN, String oldMaSP, String oldMaNCC) throws SQLException {
+    public boolean themphieunhap(NhapHang nh, String oldMaPN, String oldMaSP, String oldMaNCC) throws SQLException {
         String sql = "";
-        if (condition.equals("themphieunhap")) {
-            sql = "INSERT INTO DSPHIEUNHAP (MaNV, MaNCC, TongTien, NgayNhap, TrangThai) VALUES (?, ?, ?, ?, ?)";
-        }
-        if (condition.equals("themchitiet")) {
-            sql = "INSERT INTO CHITIETPHIEUNHAP (MaPN, MaSP, SoLuong, ThanhTien, TrangThai) VALUES (?, ?, ?, ?, ?)";
-        }
+        sql = "INSERT INTO DSPHIEUNHAP (MaNV, MaNCC, TongTien, NgayNhap, TrangThai) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement pstm = conn.prepareStatement(sql);
 
         try {
-            if (condition.equals("themphieunhap")) {
-                pstm.setString(1, nh.getMaNv());
-                pstm.setString(2, nh.getMaNcc());
-                pstm.setString(3, nh.getTongTien());
-                pstm.setString(4, nh.getNgayNhap());
-                pstm.setString(5, ""+1);
-            }
+            pstm.setString(1, nh.getMaNv());
+            pstm.setString(2, nh.getMaNcc());
+            pstm.setString(3, nh.getTongTien());
+            pstm.setString(4, nh.getNgayNhap());
+            pstm.setString(5, ""+1);
             pstm.executeUpdate();
             return true;
         } catch (Exception e) {
