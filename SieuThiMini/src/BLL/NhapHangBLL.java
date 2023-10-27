@@ -4,51 +4,21 @@
  */
 package BLL;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import DAL.NhapHangDAL;
+import DTO.NhapHang;
+
 /**
  *
  * @author Acer
  */
 public class NhapHangBLL {
-    private String maPn, maNv, maNcc, tongTien, ngayNhap ;
-
-	public String getMaPn() {
-		return maPn;
+	public ArrayList<NhapHang> getPhieuNhap() throws SQLException {
+		NhapHangDAL nhd = new NhapHangDAL();
+		ArrayList<NhapHang> arr = new ArrayList<NhapHang>();
+		arr = nhd.docNhapHang();
+		return arr;
 	}
-
-	public void setMaPn(String maPn) {
-		this.maPn = maPn;
-	}
-
-	public String getMaNv() {
-		return maNv;
-	}
-
-	public void setMaNv(String maNv) {
-		this.maNv = maNv;
-	}
-
-	public String getMaNcc() {
-		return maNcc;
-	}
-
-	public void setMaNcc(String maNcc) {
-		this.maNcc = maNcc;
-	}
-
-	public String getTongTien() {
-		return tongTien;
-	}
-
-	public void setTongTien(String tongTien) {
-		this.tongTien = tongTien;
-	}
-
-	public String getNgayNhap() {
-		return ngayNhap;
-	}
-
-	public void setNgayNhap(String ngayNhap) {
-		this.ngayNhap = ngayNhap;
-	}
-    
 }

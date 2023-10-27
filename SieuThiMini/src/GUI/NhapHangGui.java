@@ -55,6 +55,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import BLL.NhapHangBLL;
 import DTO.NhapHang;
 import DAL.NhapHangDAL;
 import DAL.NhanVienDAL;
@@ -155,17 +156,17 @@ public class NhapHangGui extends JFrame {
     boolean checkFix = false;
 
     public void hienthiphieunhap(String condition) throws SQLException {
-        NhapHangDAL nhDal = new NhapHangDAL();
+        NhapHangBLL nhBll = new NhapHangBLL();
         ArrayList<NhapHang> arrNh = new ArrayList<NhapHang>();
         ArrayList<PhieuNhapChiTiet> arrCt = new ArrayList<PhieuNhapChiTiet>();
         if (condition == "phieunhap") {
-            arrNh = nhDal.docNhapHang("docphieunhap", null);
+            arrNh = nhBll.getPhieuNhap();
         }
         if (condition == "chitiet") {
-            arrNh = nhDal.docNhapHang("docchitiet", textFieldMapn.getText());
+            //arrNh = nhBll.docNhapHang("docchitiet", textFieldMapn.getText());
         }
         if (condition == "themphieunhap") {
-            arrNh = nhDal.docNhapHang("docphieunhap", null);
+            arrNh = nhBll.getPhieuNhap();
             NhanVienDAL testnv = new NhanVienDAL();
             ArrayList<NhanVien> arrMaNV = testnv.docNhanVien("docnhanvien", null);
             DefaultComboBoxModel combonv = new DefaultComboBoxModel();
@@ -175,7 +176,7 @@ public class NhapHangGui extends JFrame {
             }
         }
         if (condition == "themchitiet") {
-            arrNh = nhDal.docNhapHang("docchitiet", textFieldMapn.getText());
+            //arrNh = nhBll.docNhapHang("docchitiet", textFieldMapn.getText());
             SanPhamDAL testsp = new SanPhamDAL();
             ArrayList<SanPham> arrMaSP = testsp.docSanPham("docsanpham", null);
             DefaultComboBoxModel combosp = new DefaultComboBoxModel();
@@ -341,9 +342,9 @@ public class NhapHangGui extends JFrame {
                 return false;
             }
             if (!textFieldMapn.getText().isEmpty()) {
-                NhapHangDAL nhd = new NhapHangDAL();
+                NhapHangBLL nhb = new NhapHangBLL();
                 ArrayList<NhapHang> arrPro = new ArrayList<NhapHang>();
-                arrPro = nhd.docNhapHang("docphieunhap", null);
+                arrPro = nhb.getPhieuNhap();
                 if (fixbtn) {
                     for (NhapHang nh : arrPro) {
                         if (oldMaPN != textFieldMapn.getText() && nh.getMaPn() == textFieldMapn.getText()) {
@@ -588,7 +589,7 @@ public class NhapHangGui extends JFrame {
                                 String manv = luunh.layTenNV((String) (comboBoxNhanVien.getSelectedItem()));
                                 nh.setMaNv(manv);
                                 //nh.setThoiDiemLap(textFieldNgaylap.getText());
-                                boolean checkAddPro = luunh.themphieunhap(nh, "themphieunhap", null, null, null);
+                                boolean checkAddPro = luunh.themphieunhap(nh, null, null, null);
                                 if (checkAddPro) {
                                     JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
                                     resetValue("themphieunhap");
@@ -641,7 +642,7 @@ public class NhapHangGui extends JFrame {
                                 ct.setSoLuong(textFieldSoluong.getText());
                                 //nh.setNgaySanXuat(textFieldNgaysx.getText());
                                 nh.setNgayNhap(textFieldNgaynhap.getText());
-                                boolean checkAddPro = luunh.themphieunhap(nh, "themchitiet", oldMaPN, oldMaSP, oldMaNCC);
+                                boolean checkAddPro = luunh.themphieunhap(nh, oldMaPN, oldMaSP, oldMaNCC);
                                 if (checkAddPro) {
                                     JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
                                     resetValue("themchitiet");
