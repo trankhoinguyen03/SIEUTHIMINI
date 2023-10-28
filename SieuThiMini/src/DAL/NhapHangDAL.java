@@ -58,37 +58,6 @@ public class NhapHangDAL extends connectSql {
         }
     }
     
-    public ArrayList<NhanVien> docNhanVienMaNV(int maNv) throws SQLException{
-		ArrayList<NhanVien> arrNhanvien = new ArrayList<NhanVien>();
-		String sql = "select * from NHANVIEN where MaNV =" + maNv;
-		PreparedStatement pstm = conn.prepareStatement(sql);
-		ResultSet rs = pstm.executeQuery();
-		while(rs.next()) {
-			NhanVien nv = new NhanVien();
-			nv.setMaNv(rs.getString("MaNV"));
-			nv.setTenNv(rs.getString(2));
-			arrNhanvien.add(nv);
-		}
-	
-	return arrNhanvien;
-	}
-    
-    public int layMaSp(String tenMaSp) throws SQLException {
-        String sql = "SELECT MaSP FROM SANPHAM WHERE TenSP = ?";
-        try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
-            pstm.setString(1, tenMaSp);
-            ResultSet rs = pstm.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("MaSP");
-            } else {
-                return -1; // or throw an exception
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1; // or throw an exception
-        }
-    }
-    
     public ArrayList<DTO.SanPham> docSanPhamMaSP(int maSp) throws SQLException{
 		ArrayList<DTO.SanPham> arrSanpham = new ArrayList<DTO.SanPham>();
 		String sql = "select * from SANPHAM where MaSP =" + maSp;
@@ -117,22 +86,7 @@ public class NhapHangDAL extends connectSql {
             e.printStackTrace();
             return null; // or throw an exception
         }
-    }
-    
-    public ArrayList<DTO.NhaCungCap> docNhaCungCapMaNCC(int maNcc) throws SQLException{
-		ArrayList<DTO.NhaCungCap> arrNhacungcap = new ArrayList<DTO.NhaCungCap>();
-		String sql = "select * from NHACUNGCAP where MaNCC =" + maNcc;
-		PreparedStatement pstm = conn.prepareStatement(sql);
-		ResultSet rs = pstm.executeQuery();
-		while(rs.next()) {
-			DTO.NhaCungCap ncc = new DTO.NhaCungCap();
-			ncc.setMaNCC(rs.getString("MaNCC"));
-			ncc.setTenNCC(rs.getString(2));
-			arrNhacungcap.add(ncc);
-		}
-	
-	return arrNhacungcap;
-	}
+    }   
 
     public boolean xoaNhapHang(String mapn) throws SQLException {
         String sql = "UPDATE DSPHIEUNHAP SET TrangThai = " + 0 + " where MaPN = " + mapn;

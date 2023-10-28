@@ -52,6 +52,22 @@ public class NhanVienDAL extends connectSql {
 	        return arrList;
 	    }
 	    
+	    public ArrayList<NhanVien> docNhanVienMaNV(String maNv) throws SQLException{
+			ArrayList<NhanVien> arrNhanvien = new ArrayList<NhanVien>();
+			String sql = "select * from NHANVIEN where MaNV LIKE ?";
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			pstm.setString(1, maNv);
+			ResultSet rs = pstm.executeQuery();
+			while(rs.next()) {
+				NhanVien nv = new NhanVien();
+				nv.setMaNv(rs.getString("MaNV"));
+				nv.setTenNv(rs.getString(2));
+				arrNhanvien.add(nv);
+			}
+		
+		return arrNhanvien;
+		}
+	    
 	    public int getLastMaNV() throws SQLException {
 	        int lastMaNV = 0;
 	        String sql = "SELECT MAX(MaNV) FROM NHANVIEN";

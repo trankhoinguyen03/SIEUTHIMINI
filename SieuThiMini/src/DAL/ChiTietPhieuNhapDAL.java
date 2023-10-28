@@ -17,23 +17,19 @@ public class ChiTietPhieuNhapDAL extends connectSql {
 	}
 	
 
-	public ArrayList<PhieuNhapChiTiet> docCtPhieuNhap(){
+	public ArrayList<PhieuNhapChiTiet> docCtPhieuNhap(String value) throws SQLException{
 		ArrayList<PhieuNhapChiTiet> arrPn = new ArrayList<PhieuNhapChiTiet>();
-		try {
-			String sql = "select * from HOADONCHITIET";
-			PreparedStatement pstm = conn.prepareStatement(sql);
-			ResultSet rs = pstm.executeQuery();
-			while(rs.next()) {
-				PhieuNhapChiTiet ctpn = new PhieuNhapChiTiet();
-				ctpn.setMaPN(rs.getString(1)); 
-				ctpn.setMaSP(rs.getString(2));
-				ctpn.setSoLuong(rs.getString(3));
-				ctpn.setThanhTien(rs.getString(4));
-				arrPn.add(ctpn);
-				
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
+		String sql = "select * from CHITIETPHIEUNHAP where TrangThai = 1 and MaPN LIKE ?";
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, value);
+		ResultSet rs = pstm.executeQuery();
+		while(rs.next()) {
+			PhieuNhapChiTiet ctpn = new PhieuNhapChiTiet();
+			ctpn.setMaPN(rs.getString(1)); 
+			ctpn.setMaSP(rs.getString(2));
+			ctpn.setSoLuong(rs.getString(3));
+			ctpn.setThanhTien(rs.getString(4));
+			arrPn.add(ctpn);			
 		}
 		return arrPn;
 	}

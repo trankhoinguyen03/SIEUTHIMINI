@@ -146,17 +146,33 @@ public class SanPhamDAL extends connectSql {
 		}
 	}
 
-	public String getNameSanPham(int maSP) throws SQLException {
-		String sql = "select TenSP from SANPHAM where MaSP = "+ maSP;
+	public String layTenSanPham(String maSP) throws SQLException {
+		String sql = "select TenSP from SANPHAM where MaSP like ?";
 		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, maSP);
 		ResultSet rs = pstm.executeQuery();
 		if (rs.next()) {
 		    String tenSP = rs.getString("TenSP");
 		    return tenSP;
 		}
-		return "";
+		return null;
 	
 	}
+    public String layMaSp(String tenSp) throws SQLException {
+        String sql = "SELECT MaSP FROM SANPHAM WHERE TenSP = ?";
+        try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
+            pstm.setString(1, tenSp);
+            ResultSet rs = pstm.executeQuery();
+            if (rs.next()) {
+                return rs.getString("MaSP");
+            } else {
+                return null; // or throw an exception
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null; // or throw an exception
+        }
+    }
 	public  float getgia(String tensp) throws SQLException {
         float giatien = 0;
         
@@ -170,35 +186,35 @@ public class SanPhamDAL extends connectSql {
         }
         return giatien;
     }
-public int getma(String tensp) throws SQLException {
+	public int getma(String tensp) throws SQLException {
         String sql = "SELECT MaSP FROM SANPHAM where TenSP=?";
-try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-    pstmt.setString(1,tensp);
-    pstmt.setFetchSize(100); // chỉ định số lượng bản ghi được trả về trong mỗi lần truy xuất
-    ResultSet rs = pstmt.executeQuery();
-    if (rs.next()) {
-        return rs.getInt("MaSP");
-    } else {
-        return -1;
-    }
-}
-}
-public String[] getTenSP() throws SQLException {
-    String sql = "SELECT TenSP FROM SANPHAM";
-    ArrayList<String> tenSPList = new ArrayList<>();
-
-    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        ResultSet rs = pstmt.executeQuery();
-
-        while (rs.next()) {
-            String tenSP = rs.getString("TenSP");
-            tenSPList.add(tenSP);
-        }
-    }
-
-    String[] tenSPArray = tenSPList.toArray(new String[tenSPList.size()]);
-    return tenSPArray;
-}
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		    pstmt.setString(1,tensp);
+		    pstmt.setFetchSize(100); // chỉ định số lượng bản ghi được trả về trong mỗi lần truy xuất
+		    ResultSet rs = pstmt.executeQuery();
+		    if (rs.next()) {
+		        return rs.getInt("MaSP");
+		    } else {
+		        return -1;
+		    }
+		}
+	}
+	public String[] getTenSP() throws SQLException {
+	    String sql = "SELECT TenSP FROM SANPHAM";
+	    ArrayList<String> tenSPList = new ArrayList<>();
+	
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        ResultSet rs = pstmt.executeQuery();
+	
+	        while (rs.next()) {
+	            String tenSP = rs.getString("TenSP");
+	            tenSPList.add(tenSP);
+	        }
+	    }
+	
+	    String[] tenSPArray = tenSPList.toArray(new String[tenSPList.size()]);
+	    return tenSPArray;
+	}
 
 
 	public static void main(String[] args) throws SQLException {

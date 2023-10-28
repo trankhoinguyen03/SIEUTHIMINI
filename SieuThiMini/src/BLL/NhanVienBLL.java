@@ -4,82 +4,28 @@
  */
 package BLL;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import DAL.NhanVienDAL;
+import DTO.NhanVien;
+
 /**
  *
  * @author Acer
  */
 public class NhanVienBLL {
-    private String maNv, tenNv, ngaySinh, sdt, diaChi, gioiTinh, cccd, ngayVaoLam, chucVu;
 
-	public String getMaNv() {
-		return maNv;
+	public ArrayList<NhanVien> getNhanVien() throws SQLException {
+		NhanVienDAL nvd = new NhanVienDAL();
+		ArrayList<NhanVien> arr = new ArrayList<NhanVien>();
+		arr = nvd.docNhanVien("docnhanvien", null);
+		return arr;
 	}
-
-	public void setMaNv(String maNv) {
-		this.maNv = maNv;
-	}
-
-	public String getTenNv() {
-		return tenNv;
-	}
-
-	public void setTenNv(String tenNv) {
-		this.tenNv = tenNv;
-	}
-
-	public String getNgaySinh() {
-		return ngaySinh;
-	}
-
-	public void setNgaySinh(String ngaySinh) {
-		this.ngaySinh = ngaySinh;
-	}
-
-	public String getSdt() {
-		return sdt;
-	}
-
-	public void setSdt(String sdt) {
-		this.sdt = sdt;
-	}
-
-	public String getDiaChi() {
-		return diaChi;
-	}
-
-	public void setDiaChi(String diaChi) {
-		this.diaChi = diaChi;
-	}
-
-	public String getGioiTinh() {
-		return gioiTinh;
-	}
-
-	public void setGioiTinh(String gioiTinh) {
-		this.gioiTinh = gioiTinh;
-	}
-
-	public String getCccd() {
-		return cccd;
-	}
-
-	public void setCccd(String cccd) {
-		this.cccd = cccd;
-	}
-
-	public String getNgayVaoLam() {
-		return ngayVaoLam;
-	}
-
-	public void setNgayVaoLam(String ngayVaoLam) {
-		this.ngayVaoLam = ngayVaoLam;
-	}
-
-	public String getChucVu() {
-		return chucVu;
-	}
-
-	public void setChucVu(String chucVu) {
-		this.chucVu = chucVu;
+	public ArrayList<NhanVien> getNhanVienMaNV(String value) throws SQLException {
+		NhanVienDAL nvd = new NhanVienDAL();
+		ArrayList<NhanVien> arr = new ArrayList<NhanVien>();
+		arr = nvd.docNhanVienMaNV(value);
+		return arr;
 	}
 }

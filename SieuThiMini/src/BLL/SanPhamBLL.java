@@ -28,6 +28,10 @@ public class SanPhamBLL {
 		SanPhamDAL spd = new SanPhamDAL();
 		return spd.anSanPham(value);
 	}
+	public String getTenSanPham(String value) throws SQLException {
+		SanPhamDAL spd = new SanPhamDAL();
+		return spd.layTenSanPham(value);
+	}
 	public static void main(String[] args) throws SQLException {
 		SanPhamBLL test = new SanPhamBLL();
 		System.out.println(test.searchSanPham("a"));

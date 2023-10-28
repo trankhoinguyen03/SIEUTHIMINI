@@ -55,7 +55,11 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import BLL.ChiTietPhieuNhapBLL;
+import BLL.NhaCungCapBLL;
+import BLL.NhanVienBLL;
 import BLL.NhapHangBLL;
+import BLL.SanPhamBLL;
 import DTO.NhapHang;
 import DAL.NhapHangDAL;
 import DAL.NhanVienDAL;
@@ -87,13 +91,16 @@ public class NhapHangGui extends JFrame {
     private JComboBox comboBoxNhanVien;
     private JTextField textFieldMaNhanVien;
     private JComboBox comboBoxNhaCC;
-    private JTextField textFieldSanPham;
+    private JComboBox comboBoxSanPham;
     private JComboBox comboBoxLoaiHang;
     //private JTextField textFieldNgaylap;
     private JTextField textFieldGiaNhap;
     private JTextField textFieldSoluong;
     //private JTextField textFieldNgaysx;
     private JTextField textFieldNgaynhap;
+    private JTextField textFieldSanPhamMoi;
+    private JTextField textFieldNsx;
+    private JTextField textFieldHsd;
     private JTable table;
     private JTable table_chitiet;
 
@@ -125,14 +132,12 @@ public class NhapHangGui extends JFrame {
     JButton btnCapNhatAnh = new JButton();
     Object lastValueMaPn;
     JButton btnXoa = new JButton("Ẩn");
+    JButton btnThemSp = new JButton("Nhập mới");
     //JButton btnSua = new JButton("Sửa");
     boolean check = true;
-    JButton btnThem = new JButton("Thêm");
+    JButton btnThem = new JButton("Nhập");
     JButton btnLuu = new JButton("Lưu");
-    //JButton btnXem = new JButton("Xem Danh Sách");
-    //JButton btnNhap = new JButton("Nhập");
-    //JButton btnSuaChitiet = new JButton("Sửa Chi Tiết");
-    //JButton btnXoaChitiet = new JButton("Xóa");
+    JButton btnChitiet = new JButton("Chi Tiết");
     int lastRow;
     JRadioButton radioSapxepsoluong = new JRadioButton("Số lượng");
     JRadioButton radioSapxepma = new JRadioButton("Mã phiếu nhập");
@@ -157,18 +162,19 @@ public class NhapHangGui extends JFrame {
 
     public void hienthiphieunhap(String condition) throws SQLException {
         NhapHangBLL nhBll = new NhapHangBLL();
+        ChiTietPhieuNhapBLL ctpnBll = new ChiTietPhieuNhapBLL();
         ArrayList<NhapHang> arrNh = new ArrayList<NhapHang>();
         ArrayList<PhieuNhapChiTiet> arrCt = new ArrayList<PhieuNhapChiTiet>();
         if (condition == "phieunhap") {
             arrNh = nhBll.getPhieuNhap();
         }
         if (condition == "chitiet") {
-            //arrNh = nhBll.docNhapHang("docchitiet", textFieldMapn.getText());
+            arrCt = ctpnBll.getChiTietPN(textFieldMapn.getText());
         }
         if (condition == "themphieunhap") {
             arrNh = nhBll.getPhieuNhap();
-            NhanVienDAL testnv = new NhanVienDAL();
-            ArrayList<NhanVien> arrMaNV = testnv.docNhanVien("docnhanvien", null);
+            NhanVienBLL testnv = new NhanVienBLL();
+            ArrayList<NhanVien> arrMaNV = testnv.getNhanVien();
             DefaultComboBoxModel combonv = new DefaultComboBoxModel();
             comboBoxNhanVien.setModel(combonv);
             for (NhanVien manv : arrMaNV) {
@@ -177,15 +183,16 @@ public class NhapHangGui extends JFrame {
         }
         if (condition == "themchitiet") {
             //arrNh = nhBll.docNhapHang("docchitiet", textFieldMapn.getText());
-            SanPhamDAL testsp = new SanPhamDAL();
-            ArrayList<SanPham> arrMaSP = testsp.docSanPham("docsanpham", null);
+            SanPhamBLL testsp = new SanPhamBLL();
+            ArrayList<SanPham> arrMaSP = testsp.getSanPham();
             DefaultComboBoxModel combosp = new DefaultComboBoxModel();
+            comboBoxSanPham.setModel(combosp);
             for (SanPham masp : arrMaSP) {
                 combosp.addElement(masp.getTenSp());
             }
 
-            NhaCungCapDAL testncc = new NhaCungCapDAL();
-            ArrayList<NhaCungCap> arrMaNCC = testncc.docNhaCungCap();
+            NhaCungCapBLL testncc = new NhaCungCapBLL();
+            ArrayList<NhaCungCap> arrMaNCC = testncc.getNhaCungCap();
             DefaultComboBoxModel comboncc = new DefaultComboBoxModel();
             comboBoxNhaCC.setModel(comboncc);
             for (NhaCungCap mancc : arrMaNCC) {
@@ -195,20 +202,6 @@ public class NhapHangGui extends JFrame {
         }
         
         if (condition == "phieunhap" || condition == "themphieunhap") {
-        	
-            String[] columnNames_chitiet = {"Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng", "Thành Tiền"};
-            DefaultTableModel model_chitiet = new DefaultTableModel(columnNames_chitiet, 0);
-
-            table_chitiet.setModel(model_chitiet);
-            model_chitiet.setRowCount(0);
-            for (NhapHang nhdata : arrNh) {
-                //NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-                Object[] row = new Object[]{};//nhdata.getMaPn(), nhdata.getMaNv(), nhdata.getThoiDiemLap()};
-                model_chitiet.addRow(row);
-            }
-
-            lastRow = table_chitiet.getRowCount() - 1; // get index of the last row
-            lastValueMaPn = table_chitiet.getValueAt(lastRow, 0); // get the value at the last row and column n
         	
             String[] columnNames = {"Mã Phiếu Nhập", "Nhân Viên", "Nhà Cung Cấp", "Tổng Tiền", "Ngày Nhập"};
             DefaultTableModel model = new DefaultTableModel(columnNames, 0);
@@ -225,22 +218,18 @@ public class NhapHangGui extends JFrame {
             lastValueMaPn = table.getValueAt(lastRow, 0); // get the value at the last row and column n
         }
         if (condition == "chitiet" || condition == "themchitiet") {
-            String[] columnNames = {"MaPN", "MaSP", "Soluong", "ThanhTien"};
-            DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-
-            table.setModel(model);
-            model.setRowCount(0);
+        	SanPhamBLL spbll = new SanPhamBLL();
+            String[] columnNames_chitiet = {"Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng", "Thành Tiền"};
+            DefaultTableModel model_chitiet = new DefaultTableModel(columnNames_chitiet, 0);
+            
+            table_chitiet.setModel(model_chitiet);
+            model_chitiet.setRowCount(0);
             for (PhieuNhapChiTiet ctdata : arrCt) {
-                //NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-                Object[] row = new Object[]{ctdata.getMaPN(), ctdata.getMaSP(), ctdata.getSoLuong(),
-                		ctdata.getThanhTien()};
-                model.addRow(row);
+            	String nameSp = spbll.getTenSanPham(ctdata.getMaSP());
+                Object[] row = new Object[]{ctdata.getMaSP(), nameSp, ctdata.getSoLuong(), ctdata.getThanhTien()};
+                model_chitiet.addRow(row);
             }
-
-            lastRow = table.getRowCount() - 1; // get index of the last row
-            lastValueMaPn = table.getValueAt(lastRow, 0); // get the value at the last row and column n
         }
-
     }
 
     public void resetValue(String condition) {
@@ -326,11 +315,15 @@ public class NhapHangGui extends JFrame {
     public void setEnable() {
         textFieldMapn.setEnabled(false);
         comboBoxNhanVien.setEnabled(false);
+        comboBoxSanPham.setEnabled(false);
+        comboBoxLoaiHang.setEnabled(false);
         comboBoxNhaCC.setEnabled(false);
-        //textFieldNgaylap.setEnabled(false);
+        textFieldGiaNhap.setEnabled(false);
         textFieldSoluong.setEnabled(false);
-        //textFieldNgaysx.setEnabled(false);
         textFieldNgaynhap.setEnabled(false);
+        textFieldSanPhamMoi.setEnabled(false);
+        textFieldNsx.setEnabled(false);
+        textFieldHsd.setEnabled(false);
     }
 
     public Boolean checkEmtyValue(String condition) throws SQLException {
@@ -472,21 +465,12 @@ public class NhapHangGui extends JFrame {
         textFieldMaNhanVien.setEnabled(false);
         textFieldMaNhanVien.setColumns(10);
 
-		/*
-		 * JLabel lblNewLabel_4 = new JLabel("Thời điểm lập");
-		 * lblNewLabel_4.setBounds(20, 90, 100, 25);
-		 * 
-		 * 
-		 * textFieldNgaylap = new JTextField(); textFieldNgaylap.setBounds(130, 90, 200,
-		 * 25); textFieldNgaylap.setEnabled(false); textFieldNgaylap.setColumns(10);
-		 */
-
         JLabel lblNewLabel_6 = new JLabel("Sản phẩm");
         lblNewLabel_6.setBounds(20, 130, 100, 25);
 
-        textFieldSanPham = new JTextField();
-        textFieldSanPham.setBounds(130, 130, 200, 25);
-        textFieldSanPham.setEnabled(false);
+        comboBoxSanPham = new JComboBox();
+        comboBoxSanPham.setBounds(130, 130, 200, 25);
+        comboBoxSanPham.setEnabled(false);
         
         JLabel lblNewLabel_loaihang = new JLabel("Loại hàng");
         lblNewLabel_loaihang.setBounds(20, 170, 100, 25);
@@ -518,15 +502,33 @@ public class NhapHangGui extends JFrame {
         textFieldSoluong.setEnabled(false);
         textFieldSoluong.setColumns(10);
 
-		/*
-		 * JLabel lblNewLabel_9 = new JLabel("Ngày sản xuất");
-		 * lblNewLabel_9.setBounds(350, 90, 100, 25);
-		 * 
-		 * 
-		 * textFieldNgaysx = new JTextField(); textFieldNgaysx.setBounds(460, 90, 200,
-		 * 25); textFieldNgaysx.setEnabled(false); textFieldNgaysx.setColumns(10);
-		 * 
-		 */
+		
+		JLabel lblNewLabel_9 = new JLabel("Sản phẩm mới");
+		lblNewLabel_9.setBounds(350, 170, 100, 25);
+		  
+		  
+		textFieldSanPhamMoi = new JTextField();
+		textFieldSanPhamMoi.setBounds(460, 170, 200, 25);
+		textFieldSanPhamMoi.setEnabled(false);
+		textFieldSanPhamMoi.setColumns(10);
+		
+		JLabel lblNewLabel_10 = new JLabel("Ngày sản xuất");
+        lblNewLabel_10.setBounds(680, 130, 100, 25);
+
+        textFieldNsx = new JTextField();
+        textFieldNsx.setBounds(790, 130, 200, 25);
+        textFieldNsx.setEnabled(false);
+        textFieldNsx.setColumns(10);
+        
+        JLabel lblNewLabel_11 = new JLabel("Hạn sử dụng");
+		lblNewLabel_11.setBounds(680, 170, 100, 25);
+		  
+		
+		textFieldHsd = new JTextField();
+		textFieldHsd.setBounds(790, 170, 200, 25);
+		textFieldHsd.setEnabled(false);
+		textFieldHsd.setColumns(10);
+		 
         JLabel lblNewLabel_13 = new JLabel("Ngày nhập");
         lblNewLabel_13.setBounds(350, 50, 100, 25);
 
@@ -700,50 +702,16 @@ public class NhapHangGui extends JFrame {
         btnThem.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
 		
-		/*
-		 * btnSua.setBounds(283, 10, 104, 53);
-		 * 
-		 * btnSua.setEnabled(false); btnSua.setIcon(new ImageIcon(
-		 * Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
-		 * ".\\Image\\Change.png")))); btnSua.setFocusPainted(false);
-		 * btnSua.addActionListener(new ActionListener() { public void
-		 * actionPerformed(ActionEvent e) { addbtn = false; fixbtn = true; addifbtn =
-		 * false; fixifbtn = false; textFieldMapn.setEnabled(false); oldMaPN =
-		 * textFieldMapn.getText(); unSetEnable("themphieunhap");
-		 * btnThem.setEnabled(false); btnLuu.setEnabled(true);
-		 * 
-		 * try { hienthiphieunhap("themphieunhap"); } catch (SQLException e1) { // TODO
-		 * //Auto-generated catch block e1.printStackTrace(); } } });
-		 */
-		  /*btnXoaChitiet.setBounds(419, 10, 104, 53); btnXoaChitiet.setEnabled(false);
-		  btnXoaChitiet.setIcon(new ImageIcon(
-		  Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
-		  ".\\Image\\Delete.png")))); btnXoaChitiet.setFocusPainted(false);
-		  btnXoaChitiet.addActionListener(new ActionListener() { public void
-		  actionPerformed(ActionEvent e) { int confirmed =
-		  JOptionPane.showConfirmDialog(null, "Bạn muốn xóa chi tiết này",
-		  "Confirmation", JOptionPane.YES_NO_OPTION); if (confirmed ==
-		  JOptionPane.YES_OPTION) { NhapHangDAL deletePn; try { deletePn = new
-		  NhapHangDAL(); NhapHangDAL luunh; String sp=null, ncc=null; try { luunh = new
-		  NhapHangDAL(); int masp = luunh.layMaSp((String)
-		  (comboBoxSanPham.getSelectedItem())); System.out.println(masp); sp =
-		  String.valueOf(masp); int mancc = luunh.layMaNcc((String)
-		  (comboBoxNhaCC.getSelectedItem())); System.out.println(mancc); ncc =
-		  String.valueOf(mancc); } catch (SQLException e2) { // TODO Auto-generated
-		  catch block e2.printStackTrace(); } System.out.println(sp);
-		  System.out.println(ncc); System.out.println(textFieldMapn.getText()); if
-		  (deletePn.xoaChiTiet(textFieldMapn.getText(), sp, ncc)) {
-		  JOptionPane.showMessageDialog(contentPane, "Xóa thành công!");
-		  hienthiphieunhap("chitiet"); resetValue("themchitiet"); setEnable(); }
+        btnThemSp.setBounds(283, 10, 150, 53);
+        btnThemSp.setFocusPainted(false);
+        btnThemSp.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+            }
+        });
+        btnThemSp.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
+        btnThemSp.setEnabled(false);
 		  
-		  } catch (SQLException e1) { // TODO Auto-generated catch block
-		  e1.printStackTrace(); }
-		  
-		  }*/
-		  
-		  ;
-		  
-		  btnXoa.setBounds(419, 10, 104, 53); btnXoa.setVisible(true);
+		  btnXoa.setBounds(469, 10, 104, 53); btnXoa.setVisible(true);
 		  btnXoa.setEnabled(false); btnXoa.setIcon(new ImageIcon(
 		  Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
 		  ".\\Image\\Delete.png")))); btnXoa.setFocusPainted(false);
@@ -764,7 +732,7 @@ public class NhapHangGui extends JFrame {
 		 
 
         JButton btnDongBo = new JButton("");
-        btnDongBo.setBounds(563, 10, 104, 53);
+        btnDongBo.setBounds(613, 10, 104, 53);
         btnDongBo.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(NhapHangGui.class.getResource(".\\Image\\Refresh-icon.png"))));
         btnDongBo.addActionListener(new ActionListener() {
@@ -780,40 +748,16 @@ public class NhapHangGui extends JFrame {
                 }
             }
         });
-		/*
-		 * btnNhap.setBounds(700, 10, 100, 53); btnNhap.setEnabled(false);
-		 * btnNhap.setFocusPainted(false); btnNhap.addActionListener(new
-		 * ActionListener() { public void actionPerformed(ActionEvent e) { addbtn =
-		 * false; fixbtn = false; addifbtn = true; fixifbtn = false;
-		 * resetValue("themchitiet"); btnThem.setEnabled(false);
-		 * btnLuu.setEnabled(true); //btnXoa.setEnabled(false);
-		 * //btnSua.setEnabled(false); btnXem.setEnabled(false);
-		 * //btnSuaChitiet.setEnabled(false); //btnXoaChitiet.setEnabled(false);
-		 * 
-		 * try { hienthiphieunhap("themchitiet"); } catch (SQLException e3) { // TODO
-		 * Auto-generated catch block e3.printStackTrace(); } } });
-		 */
-		/*
-		 * btnSuaChitiet.setBounds(830, 10, 150, 53); btnSuaChitiet.setEnabled(false);
-		 * btnSuaChitiet.setFocusPainted(false); btnSuaChitiet.addActionListener(new
-		 * ActionListener() { public void actionPerformed(ActionEvent e) { addbtn =
-		 * false; fixbtn = false; addifbtn = false; fixifbtn = true;
-		 * textFieldMapn.setEnabled(false); comboBoxSanPham.setEnabled(false);
-		 * comboBoxNhaCC.setEnabled(false); oldMaPN = textFieldMapn.getText();
-		 * NhapHangDAL luunh; try { luunh = new NhapHangDAL(); int masp =
-		 * luunh.layMaSp((String) (comboBoxSanPham.getSelectedItem())); oldMaSP =
-		 * String.valueOf(masp); int mancc = luunh.layMaNcc((String)
-		 * (comboBoxNhaCC.getSelectedItem())); oldMaNCC = String.valueOf(mancc); } catch
-		 * (SQLException e2) { // TODO Auto-generated catch block e2.printStackTrace();
-		 * } unSetEnable("themchitiet"); btnThem.setEnabled(false);
-		 * btnNhap.setEnabled(false); btnXoa.setEnabled(false);
-		 * btnXem.setEnabled(false); btnSua.setEnabled(false); btnLuu.setEnabled(true);
-		 * 
-		 * try { hienthiphieunhap("chitiet"); } catch (SQLException e1) { // TODO
-		 * Auto-generated catch block e1.printStackTrace(); } } } );
-		 */
-        btnDongBo.setFocusPainted(
-                false);
+        btnDongBo.setFocusPainted(false);
+        btnChitiet.setBounds(750, 10, 150, 53);
+        btnChitiet.setFocusPainted(false);
+        btnChitiet.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        btnChitiet.setIcon(new ImageIcon(
+                Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
+		
 
         JPanel panel_8 = new JPanel();
 
@@ -868,90 +812,90 @@ public class NhapHangGui extends JFrame {
         table.addMouseListener(new MouseAdapter() {
 
             public void mouseClicked(MouseEvent e) {
-                int col = table.getColumnCount();
-                if (col == 3) {
-                    int row = table.getSelectedRow(); // get the selected row
-                    String maPN = table.getModel().getValueAt(row, 0).toString();
-                    String maNV = table.getModel().getValueAt(row, 1).toString(); // get the value of the first column
-                    String thoiDiemLap = table.getModel().getValueAt(row, 2).toString(); // get the value of the second column
-//				String img = table.getModel().getValueAt(row, 10).toString();
-                    textFieldMapn.setText(maPN);
-                    //textFieldNgaylap.setText(thoiDiemLap);
+                int row = table.getSelectedRow(); // get the selected row
+                String maPN = table.getModel().getValueAt(row, 0).toString();
+                String maNV = table.getModel().getValueAt(row, 1).toString(); // get the value of the first column
+                String maNCC = table.getModel().getValueAt(row, 2).toString(); // get the value of the second column
+                String ngayNhap = table.getModel().getValueAt(row, 4).toString();
+                textFieldMapn.setText(maPN);
+                textFieldMaNhanVien.setText(maNV);
+                textFieldNgaynhap.setText(ngayNhap);
 
-                    setEnable();
-                    //btnXoa.setVisible(true);
-                    //btnXoa.setEnabled(true);
-                    //btnSua.setEnabled(true);
-                    btnThem.setEnabled(true);
-                    btnLuu.setEnabled(false);
-                    //btnNhap.setEnabled(false);
-                    //btnSuaChitiet.setEnabled(false);
-                    //btnXem.setEnabled(true);
+                setEnable();
+                btnThem.setEnabled(false);
+                btnLuu.setEnabled(false);
+                btnThemSp.setEnabled(true);
+                comboBoxSanPham.setSelectedIndex(-1);
+                comboBoxLoaiHang.setSelectedIndex(-1);
+                textFieldSoluong.setText("");
+                textFieldGiaNhap.setText("");
+                textFieldSanPhamMoi.setText("");
+                textFieldNsx.setText("");
+                textFieldHsd.setText("");
+                
+                
 
-//				g.dipnose();
-                    NhapHangDAL testnv;
-                    try {
-                        testnv = new NhapHangDAL();
-                        ArrayList<NhanVien> arrMaNV = testnv.docNhanVienMaNV(Integer.parseInt(maNV));
-                        DefaultComboBoxModel combo = new DefaultComboBoxModel();
-                        comboBoxNhanVien.setModel(combo);
+                //g.dipnose();
+                NhanVienBLL testnv;
+                try {
+                    testnv = new NhanVienBLL();
+                    ArrayList<NhanVien> arrMaNV = testnv.getNhanVienMaNV(maNV);
+                    DefaultComboBoxModel combo = new DefaultComboBoxModel();
+                    comboBoxNhanVien.setModel(combo);
 
-                        combo.addElement(arrMaNV.get(0).getTenNv());
+                    combo.addElement(arrMaNV.get(0).getTenNv());
 
-                    } catch (SQLException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
                 }
-                if (col == 6) {
-                    int row = table.getSelectedRow(); // get the selected row
-                    String maPN = table.getModel().getValueAt(row, 0).toString();
-                    String maSP = table.getModel().getValueAt(row, 1).toString(); // get the value of the first column
-                    String maNCC = table.getModel().getValueAt(row, 2).toString(); // get the value of the second column
-                    String soLuong = table.getModel().getValueAt(row, 3).toString();
-                    String ngaySanXuat = table.getModel().getValueAt(row, 4).toString();
-                    String ngayNhap = table.getModel().getValueAt(row, 5).toString();
-//				String img = table.getModel().getValueAt(row, 10).toString();
-                    textFieldMapn.setText(maPN);
-                    textFieldSoluong.setText(soLuong);
-                    //textFieldNgaysx.setText(ngaySanXuat);
-                    textFieldNgaynhap.setText(ngayNhap);
+                NhaCungCapBLL testncc;
+                try {
+                    testncc = new NhaCungCapBLL();
+                    ArrayList<NhaCungCap> arrMaNCC = testncc.getNhaCungCapMaNCC(maNCC);
+                    DefaultComboBoxModel combo = new DefaultComboBoxModel();
+                    comboBoxNhaCC.setModel(combo);
 
-                    setEnable();
-                    //btnXoa.setEnabled(false);
-                    //btnSua.setEnabled(false);
-                    btnThem.setEnabled(false);
-                    btnLuu.setEnabled(false);
-                    //btnNhap.setEnabled(false);
-                    //btnSuaChitiet.setEnabled(true);
-                    //btnXem.setEnabled(false);
-                    //btnXoaChitiet.setEnabled(true);
+                    combo.addElement(arrMaNCC.get(0).getTenNCC());
 
-//				g.dipnose();
-                    NhapHangDAL testsp;
-                    try {
-                        testsp = new NhapHangDAL();
-                        ArrayList<SanPham> arrMaSP = testsp.docSanPhamMaSP(Integer.parseInt(maSP));
-                        DefaultComboBoxModel combo = new DefaultComboBoxModel();
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                try {
+					hienthiphieunhap("chitiet");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            }
 
-                    } catch (SQLException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
+        });
+        table_chitiet.addMouseListener(new MouseAdapter() {
 
-                    NhapHangDAL testncc;
-                    try {
-                        testncc = new NhapHangDAL();
-                        ArrayList<NhaCungCap> arrMaNCC = testncc.docNhaCungCapMaNCC(Integer.parseInt(maNCC));
-                        DefaultComboBoxModel combo = new DefaultComboBoxModel();
-                        comboBoxNhaCC.setModel(combo);
+            public void mouseClicked(MouseEvent e) {
+                int row = table_chitiet.getSelectedRow(); // get the selected row
+                String maSp = table_chitiet.getModel().getValueAt(row, 0).toString();
+                String soLuong = table_chitiet.getModel().getValueAt(row, 2).toString(); // get the value of the second column
+                textFieldSoluong.setText(soLuong);
 
-                        combo.addElement(arrMaNCC.get(0).getTenNCC());
+                setEnable();
+                btnThem.setEnabled(false);
+                btnLuu.setEnabled(false);
+                btnThemSp.setEnabled(true);
 
-                    } catch (SQLException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
+                //g.dipnose();
+                SanPhamBLL testsp;
+                try {
+                    testsp = new SanPhamBLL();
+                    DefaultComboBoxModel combo = new DefaultComboBoxModel();
+                    comboBoxSanPham.setModel(combo);
+
+                    combo.addElement(testsp.getTenSanPham(maSp));
+
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
                 }
             }
 
@@ -971,12 +915,10 @@ public class NhapHangGui extends JFrame {
         panel_6.setLayout(null);
         panel_6.add(btnLuu);
         panel_6.add(btnThem);
-        //panel_6.add(btnSua);
+        panel_6.add(btnThemSp);
         panel_6.add(btnXoa);
         panel_6.add(btnDongBo);
-        //panel_6.add(btnNhap);
-        //panel_6.add(btnXoaChitiet);
-        //panel_6.add(btnSuaChitiet);
+        panel_6.add(btnChitiet);
         icon = new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource("/GUI/Image/Background.png")));
         Image image_bg = icon.getImage();
@@ -996,13 +938,17 @@ public class NhapHangGui extends JFrame {
         panel_5.add(textFieldMaNhanVien);
         panel_5.add(lblNewLabel_3);
         //panel_5.add(lblNewLabel_4);
-        panel_5.add(textFieldSanPham);
+        panel_5.add(comboBoxSanPham);
         panel_5.add(lblNewLabel_loaihang);
         panel_5.add(comboBoxLoaiHang);
         panel_5.add(comboBoxNhaCC);
         panel_5.add(lblNewLabel_8);
-        //panel_5.add(lblNewLabel_9);
-        //panel_5.add(textFieldNgaylap);
+        panel_5.add(lblNewLabel_9);
+        panel_5.add(textFieldSanPhamMoi);
+        panel_5.add(lblNewLabel_10);
+        panel_5.add(textFieldNsx);
+        panel_5.add(lblNewLabel_11);
+        panel_5.add(textFieldHsd);
         panel_5.add(lblNewLabel_gianhap);
         panel_5.add(textFieldGiaNhap);
         panel_5.add(textFieldSoluong);
@@ -1100,15 +1046,15 @@ public class NhapHangGui extends JFrame {
         panel.add(lbIconShop);
         panel.add(lblNewLabel);
 
-        JLabel lblNewLabel_10 = new JLabel("");
+        JLabel lblNewLabel_20 = new JLabel("");
         icon = new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Background2.png")));
         Image image2 = icon.getImage();
         Image resizedImg2 = image2.getScaledInstance(1300, 100, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon2 = new ImageIcon(resizedImg2);
-        lblNewLabel_10.setIcon(resizedIcon2);
-        lblNewLabel_10.setBounds(0, 0, 1078, 104);
-        panel.add(lblNewLabel_10);
+        lblNewLabel_20.setIcon(resizedIcon2);
+        lblNewLabel_20.setBounds(0, 0, 1078, 104);
+        panel.add(lblNewLabel_20);
         contentPane.setLayout(null);
         contentPane.add(tabbedPane);
         contentPane.add(panel_1);

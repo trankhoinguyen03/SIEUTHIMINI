@@ -30,6 +30,21 @@ public class NhaCungCapDAL extends connectSql {
 		}
 		return arrNCC;
 	}
+    public ArrayList<NhaCungCap> docNhaCungCapMaNCC(String maNcc) throws SQLException{
+		ArrayList<NhaCungCap> arrNhacungcap = new ArrayList<NhaCungCap>();
+		String sql = "select * from NHACUNGCAP where MaNCC LIKE ?";
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, maNcc);
+		ResultSet rs = pstm.executeQuery();
+		while(rs.next()) {
+			NhaCungCap ncc = new NhaCungCap();
+			ncc.setMaNCC(rs.getString("MaNCC"));
+			ncc.setTenNCC(rs.getString(2));
+			arrNhacungcap.add(ncc);
+		}
+	
+	return arrNhacungcap;
+	}
 	public int getLastMaNCC() throws SQLException {
 		String sql = "SELECT IDENT_CURRENT('NHACUNGCAP') AS MaNCC";
 		PreparedStatement pstm = conn.prepareStatement(sql);
