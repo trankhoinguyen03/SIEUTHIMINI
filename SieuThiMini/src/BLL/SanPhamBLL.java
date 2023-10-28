@@ -32,6 +32,14 @@ public class SanPhamBLL {
 		SanPhamDAL spd = new SanPhamDAL();
 		return spd.layTenSanPham(value);
 	}
+	public String getGiaNhap(String value) throws SQLException {
+		SanPhamDAL spd = new SanPhamDAL();
+		return spd.layGiaNhap(value);
+	}
+	public String getMaLoaiHang(String value) throws SQLException {
+		SanPhamDAL spd = new SanPhamDAL();
+		return spd.layMaLh(value);
+	}
 	public static void main(String[] args) throws SQLException {
 		SanPhamBLL test = new SanPhamBLL();
 		System.out.println(test.searchSanPham("a"));

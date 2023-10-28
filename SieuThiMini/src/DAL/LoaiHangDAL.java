@@ -53,9 +53,9 @@ public class LoaiHangDAL extends connectSql {
 		  if (rs.next()) {
 		        int maxColumnValue = rs.getInt("MaLH");
 		        return maxColumnValue;
-		    }
-		  closeConnection();
-		  return 0;
+		  }
+		closeConnection();
+		return 0;
 	}
 	public String docLoaiHangMaLH(String value) throws SQLException{
 		String sql = "select TenLH from LOAIHANG where MaLH = ?";

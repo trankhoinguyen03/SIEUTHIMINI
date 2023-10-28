@@ -173,6 +173,21 @@ public class SanPhamDAL extends connectSql {
             return null; // or throw an exception
         }
     }
+    public String layMaLh(String value) throws SQLException {
+        String sql = "SELECT MaLH FROM SANPHAM WHERE MaSP = ?";
+        try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
+            pstm.setString(1, value);
+            ResultSet rs = pstm.executeQuery();
+            if (rs.next()) {
+                return rs.getString("MaLH");
+            } else {
+                return null; // or throw an exception
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null; // or throw an exception
+        }
+    }
 	public  float getgia(String tensp) throws SQLException {
         float giatien = 0;
         
@@ -185,6 +200,19 @@ public class SanPhamDAL extends connectSql {
             }
         }
         return giatien;
+    }
+	public String layGiaNhap(String value) throws SQLException {
+        String giaNhap = null;
+        
+        String sql = "SELECT GiaMua FROM SANPHAM where  MaSP = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) { 
+            pstmt.setString(1, value);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                giaNhap = rs.getString("GiaMua");
+            }
+        }
+        return giaNhap;
     }
 	public int getma(String tensp) throws SQLException {
         String sql = "SELECT MaSP FROM SANPHAM where TenSP=?";

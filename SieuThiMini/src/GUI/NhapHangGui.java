@@ -56,6 +56,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import BLL.ChiTietPhieuNhapBLL;
+import BLL.LoaiHangBLL;
 import BLL.NhaCungCapBLL;
 import BLL.NhanVienBLL;
 import BLL.NhapHangBLL;
@@ -133,7 +134,6 @@ public class NhapHangGui extends JFrame {
     Object lastValueMaPn;
     JButton btnXoa = new JButton("Ẩn");
     JButton btnThemSp = new JButton("Nhập mới");
-    //JButton btnSua = new JButton("Sửa");
     boolean check = true;
     JButton btnThem = new JButton("Nhập");
     JButton btnLuu = new JButton("Lưu");
@@ -144,7 +144,7 @@ public class NhapHangGui extends JFrame {
     ButtonGroup groupSapxep = new ButtonGroup();
     JScrollPane scrollPane = new JScrollPane();
     JScrollPane scrollPane_chitiet = new JScrollPane();
-    boolean addbtn, fixbtn, addifbtn, fixifbtn = false;
+    boolean addbtn, addnewbtn, detailbtn = false;
 //	dung grap 2d tao size cho anh
     int newWidth = 130;
     int newHeight = 110;
@@ -253,7 +253,7 @@ public class NhapHangGui extends JFrame {
             //btnSua.setEnabled(false);
             btnLuu.setEnabled(false);
             //btnNhap.setEnabled(false);
-            //btnSuaChitiet.setEnabled(false);
+            btnChitiet.setEnabled(false);
             //btnXem.setEnabled(false);
             //btnXoaChitiet.setEnabled(false);
         }
@@ -295,6 +295,19 @@ public class NhapHangGui extends JFrame {
             //btnXem.setEnabled(false);
             //btnXoaChitiet.setEnabled(false);
         }
+        if (condition == "nhapsanphammoi") {
+            comboBoxNhanVien.setEnabled(true);
+            comboBoxLoaiHang.setEnabled(true);
+            comboBoxNhaCC.setEnabled(true);
+            textFieldGiaNhap.setEnabled(true);
+            textFieldSoluong.setEnabled(true);
+            textFieldSanPhamMoi.setEnabled(true);
+            textFieldNsx.setEnabled(true);
+            textFieldHsd.setEnabled(true);
+            btnThemSp.setEnabled(true);
+            btnLuu.setEnabled(true);
+            btnChitiet.setEnabled(false);
+        }
         if (condition == "themchitiet") {
             textFieldMapn.setEnabled(false);
             comboBoxNhaCC.setEnabled(false);
@@ -321,9 +334,6 @@ public class NhapHangGui extends JFrame {
         textFieldGiaNhap.setEnabled(false);
         textFieldSoluong.setEnabled(false);
         textFieldNgaynhap.setEnabled(false);
-        textFieldSanPhamMoi.setEnabled(false);
-        textFieldNsx.setEnabled(false);
-        textFieldHsd.setEnabled(false);
     }
 
     public Boolean checkEmtyValue(String condition) throws SQLException {
@@ -338,15 +348,6 @@ public class NhapHangGui extends JFrame {
                 NhapHangBLL nhb = new NhapHangBLL();
                 ArrayList<NhapHang> arrPro = new ArrayList<NhapHang>();
                 arrPro = nhb.getPhieuNhap();
-                if (fixbtn) {
-                    for (NhapHang nh : arrPro) {
-                        if (oldMaPN != textFieldMapn.getText() && nh.getMaPn() == textFieldMapn.getText()) {
-                            JOptionPane.showMessageDialog(contentPane, "Mã phiếu nhập đã tồn tại!");
-                            textFieldMapn.requestFocus();
-                            return false;
-                        }
-                    }
-                }
                 if (addbtn) {
                     for (NhapHang nh : arrPro) {
                         if (nh.getMaNv() == textFieldMapn.getText()) {
@@ -505,30 +506,34 @@ public class NhapHangGui extends JFrame {
 		
 		JLabel lblNewLabel_9 = new JLabel("Sản phẩm mới");
 		lblNewLabel_9.setBounds(350, 170, 100, 25);
-		  
+		lblNewLabel_9.setVisible(false);
 		  
 		textFieldSanPhamMoi = new JTextField();
 		textFieldSanPhamMoi.setBounds(460, 170, 200, 25);
 		textFieldSanPhamMoi.setEnabled(false);
 		textFieldSanPhamMoi.setColumns(10);
+		textFieldSanPhamMoi.setVisible(false);
 		
 		JLabel lblNewLabel_10 = new JLabel("Ngày sản xuất");
         lblNewLabel_10.setBounds(680, 130, 100, 25);
-
+        lblNewLabel_10.setVisible(false);
+        
         textFieldNsx = new JTextField();
         textFieldNsx.setBounds(790, 130, 200, 25);
         textFieldNsx.setEnabled(false);
         textFieldNsx.setColumns(10);
+        textFieldNsx.setVisible(false);
         
         JLabel lblNewLabel_11 = new JLabel("Hạn sử dụng");
 		lblNewLabel_11.setBounds(680, 170, 100, 25);
-		  
+		lblNewLabel_11.setVisible(false);
 		
 		textFieldHsd = new JTextField();
 		textFieldHsd.setBounds(790, 170, 200, 25);
 		textFieldHsd.setEnabled(false);
 		textFieldHsd.setColumns(10);
-		 
+		textFieldHsd.setVisible(false);
+		
         JLabel lblNewLabel_13 = new JLabel("Ngày nhập");
         lblNewLabel_13.setBounds(350, 50, 100, 25);
 
@@ -635,7 +640,7 @@ public class NhapHangGui extends JFrame {
                         NhapHang nh = new NhapHang();
                         PhieuNhapChiTiet ct = new PhieuNhapChiTiet();
                         NhapHangDAL luunh;
-                        if (addifbtn) {
+                        if (detailbtn) {
                             try {
                                 luunh = new NhapHangDAL();
                                 nh.setMaPn(textFieldMapn.getText());
@@ -650,7 +655,7 @@ public class NhapHangGui extends JFrame {
                                     resetValue("themchitiet");
                                     setEnable();
                                     hienthiphieunhap("chitiet");
-                                    addifbtn = false;
+                                    detailbtn = false;
                                 } else {
                                     JOptionPane.showMessageDialog(contentPane, "Thêm thất bại do trùng khóa");
                                 }
@@ -673,9 +678,8 @@ public class NhapHangGui extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     addbtn = true;
-                    fixbtn = false;
-                    addifbtn = false;
-                    fixifbtn = false;
+                    addnewbtn = false;
+                    detailbtn = false;
                     resetValue("themphieunhap");
                     textFieldMapn.setEnabled(false);
                     NhapHangDAL nh;
@@ -684,8 +688,6 @@ public class NhapHangGui extends JFrame {
                     textFieldMapn.setText("" + (lastMaPN + 1));
                     btnThem.setEnabled(false);
                     btnLuu.setEnabled(true);
-                    //btnXoa.setEnabled(false);
-                    //btnSua.setEnabled(false);
                     try {
                         hienthiphieunhap("themphieunhap");
                     } catch (SQLException e3) {
@@ -703,13 +705,24 @@ public class NhapHangGui extends JFrame {
                 Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
 		
         btnThemSp.setBounds(283, 10, 150, 53);
-        btnThemSp.setFocusPainted(false);
         btnThemSp.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		lblNewLabel_9.setVisible(true);
+        		textFieldSanPhamMoi.setVisible(true);
+        		lblNewLabel_10.setVisible(true);
+        		textFieldNsx.setVisible(true);
+        		lblNewLabel_11.setVisible(true);
+        		textFieldHsd.setVisible(true);
+        		textFieldSanPhamMoi.setEnabled(true);
+        		textFieldNsx.setEnabled(true);
+        		textFieldHsd.setEnabled(true);
+                addbtn = false;
+                addnewbtn = true;
+                detailbtn = false;
             }
         });
         btnThemSp.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
-        btnThemSp.setEnabled(false);
+        btnThemSp.setFocusPainted(false);
 		  
 		  btnXoa.setBounds(469, 10, 104, 53); btnXoa.setVisible(true);
 		  btnXoa.setEnabled(false); btnXoa.setIcon(new ImageIcon(
@@ -748,8 +761,8 @@ public class NhapHangGui extends JFrame {
                 }
             }
         });
-        btnDongBo.setFocusPainted(false);
         btnChitiet.setBounds(750, 10, 150, 53);
+        btnChitiet.setEnabled(false);
         btnChitiet.setFocusPainted(false);
         btnChitiet.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -765,7 +778,7 @@ public class NhapHangGui extends JFrame {
                 0, 250, 1067, 300);
         
         lbThongbao_chitiet.setBounds(
-                50, 40, 569, 32);
+                580, 40, 569, 32);
 
         lbThongbao_chitiet.setText(
                 "DANH SÁCH SẢN PHẨM TRONG PHIẾU NHẬP");
@@ -777,7 +790,7 @@ public class NhapHangGui extends JFrame {
                 new Font("Arial", Font.BOLD, 20));
         
         lbThongbao.setBounds(
-                670, 40, 569, 32);
+                130, 40, 569, 32);
 
         lbThongbao.setText(
                 "DANH SÁCH PHIẾU NHẬP");
@@ -822,9 +835,8 @@ public class NhapHangGui extends JFrame {
                 textFieldNgaynhap.setText(ngayNhap);
 
                 setEnable();
-                btnThem.setEnabled(false);
                 btnLuu.setEnabled(false);
-                btnThemSp.setEnabled(true);
+                btnChitiet.setEnabled(true);
                 comboBoxSanPham.setSelectedIndex(-1);
                 comboBoxLoaiHang.setSelectedIndex(-1);
                 textFieldSoluong.setText("");
@@ -882,17 +894,21 @@ public class NhapHangGui extends JFrame {
                 setEnable();
                 btnThem.setEnabled(false);
                 btnLuu.setEnabled(false);
-                btnThemSp.setEnabled(true);
-
+                btnChitiet.setEnabled(true);
+                
                 //g.dipnose();
                 SanPhamBLL testsp;
+                LoaiHangBLL testlh;
                 try {
                     testsp = new SanPhamBLL();
+                    testlh = new LoaiHangBLL();
                     DefaultComboBoxModel combo = new DefaultComboBoxModel();
                     comboBoxSanPham.setModel(combo);
-
                     combo.addElement(testsp.getTenSanPham(maSp));
-
+                    textFieldGiaNhap.setText(testsp.getGiaNhap(maSp));
+                    DefaultComboBoxModel combo1 = new DefaultComboBoxModel();
+                    comboBoxLoaiHang.setModel(combo1);
+                    combo1.addElement(testlh.getTenLoaiHang(testsp.getMaLoaiHang(maSp)));
                 } catch (SQLException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
@@ -900,11 +916,11 @@ public class NhapHangGui extends JFrame {
             }
 
         });
-        scrollPane_chitiet.setBounds(0, 70, 530, 210);
+        scrollPane_chitiet.setBounds(540, 70, 520, 210);
 
         scrollPane_chitiet.setViewportView(table_chitiet);
         
-        scrollPane.setBounds(540, 70, 530, 210);
+        scrollPane.setBounds(0, 70, 520, 210);
 
         scrollPane.setViewportView(table);
         panel_8.setLayout(null);
