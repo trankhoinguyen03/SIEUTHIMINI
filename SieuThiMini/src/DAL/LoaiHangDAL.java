@@ -33,7 +33,7 @@ public class LoaiHangDAL extends connectSql {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-//		closeConnection();
+		closeConnection();
 		return arrLoaihang;
 	}
 	public String getNameLoaiHang(int maLH) throws SQLException {
@@ -42,8 +42,10 @@ public class LoaiHangDAL extends connectSql {
 		ResultSet rs = pstm.executeQuery();
 		if (rs.next()) {
 		    String tenLH = rs.getString("TenLH");
+		    closeConnection();
 		    return tenLH;
 		}
+		closeConnection();
 		return "";
 	}
 	public int getLastMaLH() throws SQLException {
@@ -68,7 +70,7 @@ public class LoaiHangDAL extends connectSql {
 		closeConnection();
 		return null;
 	}
-	public String getMaLh(String value) throws SQLException {
+	public String layMaLh(String value) throws SQLException {
 		String sql = "";
 		sql ="select MaLH from LOAIHANG where TenLH = ?";
 		PreparedStatement pstm = conn.prepareStatement(sql);

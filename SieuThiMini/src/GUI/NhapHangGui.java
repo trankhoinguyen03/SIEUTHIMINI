@@ -44,8 +44,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.awt.event.ActionEvent;
@@ -55,7 +59,11 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import com.toedter.calendar.JDateChooser;
+
 import BLL.ChiTietPhieuNhapBLL;
+import BLL.DangNhapBLL;
+import BLL.KhoBLL;
 import BLL.LoaiHangBLL;
 import BLL.NhaCungCapBLL;
 import BLL.NhanVienBLL;
@@ -67,6 +75,7 @@ import DAL.NhanVienDAL;
 import DTO.NhanVien;
 
 import DAL.SanPhamDAL;
+import DTO.LoaiHang;
 import DTO.NhaCungCap;
 import DTO.PhieuNhapChiTiet;
 import DTO.SanPham;
@@ -89,7 +98,7 @@ public class NhapHangGui extends JFrame {
 
     private JPanel contentPane;
     private JTextField textFieldMapn;
-    private JComboBox comboBoxNhanVien;
+    private JTextField textFieldNhanVien;
     private JTextField textFieldMaNhanVien;
     private JComboBox comboBoxNhaCC;
     private JComboBox comboBoxSanPham;
@@ -98,10 +107,9 @@ public class NhapHangGui extends JFrame {
     private JTextField textFieldGiaNhap;
     private JTextField textFieldSoluong;
     //private JTextField textFieldNgaysx;
-    private JTextField textFieldNgaynhap;
     private JTextField textFieldSanPhamMoi;
-    private JTextField textFieldNsx;
-    private JTextField textFieldHsd;
+    private JDateChooser dateFieldNsx;
+    private JDateChooser dateFieldHsd;
     private JTable table;
     private JTable table_chitiet;
 
@@ -121,6 +129,7 @@ public class NhapHangGui extends JFrame {
             }
         });
     }
+    
 
     /**
      * Create the frame.
@@ -132,12 +141,12 @@ public class NhapHangGui extends JFrame {
     ImageIcon icon = new ImageIcon();
     JButton btnCapNhatAnh = new JButton();
     Object lastValueMaPn;
-    JButton btnXoa = new JButton("Ẩn");
-    JButton btnThemSp = new JButton("Nhập mới");
+    JButton btnAn = new JButton("Ẩn");
+    JButton btnThemSp = new JButton("Chi tiết");
     boolean check = true;
-    JButton btnThem = new JButton("Nhập");
+    JButton btnThem = new JButton("Thêm phiếu");
     JButton btnLuu = new JButton("Lưu");
-    JButton btnChitiet = new JButton("Chi Tiết");
+    JButton btnChitiet = new JButton("Nhập cũ");
     int lastRow;
     JRadioButton radioSapxepsoluong = new JRadioButton("Số lượng");
     JRadioButton radioSapxepma = new JRadioButton("Mã phiếu nhập");
@@ -158,27 +167,50 @@ public class NhapHangGui extends JFrame {
     String oldMaSP = null;
     String oldMaNCC = null;
     private JTextField textFieldSearch;
-    boolean checkFix = false;
-
+    boolean checkHide = true;
+   
+    
+    TaiKhoan taiKhoan = DangNhapBLL.taiKhoan;
     public void hienthiphieunhap(String condition) throws SQLException {
         NhapHangBLL nhBll = new NhapHangBLL();
         ChiTietPhieuNhapBLL ctpnBll = new ChiTietPhieuNhapBLL();
         ArrayList<NhapHang> arrNh = new ArrayList<NhapHang>();
         ArrayList<PhieuNhapChiTiet> arrCt = new ArrayList<PhieuNhapChiTiet>();
-        if (condition == "phieunhap") {
-            arrNh = nhBll.getPhieuNhap();
+        if (condition == "phieunhap" || condition == "themchitiet" || condition == "themsanphammoi") {
+        	if(taiKhoan.getQuyen().equals("RL2")) {
+                arrNh = nhBll.getPhieuNhap();
+        	} else {
+        		arrNh = nhBll.getPhieuNhapNV(taiKhoan.getMaNV());
+        	}
         }
-        if (condition == "chitiet") {
+        if (condition == "chitiet" || condition == "themchitiet" || condition == "themsanphammoi") {
             arrCt = ctpnBll.getChiTietPN(textFieldMapn.getText());
         }
         if (condition == "themphieunhap") {
-            arrNh = nhBll.getPhieuNhap();
+        	if(taiKhoan.getQuyen().equals("RL2")) {
+                arrNh = nhBll.getPhieuNhap();
+        	} else {
+        		arrNh = nhBll.getPhieuNhapNV(taiKhoan.getMaNV());
+        	}
             NhanVienBLL testnv = new NhanVienBLL();
-            ArrayList<NhanVien> arrMaNV = testnv.getNhanVien();
-            DefaultComboBoxModel combonv = new DefaultComboBoxModel();
-            comboBoxNhanVien.setModel(combonv);
-            for (NhanVien manv : arrMaNV) {
-                combonv.addElement(manv.getTenNv());
+            String lastMaPn = nhBll.getLastMaPN();
+            String maPn = lastMaPn.substring(lastMaPn.length()-3, lastMaPn.length());
+            int check = Integer.parseInt(maPn);
+            if(check < 9) {
+            	textFieldMapn.setText("PN00"+(check+1));
+            } else if(check < 99) {
+            	textFieldMapn.setText("PN0"+(check+1));
+            } else {
+            	textFieldMapn.setText("PN"+(check+1));
+            }
+            textFieldNhanVien.setText(testnv.getTenNV(taiKhoan.getMaNV()));
+            textFieldMaNhanVien.setText(taiKhoan.getMaNV());
+            NhaCungCapBLL testncc = new NhaCungCapBLL();
+            ArrayList<NhaCungCap> arrMaNCC = testncc.getNhaCungCap();
+            DefaultComboBoxModel comboncc = new DefaultComboBoxModel();
+            comboBoxNhaCC.setModel(comboncc);
+            for (NhaCungCap mancc : arrMaNCC) {
+                comboncc.addElement(mancc.getTenNCC());
             }
         }
         if (condition == "themchitiet") {
@@ -190,15 +222,16 @@ public class NhapHangGui extends JFrame {
             for (SanPham masp : arrMaSP) {
                 combosp.addElement(masp.getTenSp());
             }
-
-            NhaCungCapBLL testncc = new NhaCungCapBLL();
-            ArrayList<NhaCungCap> arrMaNCC = testncc.getNhaCungCap();
-            DefaultComboBoxModel comboncc = new DefaultComboBoxModel();
-            comboBoxNhaCC.setModel(comboncc);
-            for (NhaCungCap mancc : arrMaNCC) {
-                comboncc.addElement(mancc.getTenNCC());
+        }
+        if (condition == "themsanphammoi") {
+            //arrNh = nhBll.docNhapHang("docchitiet", textFieldMapn.getText());
+            LoaiHangBLL testlh = new LoaiHangBLL();
+            ArrayList<LoaiHang> arrMaLH = testlh.getLoaiHang();
+            DefaultComboBoxModel combosp = new DefaultComboBoxModel();
+            comboBoxLoaiHang.setModel(combosp);
+            for (LoaiHang malh : arrMaLH) {
+                combosp.addElement(malh.getTenLH());
             }
-
         }
         
         if (condition == "phieunhap" || condition == "themphieunhap") {
@@ -213,11 +246,17 @@ public class NhapHangGui extends JFrame {
                 Object[] row = new Object[]{nhdata.getMaPn(), nhdata.getMaNv(), nhdata.getMaNcc(), nhdata.getTongTien(), nhdata.getNgayNhap()};
                 model.addRow(row);
             }
-
-            lastRow = table.getRowCount() - 1; // get index of the last row
-            lastValueMaPn = table.getValueAt(lastRow, 0); // get the value at the last row and column n
+            String[] columnNames_chitiet = {"Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng", "Thành Tiền"};
+            DefaultTableModel model_chitiet = new DefaultTableModel(columnNames_chitiet, 0);
+            
+            table_chitiet.setModel(model_chitiet);
+            model_chitiet.setRowCount(0);
+            for (PhieuNhapChiTiet ctdata : arrCt) {
+                Object[] row = new Object[]{};
+                model_chitiet.addRow(row);
+            }
         }
-        if (condition == "chitiet" || condition == "themchitiet") {
+        if (condition == "chitiet") {
         	SanPhamBLL spbll = new SanPhamBLL();
             String[] columnNames_chitiet = {"Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng", "Thành Tiền"};
             DefaultTableModel model_chitiet = new DefaultTableModel(columnNames_chitiet, 0);
@@ -225,197 +264,272 @@ public class NhapHangGui extends JFrame {
             table_chitiet.setModel(model_chitiet);
             model_chitiet.setRowCount(0);
             for (PhieuNhapChiTiet ctdata : arrCt) {
-            	String nameSp = spbll.getTenSanPham(ctdata.getMaSP());
+            	String nameSp = spbll.getTenSP(ctdata.getMaSP());
+                Object[] row = new Object[]{ctdata.getMaSP(), nameSp, ctdata.getSoLuong(), ctdata.getThanhTien()};
+                model_chitiet.addRow(row);
+            }
+        }
+        if (condition == "themchitiet" || condition == "themsanphammoi") {
+        	String[] columnNames = {"Mã Phiếu Nhập", "Nhân Viên", "Nhà Cung Cấp", "Tổng Tiền", "Ngày Nhập"};
+            DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+            table.setModel(model);
+            model.setRowCount(0);
+            for (NhapHang nhdata : arrNh) {
+                //NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+                Object[] row = new Object[]{nhdata.getMaPn(), nhdata.getMaNv(), nhdata.getMaNcc(), nhdata.getTongTien(), nhdata.getNgayNhap()};
+                model.addRow(row);
+            }
+        	SanPhamBLL spbll = new SanPhamBLL();
+            String[] columnNames_chitiet = {"Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng", "Thành Tiền"};
+            DefaultTableModel model_chitiet = new DefaultTableModel(columnNames_chitiet, 0);
+            
+            table_chitiet.setModel(model_chitiet);
+            model_chitiet.setRowCount(0);
+            for (PhieuNhapChiTiet ctdata : arrCt) {
+            	String nameSp = spbll.getTenSP(ctdata.getMaSP());
                 Object[] row = new Object[]{ctdata.getMaSP(), nameSp, ctdata.getSoLuong(), ctdata.getThanhTien()};
                 model_chitiet.addRow(row);
             }
         }
     }
-
+    
+	public String formatDateToString(java.util.Date date) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String dateString = dateFormat.format(date);
+		return dateString;
+	}
     public void resetValue(String condition) {
-        if (condition == "themphieunhap") {
+        if (condition == "load") {
             textFieldMapn.setText("");
-            textFieldMapn.setEnabled(true);
-            comboBoxNhanVien.setSelectedItem(null);
-            comboBoxNhanVien.setEnabled(true);
             comboBoxNhaCC.setSelectedItem(null);
             comboBoxNhaCC.setEnabled(false);
-            //textFieldNgaylap.setText("");
-            //textFieldNgaylap.setEnabled(true);
+            comboBoxSanPham.setSelectedItem(null);
+            comboBoxSanPham.setEnabled(false);
+            comboBoxLoaiHang.setSelectedItem(null);
+            comboBoxLoaiHang.setEnabled(false);
+            textFieldGiaNhap.setText("");
+            textFieldGiaNhap.setEnabled(false);
             textFieldSoluong.setText("");
             textFieldSoluong.setEnabled(false);
-            //textFieldNgaysx.setText("");
-            //textFieldNgaysx.setEnabled(false);
-            textFieldNgaynhap.setText("");
-            textFieldNgaynhap.setEnabled(false);
+            textFieldSanPhamMoi.setText("");
+            textFieldSanPhamMoi.setEnabled(false);
+            dateFieldNsx.setDate(null);;
+            dateFieldNsx.setEnabled(false);
+            dateFieldHsd.setDate(null);
+            dateFieldHsd.setEnabled(false);
             btnThem.setEnabled(true);
-            //btnXoa.setEnabled(false);
-            //btnSua.setEnabled(false);
             btnLuu.setEnabled(false);
-            //btnNhap.setEnabled(false);
-            btnChitiet.setEnabled(false);
-            //btnXem.setEnabled(false);
-            //btnXoaChitiet.setEnabled(false);
+            btnAn.setEnabled(false);
+        }
+        if (condition == "themphieunhap") {
+        	comboBoxNhaCC.setSelectedItem(null);
+        	comboBoxNhaCC.setEnabled(true);
+            textFieldMapn.setText("");
+            btnThem.setEnabled(false);
+            btnLuu.setEnabled(true);
+            btnAn.setEnabled(false);
         }
         if (condition == "themchitiet") {
-            textFieldMapn.setEnabled(false);
-            comboBoxNhanVien.setEnabled(false);
-            comboBoxNhaCC.setSelectedItem(null);
-            comboBoxNhaCC.setEnabled(true);
-            //textFieldNgaylap.setEnabled(false);
+        	comboBoxSanPham.setSelectedItem(null);
+        	comboBoxSanPham.setEnabled(true);
             textFieldSoluong.setText("");
             textFieldSoluong.setEnabled(true);
-            //textFieldNgaysx.setText("");
-            //textFieldNgaysx.setEnabled(true);
-            textFieldNgaynhap.setText("");
-            textFieldNgaynhap.setEnabled(true);
             btnThem.setEnabled(false);
-            //btnXoa.setEnabled(false);
-            //btnSua.setEnabled(false);
-            btnLuu.setEnabled(false);
-            //btnNhap.setEnabled(true);
-            //btnSuaChitiet.setEnabled(false);
-            //btnXem.setEnabled(false);
-            //btnXoaChitiet.setEnabled(false);
+            btnThemSp.setEnabled(false);
+            btnLuu.setEnabled(true);
+            btnAn.setEnabled(false);
+        }
+        if (condition == "themsanphammoi") {
+        	comboBoxLoaiHang.setSelectedItem(null);
+        	comboBoxLoaiHang.setEnabled(true);
+        	textFieldGiaNhap.setText("");
+        	textFieldGiaNhap.setEnabled(true);
+            textFieldSoluong.setText("");
+            textFieldSoluong.setEnabled(true);
+            textFieldSanPhamMoi.setText("");
+            textFieldSanPhamMoi.setEnabled(true);
+            dateFieldNsx.setDate(null);
+            dateFieldNsx.setEnabled(true);
+            dateFieldHsd.setDate(null);
+            dateFieldHsd.setEnabled(true);
+            btnThem.setEnabled(false);
+            btnChitiet.setEnabled(false);
+            btnLuu.setEnabled(true);
+            btnAn.setEnabled(false);
         }
 
     }
-
+    
+    public void hideField() {
+    	btnThemSp.setVisible(false);
+    	btnChitiet.setVisible(false);
+		comboBoxSanPham.setVisible(false);
+		comboBoxLoaiHang.setVisible(false);
+		textFieldGiaNhap.setVisible(false);
+		textFieldSoluong.setVisible(false);
+		textFieldSanPhamMoi.setVisible(false);
+		dateFieldNsx.setVisible(false);
+		dateFieldHsd.setVisible(false);
+    }
+    public void unHideField(String condition) {
+    	if(condition == "themchitiet") {
+    		comboBoxSanPham.setVisible(true);
+    		comboBoxLoaiHang.setVisible(true);
+    		textFieldGiaNhap.setVisible(true);
+    		textFieldSoluong.setVisible(true);
+    		textFieldSanPhamMoi.setVisible(false);
+    		dateFieldNsx.setVisible(false);
+    		dateFieldHsd.setVisible(false);
+    	}
+    	if(condition == "themsanphammoi") {
+    		comboBoxSanPham.setVisible(false);
+    		comboBoxLoaiHang.setVisible(true);
+    		textFieldGiaNhap.setVisible(true);
+    		textFieldSoluong.setVisible(true);
+    		textFieldSanPhamMoi.setVisible(true);
+    		dateFieldNsx.setVisible(true);
+    		dateFieldHsd.setVisible(true);
+    	}
+    }
     public void unSetEnable(String condition) {
         if (condition == "themphieunhap") {
-            textFieldMapn.setEnabled(true);
-            comboBoxNhanVien.setEnabled(true);
-            //textFieldNgaylap.setEnabled(true);
+            comboBoxNhaCC.setEnabled(true);
             btnThem.setEnabled(true);
-            //btnXoa.setEnabled(false);
-            //btnSua.setEnabled(false);
             btnLuu.setEnabled(false);
-            //btnNhap.setEnabled(false);
-            //btnSuaChitiet.setEnabled(false);
-            //btnXem.setEnabled(false);
-            //btnXoaChitiet.setEnabled(false);
         }
         if (condition == "nhapsanphammoi") {
-            comboBoxNhanVien.setEnabled(true);
             comboBoxLoaiHang.setEnabled(true);
-            comboBoxNhaCC.setEnabled(true);
             textFieldGiaNhap.setEnabled(true);
             textFieldSoluong.setEnabled(true);
             textFieldSanPhamMoi.setEnabled(true);
-            textFieldNsx.setEnabled(true);
-            textFieldHsd.setEnabled(true);
-            btnThemSp.setEnabled(true);
+            dateFieldNsx.setEnabled(true);
+            dateFieldHsd.setEnabled(true);
+            btnThem.setEnabled(false);
             btnLuu.setEnabled(true);
-            btnChitiet.setEnabled(false);
         }
         if (condition == "themchitiet") {
-            textFieldMapn.setEnabled(false);
             comboBoxNhaCC.setEnabled(false);
+            comboBoxSanPham.setEnabled(true);
+            comboBoxLoaiHang.setEnabled(false);
+            textFieldGiaNhap.setEnabled(false);
             textFieldSoluong.setEnabled(true);
-            //textFieldNgaysx.setEnabled(true);
-            textFieldNgaynhap.setEnabled(true);
             btnThem.setEnabled(false);
-            //btnXoa.setEnabled(false);
-            //btnSua.setEnabled(false);
-            btnLuu.setEnabled(false);
-            //btnNhap.setEnabled(true);
-            //btnSuaChitiet.setEnabled(false);
-            //btnXem.setEnabled(false);
-            //btnXoaChitiet.setEnabled(false);
+            btnLuu.setEnabled(true);
         }
     }
 
     public void setEnable() {
-        textFieldMapn.setEnabled(false);
-        comboBoxNhanVien.setEnabled(false);
         comboBoxSanPham.setEnabled(false);
         comboBoxLoaiHang.setEnabled(false);
         comboBoxNhaCC.setEnabled(false);
         textFieldGiaNhap.setEnabled(false);
         textFieldSoluong.setEnabled(false);
-        textFieldNgaynhap.setEnabled(false);
+        textFieldSanPhamMoi.setEnabled(false);
+        dateFieldNsx.setEnabled(false);
+        dateFieldHsd.setEnabled(false);
     }
 
     public Boolean checkEmtyValue(String condition) throws SQLException {
         // regular expression pattern
         if (condition == "themphieunhap") {
-            if (textFieldMapn.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(contentPane, "Mã phiếu nhập trống!");
-                textFieldMapn.requestFocus();
-                return false;
+        	return true;
             }
-            if (!textFieldMapn.getText().isEmpty()) {
-                NhapHangBLL nhb = new NhapHangBLL();
-                ArrayList<NhapHang> arrPro = new ArrayList<NhapHang>();
-                arrPro = nhb.getPhieuNhap();
-                if (addbtn) {
-                    for (NhapHang nh : arrPro) {
-                        if (nh.getMaNv() == textFieldMapn.getText()) {
-                            JOptionPane.showMessageDialog(contentPane, "Mã phiếu nhập đã tồn tại!");
-                            textFieldMapn.requestFocus();
-                            return false;
-
-                        }
+        if (condition == "themchitiet") {
+            if (textFieldSoluong.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(contentPane, "Số lượng rỗng!");
+                textFieldSoluong.requestFocus();
+                return false;
+            } else {
+            	boolean flag = true;
+            	for (char c : textFieldSoluong.getText().toCharArray()) {
+                    if (!Character.isDigit(c)) {
+                        flag = false;
                     }
                 }
-				/*
-				 * if (textFieldNgaylap.getText().isEmpty()) {
-				 * JOptionPane.showMessageDialog(contentPane, "Thời điểm lập rỗng!");
-				 * textFieldNgaylap.requestFocus(); return false; } if
-				 * (!textFieldNgaylap.getText().isEmpty()) { Pattern reg =
-				 * Pattern.compile("^\\d{4}[\\-](0?[1-9]|1[012])[\\-](0?[1-9]|[12][0-9]|3[01])$"
-				 * ); boolean kt = reg.matcher(textFieldNgaylap.getText()).matches(); if (kt ==
-				 * false) { JOptionPane.showMessageDialog(contentPane,
-				 * "Thời điểm lập phải có định dạng yyyy-mm-dd!");
-				 * textFieldNgaylap.requestFocus(); return false; } }
-				 */
-            }
-            if (condition == "themchitiet") {
-                
-                if (textFieldSoluong.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(contentPane, "Số lượng rỗng!");
+            	if(!flag) {
+                    JOptionPane.showMessageDialog(contentPane, "Số lượng phải là số nguyên dương!");
                     textFieldSoluong.requestFocus();
                     return false;
-                }
-                if (!textFieldSoluong.getText().isEmpty()) {
-                    Pattern reg = Pattern.compile("^[1-9][0-9]*$");
-                    boolean kt = reg.matcher(textFieldSoluong.getText()).matches();
-                    if (kt == false) {
-                        JOptionPane.showMessageDialog(contentPane, "Số lượng phải là số nguyên dương!");
-                        textFieldSoluong.requestFocus();
-                        return false;
+            	}
+            }
+    	}
+        if (condition == "themsanphammoi") {
+            if (textFieldSanPhamMoi.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(contentPane, "Tên sản phẩm rỗng!");
+                textFieldSanPhamMoi.requestFocus();
+                return false;
+            } else {
+            	boolean flag = true;
+                SanPhamBLL testsp = new SanPhamBLL();
+                ArrayList<SanPham> arrMaSP = testsp.getSanPham();
+                for (SanPham masp : arrMaSP) {
+                    if(masp.getTenSp().equalsIgnoreCase(textFieldSanPhamMoi.getText())) {
+                    	flag = false;
                     }
                 }
-				/*
-				 * if (textFieldNgaysx.getText().isEmpty()) {
-				 * JOptionPane.showMessageDialog(contentPane, "Ngày sản xuất rỗng!");
-				 * textFieldNgaysx.requestFocus(); return false; } if
-				 * (!textFieldNgaysx.getText().isEmpty()) { Pattern reg =
-				 * Pattern.compile("^\\d{4}[\\-](0?[1-9]|1[012])[\\-](0?[1-9]|[12][0-9]|3[01])$"
-				 * ); boolean kt = reg.matcher(textFieldNgaysx.getText()).matches(); if (kt ==
-				 * false) { JOptionPane.showMessageDialog(contentPane,
-				 * "Ngày sản xuất phải có định dạng yyyy-mm-dd!");
-				 * textFieldNgaysx.requestFocus(); return false; } }
-				 */
-                if (textFieldNgaynhap.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(contentPane, "Ngày nhập rỗng!");
-                    textFieldNgaynhap.requestFocus();
+                if(!flag) {
+                    JOptionPane.showMessageDialog(contentPane, "Tên sản phẩm đã tồn tại!");
+                    textFieldSanPhamMoi.requestFocus();
                     return false;
                 }
-                if (!textFieldNgaynhap.getText().isEmpty()) {
-                    Pattern reg = Pattern.compile("^\\d{4}[\\-](0?[1-9]|1[012])[\\-](0?[1-9]|[12][0-9]|3[01])$");
-                    boolean kt = reg.matcher(textFieldNgaynhap.getText()).matches();
-                    if (kt == false) {
-                        JOptionPane.showMessageDialog(contentPane, "Ngày nhập phải có định dạng yyyy-mm-dd!");
-                        textFieldNgaynhap.requestFocus();
-                        return false;
+            }
+            if (textFieldSoluong.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(contentPane, "Số lượng rỗng!");
+                textFieldSoluong.requestFocus();
+                return false;
+            } else {
+            	boolean flag = true;
+            	for (char c : textFieldSoluong.getText().toCharArray()) {
+                    if (!Character.isDigit(c)) {
+                        flag = false;
                     }
                 }
+            	if(!flag) {
+                    JOptionPane.showMessageDialog(contentPane, "Số lượng phải là số nguyên dương!");
+                    textFieldSoluong.requestFocus();
+                    return false;
+            	}
+            }
+            if (textFieldGiaNhap.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(contentPane, "Giá nhập rỗng!");
+                textFieldGiaNhap.requestFocus();
+                return false;
+            } else {
+            	boolean flag = true;
+            	for (char c : textFieldGiaNhap.getText().toCharArray()) {
+                    if (!Character.isDigit(c)) {
+                        flag = false;
+                    }
+                }
+            	if(!flag) {
+                    JOptionPane.showMessageDialog(contentPane, "Giá nhập phải là số!");
+                    textFieldGiaNhap.requestFocus();
+                    return false;
+            	} else if(Integer.parseInt(textFieldGiaNhap.getText()) < 1000) {
+                    JOptionPane.showMessageDialog(contentPane, "Giá nhập phải lớn hơn 1000!");
+                    textFieldGiaNhap.requestFocus();
+                    return false;
+            	}
+            }
+            java.util.Date nsx = dateFieldNsx.getDate();
+            java.util.Date hsd = dateFieldHsd.getDate();
+            if(dateFieldNsx.getDate() == null) {
+            	JOptionPane.showMessageDialog(contentPane, "Ngày sản xuất rỗng!");
+            	dateFieldNsx.requestFocus();
+                return false;
+            } else if(dateFieldHsd.getDate() == null) {
+            	JOptionPane.showMessageDialog(contentPane, "Hạn sử dụng rỗng!");
+            	dateFieldHsd.requestFocus();
+                return false;
+            } else if(nsx.compareTo(hsd) > 0) {
+            	JOptionPane.showMessageDialog(contentPane, "Ngày sản xuất lớn hơn hạn sử dụng!");
+            	dateFieldNsx.requestFocus();
+                return false;
             }
         }
         return true;
     }
-    TaiKhoan taiKhoan = ShareDAta.taiKhoan;
     public NhapHangGui() throws SQLException {
 
         setTitle("Quản lý nhập");
@@ -454,9 +568,10 @@ public class NhapHangGui extends JFrame {
         JLabel lblNewLabel_3 = new JLabel("Nhân viên");
         lblNewLabel_3.setBounds(20, 50, 100, 25);
 
-        comboBoxNhanVien = new JComboBox();
-        comboBoxNhanVien.setBounds(130, 50, 200, 25);
-        comboBoxNhanVien.setEnabled(false);
+        textFieldNhanVien = new JTextField();
+        textFieldNhanVien.setBounds(130, 50, 200, 25);
+        textFieldNhanVien.setEnabled(false);
+        textFieldNhanVien.setColumns(10);
         
         JLabel lblNewLabel_manhanvien = new JLabel("Mã nhân viên");
         lblNewLabel_manhanvien.setBounds(20, 90, 100, 25);
@@ -468,17 +583,21 @@ public class NhapHangGui extends JFrame {
 
         JLabel lblNewLabel_6 = new JLabel("Sản phẩm");
         lblNewLabel_6.setBounds(20, 130, 100, 25);
+        lblNewLabel_6.setVisible(false);
 
         comboBoxSanPham = new JComboBox();
         comboBoxSanPham.setBounds(130, 130, 200, 25);
         comboBoxSanPham.setEnabled(false);
-        
+        comboBoxSanPham.setVisible(false);
+
         JLabel lblNewLabel_loaihang = new JLabel("Loại hàng");
         lblNewLabel_loaihang.setBounds(20, 170, 100, 25);
+        lblNewLabel_loaihang.setVisible(false);
 
         comboBoxLoaiHang = new JComboBox();
         comboBoxLoaiHang.setBounds(130, 170, 200, 25);
         comboBoxLoaiHang.setEnabled(false);
+        comboBoxLoaiHang.setVisible(false);
 
         JLabel lblNewLabel_7 = new JLabel("Nhà Cung Cấp");
         lblNewLabel_7.setBounds(350, 10, 100, 25);
@@ -489,64 +608,56 @@ public class NhapHangGui extends JFrame {
         
         JLabel lblNewLabel_gianhap = new JLabel("Giá nhập");
         lblNewLabel_gianhap.setBounds(350, 90, 100, 25);
+        lblNewLabel_gianhap.setVisible(false);
 
         textFieldGiaNhap = new JTextField();
         textFieldGiaNhap.setBounds(460, 90, 200, 25);
         textFieldGiaNhap.setEnabled(false);
         textFieldGiaNhap.setColumns(10);
+        textFieldGiaNhap.setVisible(false);
 
         JLabel lblNewLabel_8 = new JLabel("Số lượng");
-        lblNewLabel_8.setBounds(350, 130, 100, 25);
+        lblNewLabel_8.setBounds(350, 50, 100, 25);
+        lblNewLabel_8.setVisible(false);
 
         textFieldSoluong = new JTextField();
-        textFieldSoluong.setBounds(460, 130, 200, 25);
+        textFieldSoluong.setBounds(460, 50, 200, 25);
         textFieldSoluong.setEnabled(false);
         textFieldSoluong.setColumns(10);
+        textFieldSoluong.setVisible(false);
 
 		
-		JLabel lblNewLabel_9 = new JLabel("Sản phẩm mới");
-		lblNewLabel_9.setBounds(350, 170, 100, 25);
+		JLabel lblNewLabel_9 = new JLabel("Sản phẩm");
+		lblNewLabel_9.setBounds(20, 130, 100, 25);
 		lblNewLabel_9.setVisible(false);
 		  
 		textFieldSanPhamMoi = new JTextField();
-		textFieldSanPhamMoi.setBounds(460, 170, 200, 25);
-		textFieldSanPhamMoi.setEnabled(false);
+		textFieldSanPhamMoi.setBounds(130, 130, 200, 25);
 		textFieldSanPhamMoi.setColumns(10);
 		textFieldSanPhamMoi.setVisible(false);
 		
 		JLabel lblNewLabel_10 = new JLabel("Ngày sản xuất");
-        lblNewLabel_10.setBounds(680, 130, 100, 25);
+        lblNewLabel_10.setBounds(350, 130, 100, 25);
         lblNewLabel_10.setVisible(false);
         
-        textFieldNsx = new JTextField();
-        textFieldNsx.setBounds(790, 130, 200, 25);
-        textFieldNsx.setEnabled(false);
-        textFieldNsx.setColumns(10);
-        textFieldNsx.setVisible(false);
+        dateFieldNsx = new JDateChooser();
+        dateFieldNsx.setBounds(460, 130, 200, 25);
+        dateFieldNsx.setVisible(false);
         
         JLabel lblNewLabel_11 = new JLabel("Hạn sử dụng");
-		lblNewLabel_11.setBounds(680, 170, 100, 25);
+		lblNewLabel_11.setBounds(350, 170, 100, 25);
 		lblNewLabel_11.setVisible(false);
 		
-		textFieldHsd = new JTextField();
-		textFieldHsd.setBounds(790, 170, 200, 25);
-		textFieldHsd.setEnabled(false);
-		textFieldHsd.setColumns(10);
-		textFieldHsd.setVisible(false);
+		dateFieldHsd = new JDateChooser();
+		dateFieldHsd.setBounds(460, 170, 200, 25);
+		dateFieldHsd.setVisible(false);
 		
-        JLabel lblNewLabel_13 = new JLabel("Ngày nhập");
-        lblNewLabel_13.setBounds(350, 50, 100, 25);
-
-        textFieldNgaynhap = new JTextField();
-        textFieldNgaynhap.setBounds(460, 50, 200, 25);
-        textFieldNgaynhap.setEnabled(false);
-        textFieldNgaynhap.setColumns(10);
 
 		/*
 		 * btnXem.setBounds(700, 10, 200, 100); btnXem.setEnabled(false);
 		 * btnXem.setFocusPainted(false); btnXem.addActionListener(new ActionListener()
 		 * { public void actionPerformed(ActionEvent e) { try {
-		 * resetValue("themchitiet"); setEnable(); //btnXoa.setVisible(false);
+		 * resetValue("themchitiet"); setEnable(); //btnAn.setVisible(false);
 		 * hienthiphieunhap("chitiet"); } catch (SQLException e1) { // TODO
 		 * Auto-generated catch block e1.printStackTrace(); } } });
 		 */
@@ -562,109 +673,154 @@ public class NhapHangGui extends JFrame {
         btnLuu.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if (checkEmtyValue("themphieunhap")) {
+                    if (addbtn) {
                         // -------------------Copy img vao thu muc Image cua project
-                        if (selectedFile != null) {
-                            Path sourcePath = selectedFile.toPath();
-                            Path projectPath = Paths.get(System.getProperty("user.dir")); // get the path to the project
-                            // directory
-                            Path imageDirectory = projectPath.resolve("src//GUI//Image"); // resolve the path to the Image
-
-                            try {
-                                Files.createDirectories(imageDirectory);
-                            } catch (IOException e2) {
-                                // TODO Auto-generated catch block
-                                e2.printStackTrace();
-                            } // create the Image directory if it does not exist
-                            Path destinationPath = imageDirectory.resolve(selectedFile.getName());
-
-                            try {
-                                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-                            } catch (IOException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
-                        }
-
                         NhapHang nh = new NhapHang();
-                        
-                        NhapHangDAL luunh;
-                        if (addbtn) {
-                            try {
-                                luunh = new NhapHangDAL();
-                                nh.setMaPn(textFieldMapn.getText());
-                                String manv = luunh.layTenNV((String) (comboBoxNhanVien.getSelectedItem()));
-                                nh.setMaNv(manv);
-                                //nh.setThoiDiemLap(textFieldNgaylap.getText());
-                                boolean checkAddPro = luunh.themphieunhap(nh, null, null, null);
-                                if (checkAddPro) {
-                                    JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
-                                    resetValue("themphieunhap");
-                                    setEnable();
-                                    hienthiphieunhap("phieunhap");
-                                    addbtn = false;
-                                } else {
-                                    JOptionPane.showMessageDialog(contentPane, "Thêm thất bại");
-                                }
-                            } catch (SQLException e2) {
-                                // TODO Auto-generated catch block
-                                e2.printStackTrace();
-                            }
-                        }
-
+                        NhapHangBLL luu;
+                        NhaCungCapBLL ncc;
+                        if (checkEmtyValue("themphieunhap")) {
+	      					  int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn thêm phiếu nhập "+textFieldMapn.getText(),
+	    							  "Confirmation", JOptionPane.YES_NO_OPTION);
+	    					  if (confirmed == JOptionPane.YES_OPTION) {
+	                            try {
+	                                luu = new NhapHangBLL();
+	                                ncc = new NhaCungCapBLL();
+	                                nh.setMaPn(textFieldMapn.getText());
+	                                nh.setMaNv(textFieldMaNhanVien.getText());
+	                                nh.setMaNcc(ncc.getMaNCC(comboBoxNhaCC.getSelectedItem().toString()));
+	                                nh.setTongTien("0");
+	                                LocalDate currentDate = LocalDate.now();
+	                                nh.setNgayNhap(currentDate.toString());;
+	                                boolean checkAddPro = luu.addPhieuNhap(nh);
+	                                if (checkAddPro) {
+	                                    JOptionPane.showMessageDialog(contentPane, "Thêm phiếu nhập thành công");
+	                                    resetValue("themphieunhap");
+	                                    setEnable();
+	                                    hienthiphieunhap("phieunhap");
+	                                    addbtn = false;
+	                                } else {
+	                                    JOptionPane.showMessageDialog(contentPane, "Thêm phiếu nhập thất bại");
+	                                }
+	                            } catch (SQLException e2) {
+	                                // TODO Auto-generated catch block
+	                                e2.printStackTrace();
+	                            }
+	                        }
+                       }
                     }
-                    if (checkEmtyValue("themchitiet")) {
-                        // -------------------Copy img vao thu muc Image cua project
-                        if (selectedFile != null) {
-                            Path sourcePath = selectedFile.toPath();
-                            Path projectPath = Paths.get(System.getProperty("user.dir")); // get the path to the project
-                            // directory
-                            Path imageDirectory = projectPath.resolve("src//GUI//Image"); // resolve the path to the Image
-
-                            try {
-                                Files.createDirectories(imageDirectory);
-                            } catch (IOException e2) {
-                                // TODO Auto-generated catch block
-                                e2.printStackTrace();
-                            } // create the Image directory if it does not exist
-                            Path destinationPath = imageDirectory.resolve(selectedFile.getName());
-
-                            try {
-                                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-                            } catch (IOException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
-                        }
-
+                    else if (detailbtn) {
                         NhapHang nh = new NhapHang();
                         PhieuNhapChiTiet ct = new PhieuNhapChiTiet();
-                        NhapHangDAL luunh;
-                        if (detailbtn) {
-                            try {
-                                luunh = new NhapHangDAL();
-                                nh.setMaPn(textFieldMapn.getText());
-                                String mancc = luunh.layTenNCC((String) (comboBoxNhaCC.getSelectedItem()));
-                                nh.setMaNcc(mancc);
-                                ct.setSoLuong(textFieldSoluong.getText());
-                                //nh.setNgaySanXuat(textFieldNgaysx.getText());
-                                nh.setNgayNhap(textFieldNgaynhap.getText());
-                                boolean checkAddPro = luunh.themphieunhap(nh, oldMaPN, oldMaSP, oldMaNCC);
-                                if (checkAddPro) {
-                                    JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
-                                    resetValue("themchitiet");
-                                    setEnable();
-                                    hienthiphieunhap("chitiet");
-                                    detailbtn = false;
-                                } else {
-                                    JOptionPane.showMessageDialog(contentPane, "Thêm thất bại do trùng khóa");
-                                }
-                            } catch (SQLException e2) {
-                                // TODO Auto-generated catch block
-                                e2.printStackTrace();
-                            }
+                        ChiTietPhieuNhapBLL luuct;
+                        NhapHangBLL luunh;
+                        SanPhamBLL sp;
+                        KhoBLL kho;
+                        if (checkEmtyValue("themchitiet")) {
+                        	int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn thêm chi tiết cho phiếu nhập "+textFieldMapn.getText(),
+	    							  "Confirmation", JOptionPane.YES_NO_OPTION);
+	    					  if (confirmed == JOptionPane.YES_OPTION) {
+		                            try {
+		                                luuct = new ChiTietPhieuNhapBLL();
+		                                luunh = new NhapHangBLL();
+		                                sp = new SanPhamBLL();
+		                                kho = new KhoBLL();
+		                                ct.setMaPN(textFieldMapn.getText());
+		                                ct.setMaSP(sp.getMaSP(comboBoxSanPham.getSelectedItem().toString()));
+		                                ct.setSoLuong(textFieldSoluong.getText());
+		                                int giaNhap = Integer.parseInt(sp.getGiaNhap(ct.getMaSP()));
+		                                int thanhTien = Integer.parseInt(ct.getSoLuong()) * giaNhap;
+		                                ct.setThanhTien(""+thanhTien);
+		                                boolean checkAddPro = luuct.addChiTietPN(ct);
+		                                if (checkAddPro) {
+		                                    JOptionPane.showMessageDialog(contentPane, "Thêm chi tiết thành công");
+		                                    int tongTien = Integer.parseInt(luunh.getTongTien(ct.getMaPN())) + thanhTien ;
+		                                    luunh.updateTongTien(String.valueOf(tongTien), ct.getMaPN());
+		                                    int soLuong = Integer.parseInt(kho.getSoLuong(ct.getMaSP()));
+		                                    int upSoLuong = soLuong + Integer.parseInt(textFieldSoluong.getText());
+		                                    kho.updateSoLuong(String.valueOf(upSoLuong), ct.getMaSP());
+		                                    resetValue("themchitiet");
+		                                    setEnable();
+		                                    hienthiphieunhap("themchitiet");
+		                                    detailbtn = false;
+		                                } else {
+		                                    JOptionPane.showMessageDialog(contentPane, "Thêm chi tiết thất bại");
+		                                }
+		                            } catch (SQLException e2) {
+		                                // TODO Auto-generated catch block
+		                                e2.printStackTrace();
+		                            }
+	    					  }
                         }
-
+                    }
+                    else if (addnewbtn) {
+                        NhapHang nh = new NhapHang();
+                        PhieuNhapChiTiet ct = new PhieuNhapChiTiet();
+                        ChiTietPhieuNhapBLL luuct;
+                        NhapHangBLL luunh;
+                        SanPhamBLL spbll;
+                        LoaiHangBLL lhbll;
+                        SanPham sp = new SanPham();
+                        KhoBLL khobll;                        
+                        if (checkEmtyValue("themsanphammoi")) {
+                            String nsx = formatDateToString(dateFieldNsx.getDate());
+                            String hsd = formatDateToString(dateFieldHsd.getDate());
+                        	int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn thêm chi tiết cho phiếu nhập "+textFieldMapn.getText(),
+	    							  "Confirmation", JOptionPane.YES_NO_OPTION);
+	    					  if (confirmed == JOptionPane.YES_OPTION) {
+		                            try {
+		                                luuct = new ChiTietPhieuNhapBLL();
+		                                luunh = new NhapHangBLL();
+		                                spbll = new SanPhamBLL();
+		                                lhbll = new LoaiHangBLL();
+		                                khobll = new KhoBLL();
+		                                String lastMaSp = spbll.getLastMaSP();
+		                                String maSp = lastMaSp.substring(lastMaSp.length()-3, lastMaSp.length());
+		                                int check = Integer.parseInt(maSp);
+		                                if(check < 9) {
+		                                	sp.setMaSp("SP00"+(check+1));
+		                                } else if(check < 99) {
+		                                	sp.setMaSp("SP0"+(check+1));
+		                                } else {
+		                                	sp.setMaSp("SP"+(check+1));
+		                                }
+		                                sp.setTenSp(textFieldSanPhamMoi.getText());
+		                                sp.setMaLh(lhbll.getMaLH(comboBoxLoaiHang.getSelectedItem().toString()));
+		                                sp.setGiaMua(textFieldGiaNhap.getText());
+		                                int giaMua = Integer.parseInt(textFieldGiaNhap.getText());
+		                                int giaBan = (giaMua*20/100) + giaMua;
+		                                sp.setGiaBan(String.valueOf(giaBan));
+		                                sp.setNgaySanXuat(nsx);
+		                                sp.setHanSuDung(hsd);
+		                                ct.setMaPN(textFieldMapn.getText());
+		                                ct.setMaSP(sp.getMaSp());
+		                                ct.setSoLuong(textFieldSoluong.getText());
+		                                int giaNhap = Integer.parseInt(sp.getGiaMua());
+		                                int thanhTien = Integer.parseInt(ct.getSoLuong()) * giaNhap;
+		                                ct.setThanhTien(""+thanhTien);
+		                                boolean checkAddPro = spbll.addSanPham(sp);
+		                                if(checkAddPro) {
+			                                boolean checkAddSto = khobll.addSoLuong(textFieldSoluong.getText(), sp.getMaSp());
+		                                	if (checkAddSto) {
+				                                boolean checkAddDetail = luuct.addChiTietPN(ct);
+				                                if (checkAddDetail) {
+				                                    JOptionPane.showMessageDialog(contentPane, "Thêm chi tiết thành công");
+				                                    int tongTien = Integer.parseInt(luunh.getTongTien(ct.getMaPN())) + thanhTien ;
+				                                    luunh.updateTongTien(String.valueOf(tongTien), ct.getMaPN());
+				                                    resetValue("themchitiet");
+				                                    setEnable();
+				                                    hienthiphieunhap("themchitiet");
+				                                    detailbtn = false;
+				                                } else {
+				                                    JOptionPane.showMessageDialog(contentPane, "Thêm chi tiết thất bại");
+				                                }
+		                                	}
+		                                }
+		                            } catch (SQLException e2) {
+		                                // TODO Auto-generated catch block
+		                                e2.printStackTrace();
+		                            }
+	    					  }
+                        }
                     }
                 } catch (NumberFormatException | HeadlessException | SQLException e1) {
                     // TODO Auto-generated catch block
@@ -672,86 +828,131 @@ public class NhapHangGui extends JFrame {
                 }
             }
         });
-        btnThem.setBounds(146, 10, 104, 53);
+        btnThem.setBounds(146, 10, 150, 53);
         btnThem.setFocusPainted(false);
         btnThem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                addbtn = true;
+                addnewbtn = false;
+                detailbtn = false;
+                resetValue("themphieunhap");
+                hideField();
                 try {
-                    addbtn = true;
-                    addnewbtn = false;
-                    detailbtn = false;
-                    resetValue("themphieunhap");
-                    textFieldMapn.setEnabled(false);
-                    NhapHangDAL nh;
-                    nh = new NhapHangDAL();
-                    int lastMaPN = nh.getLastMaPN();
-                    textFieldMapn.setText("" + (lastMaPN + 1));
-                    btnThem.setEnabled(false);
-                    btnLuu.setEnabled(true);
-                    try {
-                        hienthiphieunhap("themphieunhap");
-                    } catch (SQLException e3) {
-                        // TODO Auto-generated catch block
-                        e3.printStackTrace();
-                    }
-
-                } catch (SQLException ex) {
-                    Logger.getLogger(NhapHangGui.class.getName()).log(Level.SEVERE, null, ex);
+                    hienthiphieunhap("themphieunhap");
+                } catch (SQLException e3) {
+                    // TODO Auto-generated catch block
+                    e3.printStackTrace();
                 }
-
             }
         });
         btnThem.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
 		
-        btnThemSp.setBounds(283, 10, 150, 53);
+        btnThemSp.setBounds(610, 10, 150, 53);
         btnThemSp.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		lblNewLabel_9.setVisible(true);
-        		textFieldSanPhamMoi.setVisible(true);
-        		lblNewLabel_10.setVisible(true);
-        		textFieldNsx.setVisible(true);
-        		lblNewLabel_11.setVisible(true);
-        		textFieldHsd.setVisible(true);
-        		textFieldSanPhamMoi.setEnabled(true);
-        		textFieldNsx.setEnabled(true);
-        		textFieldHsd.setEnabled(true);
-                addbtn = false;
-                addnewbtn = true;
-                detailbtn = false;
+        		if(taiKhoan.getMaNV().equals(textFieldMaNhanVien.getText())) {
+            		resetValue("themsanphammoi");
+            		unHideField("themsanphammoi");
+            		lblNewLabel_6.setVisible(false);
+            		lblNewLabel_loaihang.setVisible(true);
+            		lblNewLabel_gianhap.setVisible(true);
+            		lblNewLabel_8.setVisible(true);
+            		lblNewLabel_9.setVisible(true);
+            		lblNewLabel_10.setVisible(true);
+            		lblNewLabel_11.setVisible(true);
+            		btnThemSp.setEnabled(false);
+                    addbtn = false;
+                    addnewbtn = true;
+                    detailbtn = false;
+                    try {
+                        hienthiphieunhap("themsanphammoi");
+                    } catch (SQLException e3) {
+                        // TODO Auto-generated catch block
+                        e3.printStackTrace();
+                    }
+        		} else {
+        			JOptionPane.showMessageDialog(contentPane, "Đây không phải phiếu nhập của bạn");
+        		}
             }
         });
         btnThemSp.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
         btnThemSp.setFocusPainted(false);
+        btnThemSp.setVisible(false);
 		  
-		  btnXoa.setBounds(469, 10, 104, 53); btnXoa.setVisible(true);
-		  btnXoa.setEnabled(false); btnXoa.setIcon(new ImageIcon(
-		  Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
-		  ".\\Image\\Delete.png")))); btnXoa.setFocusPainted(false);
-		  btnXoa.addActionListener(new ActionListener() { public void
-		  actionPerformed(ActionEvent e) { int confirmed =
-		  JOptionPane.showConfirmDialog(null, "Bạn muốn xóa phiếu nhập này",
-		  "Confirmation", JOptionPane.YES_NO_OPTION); if (confirmed ==
-		  JOptionPane.YES_OPTION) { NhapHangDAL deletePn; try { deletePn = new
-		  NhapHangDAL(); if (deletePn.xoaNhapHang(textFieldMapn.getText())) {
-		  JOptionPane.showMessageDialog(contentPane, "Xóa thành công!");
-		  hienthiphieunhap("themphieunhap"); resetValue("themphieunhap"); setEnable();
-		  } } catch (SQLException e1) { // TODO Auto-generated catch block
-		  e1.printStackTrace(); }
-		  
+		  btnAn.setBounds(469, 10, 104, 53);
+		  if(taiKhoan.getQuyen().equals("RL2")) {
+			  btnAn.setVisible(true);
+		  } else {
+			  btnAn.setVisible(false);
 		  }
-		  
-		  } });
+		  btnAn.setEnabled(false);
+		  btnAn.setIcon(new ImageIcon(
+		  Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
+		  ".\\Image\\Delete.png"))));
+		  btnAn.setFocusPainted(false);
+		  btnAn.addActionListener(new ActionListener() {
+			  public void actionPerformed(ActionEvent e) { 
+				  if(checkHide) {
+					  int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn phiếu nhập "+textFieldMapn.getText(),
+							  "Confirmation", JOptionPane.YES_NO_OPTION);
+					  if (confirmed == JOptionPane.YES_OPTION) {
+						  NhapHangBLL testnh;
+						  try {
+							  testnh = new NhapHangBLL();
+							  if (testnh.hidePhieuNhap(textFieldMapn.getText())) {
+								  JOptionPane.showMessageDialog(contentPane, "Ẩn thành công!");
+								  hienthiphieunhap("themphieunhap");
+								  resetValue("load");
+								  setEnable();
+							  }
+						  } catch (SQLException e1) { // TODO Auto-generated catch block
+							  e1.printStackTrace();
+						  	}
+					  }
+				  } else {
+					  int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn chi tiết này",
+							  "Confirmation", JOptionPane.YES_NO_OPTION);
+					  if (confirmed == JOptionPane.YES_OPTION) {
+						  ChiTietPhieuNhapBLL testct;
+						  SanPhamBLL testsp;
+						  try {
+							  testct = new ChiTietPhieuNhapBLL();
+							  testsp = new SanPhamBLL();
+							  if (testct.hideChiTietPN(testsp.getMaSP(comboBoxSanPham.getSelectedItem().toString()) ,textFieldMapn.getText())) {
+								  JOptionPane.showMessageDialog(contentPane, "Ẩn thành công!");
+								  hienthiphieunhap("themchitiet");
+								  resetValue("themchitiet");
+								  setEnable();
+							  }
+						  } catch (SQLException e1) { // TODO Auto-generated catch block
+							  e1.printStackTrace();
+						  	}
+					  }
+				  }
+
+			  }
+		  });
 		 
 
         JButton btnDongBo = new JButton("");
-        btnDongBo.setBounds(613, 10, 104, 53);
+        btnDongBo.setBounds(330, 10, 104, 53);
         btnDongBo.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(NhapHangGui.class.getResource(".\\Image\\Refresh-icon.png"))));
         btnDongBo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    resetValue("themphieunhap");
+                	hideField();
+                	lblNewLabel_6.setVisible(false);
+                	lblNewLabel_gianhap.setVisible(false);
+                	lblNewLabel_loaihang.setVisible(false);
+                	lblNewLabel_8.setVisible(false);
+            		lblNewLabel_9.setVisible(false);
+            		lblNewLabel_10.setVisible(false);
+            		lblNewLabel_11.setVisible(false);
+                    resetValue("load");
+                    textFieldNhanVien.setText(null);
+                    textFieldMaNhanVien.setText(null);
                     setEnable();
                     
                     hienthiphieunhap("phieunhap");
@@ -761,11 +962,36 @@ public class NhapHangGui extends JFrame {
                 }
             }
         });
-        btnChitiet.setBounds(750, 10, 150, 53);
-        btnChitiet.setEnabled(false);
+        //btnChitiet.setBounds(610, 10, 150, 53);
+        btnChitiet.setVisible(false);
         btnChitiet.setFocusPainted(false);
         btnChitiet.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	if(taiKhoan.getMaNV().equals(textFieldMaNhanVien.getText())) {
+                	unHideField("themchitiet");
+            		textFieldGiaNhap.setVisible(false);
+            		comboBoxLoaiHang.setVisible(false);
+                	resetValue("themchitiet");
+                	lblNewLabel_6.setVisible(true);
+                	lblNewLabel_gianhap.setVisible(false);
+                	lblNewLabel_loaihang.setVisible(false);
+                	lblNewLabel_8.setVisible(true);
+            		lblNewLabel_9.setVisible(false);
+            		lblNewLabel_10.setVisible(false);
+            		lblNewLabel_11.setVisible(false);
+            		btnChitiet.setEnabled(false);
+            		addbtn = false;
+                    addnewbtn = false;
+                    detailbtn = true;
+                    try {
+                        hienthiphieunhap("themchitiet");
+                    } catch (SQLException e3) {
+                        // TODO Auto-generated catch block
+                        e3.printStackTrace();
+                    }
+            	} else {
+            		JOptionPane.showMessageDialog(contentPane, "Đây không phải phiếu nhập của bạn");
+            	}
             }
         });
         btnChitiet.setIcon(new ImageIcon(
@@ -829,21 +1055,27 @@ public class NhapHangGui extends JFrame {
                 String maPN = table.getModel().getValueAt(row, 0).toString();
                 String maNV = table.getModel().getValueAt(row, 1).toString(); // get the value of the first column
                 String maNCC = table.getModel().getValueAt(row, 2).toString(); // get the value of the second column
-                String ngayNhap = table.getModel().getValueAt(row, 4).toString();
                 textFieldMapn.setText(maPN);
                 textFieldMaNhanVien.setText(maNV);
-                textFieldNgaynhap.setText(ngayNhap);
-
+                
                 setEnable();
+                hideField();
+            	lblNewLabel_6.setVisible(false);
+            	lblNewLabel_gianhap.setVisible(false);
+            	lblNewLabel_loaihang.setVisible(false);
+            	lblNewLabel_8.setVisible(false);
+        		lblNewLabel_9.setVisible(false);
+        		lblNewLabel_10.setVisible(false);
+        		lblNewLabel_11.setVisible(false);
                 btnLuu.setEnabled(false);
+                btnThem.setEnabled(true);
+                btnAn.setEnabled(true);
+                checkHide = true;
+                btnThemSp.setVisible(true);
+                btnThemSp.setEnabled(true);
+                btnChitiet.setVisible(true);
                 btnChitiet.setEnabled(true);
-                comboBoxSanPham.setSelectedIndex(-1);
-                comboBoxLoaiHang.setSelectedIndex(-1);
-                textFieldSoluong.setText("");
-                textFieldGiaNhap.setText("");
-                textFieldSanPhamMoi.setText("");
-                textFieldNsx.setText("");
-                textFieldHsd.setText("");
+                
                 
                 
 
@@ -851,11 +1083,7 @@ public class NhapHangGui extends JFrame {
                 NhanVienBLL testnv;
                 try {
                     testnv = new NhanVienBLL();
-                    ArrayList<NhanVien> arrMaNV = testnv.getNhanVienMaNV(maNV);
-                    DefaultComboBoxModel combo = new DefaultComboBoxModel();
-                    comboBoxNhanVien.setModel(combo);
-
-                    combo.addElement(arrMaNV.get(0).getTenNv());
+                    textFieldNhanVien.setText(testnv.getTenNV(maNV));
 
                 } catch (SQLException e1) {
                     // TODO Auto-generated catch block
@@ -864,11 +1092,10 @@ public class NhapHangGui extends JFrame {
                 NhaCungCapBLL testncc;
                 try {
                     testncc = new NhaCungCapBLL();
-                    ArrayList<NhaCungCap> arrMaNCC = testncc.getNhaCungCapMaNCC(maNCC);
                     DefaultComboBoxModel combo = new DefaultComboBoxModel();
                     comboBoxNhaCC.setModel(combo);
 
-                    combo.addElement(arrMaNCC.get(0).getTenNCC());
+                    combo.addElement(testncc.getTenNCC(maNCC));
 
                 } catch (SQLException e1) {
                     // TODO Auto-generated catch block
@@ -892,8 +1119,21 @@ public class NhapHangGui extends JFrame {
                 textFieldSoluong.setText(soLuong);
 
                 setEnable();
-                btnThem.setEnabled(false);
+                unHideField("themchitiet");
+            	lblNewLabel_6.setVisible(true);
+            	lblNewLabel_gianhap.setVisible(true);
+            	lblNewLabel_loaihang.setVisible(true);
+            	lblNewLabel_8.setVisible(true);
+        		lblNewLabel_9.setVisible(false);
+        		lblNewLabel_10.setVisible(false);
+        		lblNewLabel_11.setVisible(false);
                 btnLuu.setEnabled(false);
+                btnThem.setEnabled(true);
+                btnAn.setEnabled(true);
+                checkHide = false;
+                btnThemSp.setVisible(true);
+                btnThemSp.setEnabled(true);
+                btnChitiet.setVisible(true);
                 btnChitiet.setEnabled(true);
                 
                 //g.dipnose();
@@ -904,11 +1144,11 @@ public class NhapHangGui extends JFrame {
                     testlh = new LoaiHangBLL();
                     DefaultComboBoxModel combo = new DefaultComboBoxModel();
                     comboBoxSanPham.setModel(combo);
-                    combo.addElement(testsp.getTenSanPham(maSp));
+                    combo.addElement(testsp.getTenSP(maSp));
                     textFieldGiaNhap.setText(testsp.getGiaNhap(maSp));
                     DefaultComboBoxModel combo1 = new DefaultComboBoxModel();
                     comboBoxLoaiHang.setModel(combo1);
-                    combo1.addElement(testlh.getTenLoaiHang(testsp.getMaLoaiHang(maSp)));
+                    combo1.addElement(testlh.getTenLH(testsp.getMaLoaiHang(maSp)));
                 } catch (SQLException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
@@ -932,7 +1172,7 @@ public class NhapHangGui extends JFrame {
         panel_6.add(btnLuu);
         panel_6.add(btnThem);
         panel_6.add(btnThemSp);
-        panel_6.add(btnXoa);
+        panel_6.add(btnAn);
         panel_6.add(btnDongBo);
         panel_6.add(btnChitiet);
         icon = new ImageIcon(
@@ -949,7 +1189,7 @@ public class NhapHangGui extends JFrame {
         panel_5.add(lblNewLabel_1);
         panel_5.add(textFieldMapn);
         panel_5.add(lblNewLabel_7);
-        panel_5.add(comboBoxNhanVien);
+        panel_5.add(textFieldNhanVien);
         panel_5.add(lblNewLabel_manhanvien);
         panel_5.add(textFieldMaNhanVien);
         panel_5.add(lblNewLabel_3);
@@ -962,16 +1202,12 @@ public class NhapHangGui extends JFrame {
         panel_5.add(lblNewLabel_9);
         panel_5.add(textFieldSanPhamMoi);
         panel_5.add(lblNewLabel_10);
-        panel_5.add(textFieldNsx);
+        panel_5.add(dateFieldNsx);
         panel_5.add(lblNewLabel_11);
-        panel_5.add(textFieldHsd);
+        panel_5.add(dateFieldHsd);
         panel_5.add(lblNewLabel_gianhap);
         panel_5.add(textFieldGiaNhap);
         panel_5.add(textFieldSoluong);
-        panel_5.add(lblNewLabel_13);
-        //panel_5.add(textFieldNgaysx);
-        panel_5.add(textFieldNgaynhap);
-        //panel_5.add(btnXem);
         panel_2.add(panel_5);
 
         textFieldSearch = new JTextField();

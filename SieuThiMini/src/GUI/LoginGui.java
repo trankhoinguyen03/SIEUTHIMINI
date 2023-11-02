@@ -135,7 +135,7 @@ public class LoginGui extends JFrame {
 							
 								QuanLyHome home = new QuanLyHome();
 								setVisible(false);
-								ShareDAta.taiKhoan = tk;
+								DangNhapBLL.taiKhoan = tk;
 							
 								home.setVisible(true);
 								home.setLocationRelativeTo(null);
@@ -144,7 +144,7 @@ public class LoginGui extends JFrame {
 								
 								NhanVienBanHangHome home = new NhanVienBanHangHome();
 								setVisible(false);
-								ShareDAta.taiKhoan = tk;
+								DangNhapBLL.taiKhoan = tk;
 							
 								home.setVisible(true);
 								home.setLocationRelativeTo(null);
@@ -153,7 +153,7 @@ public class LoginGui extends JFrame {
 								
 								NhanVienKhoHome home = new NhanVienKhoHome();
 								setVisible(false);
-								ShareDAta.taiKhoan = tk;
+								DangNhapBLL.taiKhoan = tk;
 							
 								home.setVisible(true);
 								home.setLocationRelativeTo(null);

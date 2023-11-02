@@ -67,7 +67,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-
+import BLL.DangNhapBLL;
 import DTO.Kho;
 import DTO.TaiKhoan;
 import DAL.KhoDAL;
@@ -339,7 +339,7 @@ public class KhoGui extends JFrame {
 
 	// Tabbed 3
 
-	TaiKhoan taiKhoan = ShareDAta.taiKhoan;
+	TaiKhoan taiKhoan = DangNhapBLL.taiKhoan;
 	public KhoGui() throws SQLException {
 
 		

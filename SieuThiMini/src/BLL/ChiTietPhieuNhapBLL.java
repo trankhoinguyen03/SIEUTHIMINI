@@ -13,4 +13,12 @@ public class ChiTietPhieuNhapBLL {
 		arr = ctpnd.docCtPhieuNhap(value);
 		return arr;
 	}
+	public boolean addChiTietPN(PhieuNhapChiTiet obj) throws SQLException {
+		ChiTietPhieuNhapDAL ctpnd = new ChiTietPhieuNhapDAL();
+		return ctpnd.themChiTietPN(obj);
+	}
+	public boolean hideChiTietPN(String masp, String mapn) throws SQLException {
+		ChiTietPhieuNhapDAL ctpnd = new ChiTietPhieuNhapDAL();
+		return ctpnd.anChiTietPN(masp, mapn);
+	}
 }

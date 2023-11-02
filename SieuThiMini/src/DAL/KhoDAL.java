@@ -21,7 +21,7 @@ public class KhoDAL extends connectSql {
 	public ArrayList<Kho> dockho(){
 		ArrayList<Kho> arrKho = new ArrayList<Kho>();
 		try {
-			String sql = "select * from KHO";
+			String sql = "select * from KHO where TrangThai = 1";
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
 			while(rs.next()) {
@@ -48,12 +48,57 @@ public class KhoDAL extends connectSql {
 		  closeConnection();
 		  return 0;
 	}
-
 	
+	public boolean anSanPham(String masp) throws SQLException {
+		String sql = "UPDATE KHO SET TrangThai = " + 0 + " where MaSP = " + masp;
+		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+			int rowsUpdated = pstm.executeUpdate();
+
+			return rowsUpdated > 0;
+		}
+	}
+	
+    public String laySoLuong(String value) throws SQLException {
+        String sql = "SELECT SoLuong FROM KHO WHERE MaSP = ?";
+        try ( PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        	pstmt.setString(1, value);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("SoLuong");
+            }
+        }
+        return null;
+    }
+	
+    public boolean capNhatSoLuong(String value, String id) throws SQLException {
+        String sql = "UPDATE KHO SET SoLuong = ? WHERE MaSP = ?";
+        try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
+        	pstm.setString(1, value);
+        	pstm.setString(2, id);
+            int rowsUpdated = pstm.executeUpdate();
+            return rowsUpdated > 0;
+        }
+    }
+	public boolean themSoLuong(String value, String id) throws SQLException {
+		String sql = "INSERT INTO KHO (SoLuong, TrangThai, MaSP) VALUES (?, ?, ?)";
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		try {
+			pstm.setString(1, value);
+			pstm.setString(2, ""+1);
+			pstm.setString(3, id);
+			pstm.executeUpdate();
+			closeConnection();
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			closeConnection();
+			return false;
+		}
+	}
+    
 	public static void main(String[] args) throws SQLException {
-		LoaiHangDAL test = new LoaiHangDAL();
-		 
-		System.out.println(test.getNameLoaiHang(31));
-		
+		KhoDAL kho = new KhoDAL();
+		if(kho.themSoLuong("12", "SP011"))
+			System.out.println("thêm thành công");
 	}
 }

@@ -13,9 +13,13 @@ public class LoaiHangBLL {
 		arr = lhd.docLoaiHang();
 		return arr;
 	}
-	public String getTenLoaiHang(String value) throws SQLException {
+	public String getTenLH(String value) throws SQLException {
 		LoaiHangDAL lhd = new LoaiHangDAL();
 		return lhd.docLoaiHangMaLH(value);
+	}
+	public String getMaLH(String value) throws SQLException {
+		LoaiHangDAL lhd = new LoaiHangDAL();
+		return lhd.layMaLh(value);
 	}
 	public int getLastMaLH() throws SQLException {
 		LoaiHangDAL lhd = new LoaiHangDAL();

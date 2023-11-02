@@ -67,6 +67,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import BLL.DangNhapBLL;
+import BLL.KhoBLL;
 import BLL.LoaiHangBLL;
 import BLL.SanPhamBLL;
 import DTO.LoaiHang;
@@ -148,7 +150,7 @@ public class QuanLySanPhamGui extends JFrame {
 	boolean addbtn, fixbtn = false;
 	JComboBox comboBoxSearch = new JComboBox();
 	int rsRenderType = 0;
-	JTextField textFieldSearch = new JTextField();
+	//JTextField textFieldSearch = new JTextField();
 	boolean btnfind = false;
 //	dung grap 2d tao size cho anh
 	int newWidth = 130;
@@ -210,10 +212,6 @@ public class QuanLySanPhamGui extends JFrame {
 		if (condition == "hien thi") {
 
 			arrSp = spbll.getSanPham();
-		}
-		if (condition == "timkiem") {
-			arrSp = spbll.searchSanPham(textFieldSearch.getText());
-
 		}
 		if (condition == "timkiemtheoloaihang") {
 
@@ -553,7 +551,7 @@ public class QuanLySanPhamGui extends JFrame {
 		return true;
 	}
 	
-	TaiKhoan taiKhoan = ShareDAta.taiKhoan;
+	TaiKhoan taiKhoan = DangNhapBLL.taiKhoan;
 	public QuanLySanPhamGui() throws SQLException {
 
 		
@@ -770,7 +768,11 @@ public class QuanLySanPhamGui extends JFrame {
 		JPanel panel_6 = new JPanel();
 		
 		btnAn.setFont(new Font("Arial", Font.BOLD, 12));
-
+		if(taiKhoan.getQuyen().equals("RL2")) {
+			btnAn.setVisible(true);
+		} else {
+			btnAn.setVisible(false);
+		}
 		btnAn.setEnabled(false);
 		btnAn.setIcon(new ImageIcon(
 				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Delete.png"))));
@@ -780,16 +782,19 @@ public class QuanLySanPhamGui extends JFrame {
 				int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn sản phẩm này", "Confirmation",
 						JOptionPane.YES_NO_OPTION);
 				if (confirmed == JOptionPane.YES_OPTION) {
-					SanPhamBLL deleteSp;
+					SanPhamBLL hideSp;
+					KhoBLL kho;
 					try {
-						deleteSp = new SanPhamBLL();
-						if (deleteSp.hideSanPham(textFieldMasp.getText())) {
-							JOptionPane.showMessageDialog(contentPane, "Ẩn sản phẩm thành công!");
-							hienthisanpham("hien thi");
-							resetValue();
-							comboBoxSearch.setSelectedItem("Tất cả");
-							setEnable();
-
+						hideSp = new SanPhamBLL();
+						kho = new KhoBLL();
+						if (hideSp.hideSanPham(textFieldMasp.getText())) {
+							if(kho.hideSanPham(textFieldMasp.getText())) {
+								JOptionPane.showMessageDialog(contentPane, "Ẩn sản phẩm thành công!");
+								hienthisanpham("hien thi");
+								resetValue();
+								comboBoxSearch.setSelectedItem("Tất cả");
+								setEnable();
+							}
 						}
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
@@ -943,7 +948,7 @@ public class QuanLySanPhamGui extends JFrame {
 				LoaiHangBLL test;
 				try {
 					test = new LoaiHangBLL();
-					String loaiHang = test.getTenLoaiHang(maLh);
+					String loaiHang = test.getTenLH(maLh);
 					textFieldLoaiHang.setText(loaiHang);
 
 				} catch (SQLException e1) {
@@ -1025,7 +1030,6 @@ public class QuanLySanPhamGui extends JFrame {
 
 			public void actionPerformed(ActionEvent e) {
 				btg.clearSelection();
-				textFieldSearch.setText("");
 				try {
 					hienthisanpham("timkiemtheoloaihang");
 				} catch (SQLException e1) {
@@ -1036,42 +1040,12 @@ public class QuanLySanPhamGui extends JFrame {
 			}
 		});
 
-		textFieldSearch.setColumns(10);
 
-		JButton btnTimKiem = new JButton("Tìm Kiếm (theo mã/giá bán)");
-		btnTimKiem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			
-				btg.clearSelection();
-				if (textFieldSearch.getText().isEmpty()) {
-
-					JOptionPane.showMessageDialog(contentPane, "Nội dung tìm kiếm trống!");
-					textFieldSearch.requestFocus();
-
-				}
-				if (!textFieldSearch.getText().isEmpty()) {
-					btnfind = true;
-					try {
-					hienthisanpham("timkiem");
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-
-			}
-		});
-		btnTimKiem.setFont(new Font("Arial", Font.BOLD, 12));
-		btnTimKiem.setFocusPainted(false);
 		GroupLayout gl_panel_7_1 = new GroupLayout(panel_7_1);
 		gl_panel_7_1.setHorizontalGroup(
 			gl_panel_7_1.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_7_1.createSequentialGroup()
 					.addGap(24)
-					.addComponent(btnTimKiem, GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(textFieldSearch, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-					.addGap(37)
 					.addComponent(comboBoxSearch, 0, 189, Short.MAX_VALUE)
 					.addGap(49)
 					.addPreferredGap(ComponentPlacement.RELATED)
@@ -1081,11 +1055,9 @@ public class QuanLySanPhamGui extends JFrame {
 				.addGroup(gl_panel_7_1.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel_7_1.createParallelGroup(Alignment.TRAILING)
-						.addComponent(btnTimKiem, GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
 						.addGroup(gl_panel_7_1.createSequentialGroup()
 							.addGap(2)
 							.addGroup(gl_panel_7_1.createParallelGroup(Alignment.BASELINE)
-								.addComponent(textFieldSearch, GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
 								.addGroup(gl_panel_7_1.createSequentialGroup()
 									.addGap(4)
 									.addComponent(comboBoxSearch, GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))

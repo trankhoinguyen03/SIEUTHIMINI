@@ -55,6 +55,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import BLL.DangNhapBLL;
 import DTO.KhachHang;
 import DAL.KhachHangDAL;
 import DTO.TaiKhoan;
@@ -315,7 +316,7 @@ public class QuanLyKhachHangGui extends JFrame {
         return true;
     }
     
-    TaiKhoan taiKhoan = ShareDAta.taiKhoan;
+    TaiKhoan taiKhoan = DangNhapBLL.taiKhoan;
     public QuanLyKhachHangGui() throws SQLException {
 
         setTitle("Quản lý Khách Hàng");

@@ -68,7 +68,7 @@ public class SanPhamDAL extends connectSql {
 			if(condition.equals("timkiemtheoloaihang")) {
 				if(!value.equals("Tất cả")) {
 					LoaiHangDAL lh = new LoaiHangDAL();
-					pstm.setString(1, lh.getMaLh(value));
+					pstm.setString(1, lh.layMaLh(value));
 				}
 			}
 			ResultSet rs = pstm.executeQuery();
@@ -79,6 +79,7 @@ public class SanPhamDAL extends connectSql {
 				sp.setTenSp(rs.getString("TenSP"));
 				sp.setGiaMua(rs.getString("GiaMua"));
 				sp.setGiaBan(rs.getString("GiaBan"));
+				sp.setNgaySanXuat(rs.getString("NSX"));
 				sp.setHanSuDung(rs.getString("HSD"));
 				sp.setMaLh(rs.getString("MaLH"));
 				arrList.add(sp);
@@ -86,6 +87,7 @@ public class SanPhamDAL extends connectSql {
 		} catch (Exception e) {
 
 		}
+		closeConnection();
 		return arrList;
 	}
 	public String layMaLoaiSP(String tenMaLoai) throws SQLException {
@@ -113,35 +115,26 @@ public class SanPhamDAL extends connectSql {
 		}
 	}
 
-	public boolean themsanpham(SanPham sp, String condition, String oldMaSP) throws SQLException {
+	public boolean themSanPham(SanPham sp) throws SQLException {
 		String sql = "";
-		if (condition.equals("themsanpham")) {
-			sql = "INSERT INTO SANPHAM (TenSP, GiaMua, GiaBan, NSX, HSD, MaLH, TrangThai, MaSP) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-		}
-		if (condition.equals("suasanpham")) {
-			sql = "UPDATE SANPHAM SET TenSP = ?, GiaMua = ?, GiaBan = ?, NSX = ?, HSD = ?, MaLH = ?, TrangThai = ? WHERE MaSP = ?";
-
-		}
+		sql = "INSERT INTO SANPHAM (TenSP, GiaMua, GiaBan, NSX, HSD, MaLH, TrangThai, MaSP) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstm = conn.prepareStatement(sql);
 
 		try {
-
 			pstm.setString(1, sp.getTenSp());
 			pstm.setString(2, sp.getGiaMua());
 			pstm.setString(3, sp.getGiaBan());
-			pstm.setString(4, sp.getHanSuDung());
-			pstm.setString(5, sp.getMaLh());
+			pstm.setString(4, sp.getNgaySanXuat());
+			pstm.setString(5, sp.getHanSuDung());
+			pstm.setString(6, sp.getMaLh());
 			pstm.setString(7, ""+1);
 			pstm.setString(8, sp.getMaSp());
-
-			if (condition.equals("suasanpham")) {
-				pstm.setInt(10, Integer.parseInt(oldMaSP));
-			}
-
 			pstm.executeUpdate();
+			closeConnection();
 			return true;
 		} catch (Exception e) {
 			// TODO: handle exception
+			closeConnection();
 			return false;
 		}
 	}
@@ -213,6 +206,16 @@ public class SanPhamDAL extends connectSql {
             }
         }
         return giaNhap;
+    }
+    public String layMaSPcuoi() throws SQLException {
+        String sql = "SELECT MAX(MaSP) FROM SANPHAM";
+        try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
+            ResultSet rs = pstm.executeQuery();
+            if (rs.next()) {
+                return rs.getString(1);
+            }
+        }
+        return null;
     }
 	public int getma(String tensp) throws SQLException {
         String sql = "SELECT MaSP FROM SANPHAM where TenSP=?";

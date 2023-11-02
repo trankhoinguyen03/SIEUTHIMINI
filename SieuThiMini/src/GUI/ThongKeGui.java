@@ -393,8 +393,8 @@ public class ThongKeGui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					LoaiHangDAL lhd = new LoaiHangDAL();
-					showTableOutput(lhd.getMaLh(comboBox.getSelectedItem().toString())+"");
-					showTableInput(lhd.getMaLh(comboBox.getSelectedItem().toString())+"");
+					showTableOutput(lhd.layMaLh(comboBox.getSelectedItem().toString())+"");
+					showTableInput(lhd.layMaLh(comboBox.getSelectedItem().toString())+"");
 					
 					
 
@@ -434,7 +434,7 @@ public class ThongKeGui extends JFrame {
 						
 						LoaiHangDAL lhd = new LoaiHangDAL();
 						
-						drawChart(lhd.getMaLh(comboBox.getSelectedItem().toString())+"");
+						drawChart(lhd.layMaLh(comboBox.getSelectedItem().toString())+"");
 						NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
 						//String formatChiPhi = numberFormat.format(Integer.parseInt(getChiPhi(lhd.getMaLh(comboBox.getSelectedItem().toString())+"")+"") );
 						//String formatDoanhThu = numberFormat.format(Integer.parseInt( getDoanhThu(lhd.getMaLh(comboBox.getSelectedItem().toString())+"")+""));
@@ -469,7 +469,7 @@ public class ThongKeGui extends JFrame {
 				String malh="";
 				try {
 					lhd = new LoaiHangDAL();
-					malh = lhd.getMaLh(comboBox.getSelectedItem().toString())+"";
+					malh = lhd.layMaLh(comboBox.getSelectedItem().toString())+"";
 					
 					//arr = tkbll.getDataDoanhThu(formatDateToString(dateFromSql), formatDateToString(dateToSql),malh);
 				} catch (SQLException e1) {

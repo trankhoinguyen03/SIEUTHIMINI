@@ -22,10 +22,20 @@ public class NhanVienBLL {
 		arr = nvd.docNhanVien("docnhanvien", null);
 		return arr;
 	}
-	public ArrayList<NhanVien> getNhanVienMaNV(String value) throws SQLException {
+	public String getTenNV(String value) throws SQLException {
 		NhanVienDAL nvd = new NhanVienDAL();
-		ArrayList<NhanVien> arr = new ArrayList<NhanVien>();
-		arr = nvd.docNhanVienMaNV(value);
-		return arr;
+		return nvd.docTenNV(value);
+	}
+	public String getMaNV(String value) throws SQLException {
+		NhanVienDAL nvd = new NhanVienDAL();
+		return nvd.docMaNV(value);
+	}
+	public String getLastMaNV() throws SQLException {
+		NhanVienDAL nvd = new NhanVienDAL();
+		return nvd.layMaNVcuoi();
+	}
+	public static void main(String[] args) throws SQLException {
+		NhanVienBLL test = new NhanVienBLL();
+		System.out.println(""+test.getLastMaNV());
 	}
 }

@@ -20,6 +20,7 @@ import DTO.TaiKhoan;
 
 import com.sun.jdi.connect.spi.Connection;
 
+import BLL.DangNhapBLL;
 import BLL.XuatHoaDonBLL;
 
 import java.awt.event.ActionEvent;
@@ -104,7 +105,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 	/**
 	 * Creates new form HoaDon1
 	 */
-	TaiKhoan taiKhoan = ShareDAta.taiKhoan;
+	TaiKhoan taiKhoan = DangNhapBLL.taiKhoan;
 
 	public HoaDon1() throws SQLException {
 		initComponents();

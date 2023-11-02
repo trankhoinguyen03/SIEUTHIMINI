@@ -52,21 +52,39 @@ public class NhanVienDAL extends connectSql {
 	        return arrList;
 	    }
 	    
-	    public ArrayList<NhanVien> docNhanVienMaNV(String maNv) throws SQLException{
-			ArrayList<NhanVien> arrNhanvien = new ArrayList<NhanVien>();
-			String sql = "select * from NHANVIEN where MaNV LIKE ?";
+	    public String docTenNV(String value) throws SQLException{
+			String sql = "select TenNV from NHANVIEN where MaNV LIKE ?";
 			PreparedStatement pstm = conn.prepareStatement(sql);
-			pstm.setString(1, maNv);
+			pstm.setString(1, value);
 			ResultSet rs = pstm.executeQuery();
 			while(rs.next()) {
-				NhanVien nv = new NhanVien();
-				nv.setMaNv(rs.getString("MaNV"));
-				nv.setTenNv(rs.getString(2));
-				arrNhanvien.add(nv);
+				return rs.getString("TenNV");
+			}
+			return null;
+		}
+	    
+	    public String docMaNV(String value) throws SQLException{
+			String sql = "select MaNV from NHANVIEN where TenNV LIKE ?";
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			pstm.setString(1, value);
+			ResultSet rs = pstm.executeQuery();
+			while(rs.next()) {
+				return rs.getString("MaNV");
 			}
 		
-		return arrNhanvien;
+			return null;
 		}
+	    
+	    public String layMaNVcuoi() throws SQLException {
+	        String sql = "SELECT MAX(MaNV) FROM NHANVIEN";
+	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            ResultSet rs = pstmt.executeQuery();
+	            if (rs.next()) {
+	                return rs.getString(1);
+	            }
+	        }
+	        return null;
+	    }
 	    
 	    public int getLastMaNV() throws SQLException {
 	        int lastMaNV = 0;

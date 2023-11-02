@@ -34,7 +34,7 @@ public class SanPham {
 		this.tenSp = tenSp;
 	}
 	public String getNgaySanXuat() {
-		return hanSuDung;
+		return ngaySanXuat;
 	}
 	public void setNgaySanXuat(String ngaySanXuat) {
 		this.ngaySanXuat = ngaySanXuat;

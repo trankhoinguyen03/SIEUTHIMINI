@@ -28,22 +28,29 @@ public class NhaCungCapDAL extends connectSql {
 			ncc.setSoDT(rs.getString("SDT"));
 		arrNCC.add(ncc);
 		}
+		closeConnection();
 		return arrNCC;
 	}
-    public ArrayList<NhaCungCap> docNhaCungCapMaNCC(String maNcc) throws SQLException{
-		ArrayList<NhaCungCap> arrNhacungcap = new ArrayList<NhaCungCap>();
-		String sql = "select * from NHACUNGCAP where MaNCC LIKE ?";
+    public String docTenNCC(String value) throws SQLException{
+		String sql = "select TenNCC from NHACUNGCAP where MaNCC LIKE ?";
 		PreparedStatement pstm = conn.prepareStatement(sql);
-		pstm.setString(1, maNcc);
+		pstm.setString(1, value);
 		ResultSet rs = pstm.executeQuery();
 		while(rs.next()) {
-			NhaCungCap ncc = new NhaCungCap();
-			ncc.setMaNCC(rs.getString("MaNCC"));
-			ncc.setTenNCC(rs.getString(2));
-			arrNhacungcap.add(ncc);
+			return rs.getString("TenNCC");
+		}
+	return null;
+	}
+    public String docMaNCC(String value) throws SQLException{
+		String sql = "select MaNCC from NHACUNGCAP where TenNCC LIKE ?";
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, value);
+		ResultSet rs = pstm.executeQuery();
+		while(rs.next()) {
+			return rs.getString("MaNCC");
 		}
 	
-	return arrNhacungcap;
+	return null;
 	}
 	public int getLastMaNCC() throws SQLException {
 		String sql = "SELECT IDENT_CURRENT('NHACUNGCAP') AS MaNCC";

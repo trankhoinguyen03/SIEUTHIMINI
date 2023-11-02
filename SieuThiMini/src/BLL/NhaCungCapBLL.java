@@ -13,10 +13,12 @@ public class NhaCungCapBLL {
 		arr = nccd.docNhaCungCap();
 		return arr;
 	}
-	public ArrayList<NhaCungCap> getNhaCungCapMaNCC(String value) throws SQLException {
+	public String getTenNCC(String value) throws SQLException {
 		NhaCungCapDAL nccd = new NhaCungCapDAL();
-		ArrayList<NhaCungCap> arr = new ArrayList<NhaCungCap>();
-		arr = nccd.docNhaCungCapMaNCC(value);
-		return arr;
+		return nccd.docTenNCC(value);
+	}
+	public String getMaNCC(String value) throws SQLException {
+		NhaCungCapDAL nccd = new NhaCungCapDAL();
+		return nccd.docMaNCC(value);
 	}
 }

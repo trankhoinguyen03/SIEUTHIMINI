@@ -7,6 +7,7 @@ import DAL.TaiKhoanDAL;
 import DTO.TaiKhoan;
 
 public class DangNhapBLL {
+	public static TaiKhoan taiKhoan;
 	public TaiKhoan checkLogin(String TenDangNhap,String MatKhau) throws SQLException {
 		TaiKhoanDAL tkd = new TaiKhoanDAL();
 		ArrayList<TaiKhoan> arrTk = new ArrayList<TaiKhoan>();

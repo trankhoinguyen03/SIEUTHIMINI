@@ -31,53 +31,35 @@ public class ChiTietPhieuNhapDAL extends connectSql {
 			ctpn.setThanhTien(rs.getString(4));
 			arrPn.add(ctpn);			
 		}
+		closeConnection();
 		return arrPn;
 	}
 	
-	public boolean themphieunhap(PhieuNhapChiTiet pnct,String condition) throws SQLException {
-		String sql = "";
-		if(condition.equals("themphieunhap")) {
-			sql =  "INSERT INTO CHITIETPHIEUNHAP( MaPN, MaSP, SoLuong, ThanhTien, TrangThai) VALUES (?, ?, ?, ?, ?)";
-		}
-	
+	public boolean themChiTietPN(PhieuNhapChiTiet obj) throws SQLException {
+		String sql =  "INSERT INTO CHITIETPHIEUNHAP(MaPN, MaSP, SoLuong, ThanhTien, TrangThai) VALUES (?, ?, ?, ?, ?)";
 		PreparedStatement pstm = conn.prepareStatement(sql);
-			
 		try {
-
-            pstm.setString(1,pnct.getMaPN());
-			pstm.setString(2,pnct.getMaSP());
-			pstm.setString(3, pnct.getSoLuong());
-			pstm.setString(4, pnct.getThanhTien());
-			pstm.setString(5, ""+1);
-//			if(condition.equals("suahoadon")) {
-//				System.out.println(hd.getMaHd());
-//				System.out.println(MaHDcu);
-//				pstm.setInt(10, Integer.parseInt(MaHDcu));
-//			}
-			
+            pstm.setString(1, obj.getMaPN());
+			pstm.setString(2, obj.getMaSP());
+			pstm.setString(3, obj.getSoLuong());
+			pstm.setString(4, obj.getThanhTien());
+			pstm.setString(5, ""+1);			
 			pstm.executeUpdate();
+			closeConnection();
 			return true;
 		} catch (Exception e) {
 			// TODO: handle exception
-			return true;
+			closeConnection();
+			return false;
 		}
 } 
-       public boolean xoaSanPham(String masp, String mapn) throws SQLException {
-    String sql = "UPDATE CHITIETPHIEUNHAP SET TrangThai = 0  WHERE MaSP = ? AND MaPN = ?";
-    try (PreparedStatement pstm = conn.prepareStatement(sql)) {
-        pstm.setString(1, masp);
-        pstm.setString(2, mapn);
-        int rowsUpdated = pstm.executeUpdate();
-    }
-    return true;
-}
-
-         public boolean xoaPhieuNhap(String maPhieuNhap) throws SQLException {
-    String sql = "UPDATE CHITIETPHIEUNHAP SET TrangThai = 0 WHERE MaHD = ?";
-    try (PreparedStatement pstm = conn.prepareStatement(sql)) {
-        pstm.setString(1, maPhieuNhap);
-        int rowsUpdated = pstm.executeUpdate();
-    }
-            return true;
-}
+       public boolean anChiTietPN(String masp, String mapn) throws SQLException {
+		    String sql = "UPDATE CHITIETPHIEUNHAP SET TrangThai = 0  WHERE MaSP = ? AND MaPN = ?";
+		    try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+		        pstm.setString(1, masp);
+		        pstm.setString(2, mapn);
+		        int rowsUpdated = pstm.executeUpdate();
+		        return rowsUpdated > 0;
+		    }
+       }
 }
