@@ -42,7 +42,7 @@ public class KhachHangDAL extends connectSql {
         }
         return makhachhang;
  }
-	public ArrayList<KhachHang> docKhachHang(String condition, String value)  {
+	public ArrayList<KhachHang> docKhachHang(String condition)  {
 		String sql = "";
 		ArrayList<KhachHang> arrList = new ArrayList<KhachHang>();
                 try {
@@ -55,22 +55,14 @@ public class KhachHangDAL extends connectSql {
 			if (condition.equals("sapxeptheomakh")) {
 				sql = "select * from KHACHHANG where TrangThai = 1 order by MaKH";
 			}
-			if (condition.equals("timkiem")) {
-				sql = "select * from KHACHHANG where TrangThai = 1 and MaKH = ?";
-
-			}
 			PreparedStatement pstm = conn.prepareStatement(sql);
-			if (condition.equals("timkiem")) {
-				pstm.setString(1,value);
-			}
-			ResultSet rs = pstm.executeQuery();
-			
+			ResultSet rs = pstm.executeQuery();	
 			while (rs.next()) {
 				KhachHang kh = new KhachHang();
 				kh.setMaKh(rs.getString("MaKH"));
-                                kh.setTenKh(rs.getString("TenKH"));
-                                kh.setSoDienThoai(rs.getString("SDT"));
-                                kh.setTichDiem(rs.getString("TichDiem"));
+                kh.setTenKh(rs.getString("TenKH"));
+                kh.setSoDienThoai(rs.getString("SDT"));
+                kh.setTichDiem(rs.getString("TichDiem"));
 				arrList.add(kh);
 			}
 		} catch (Exception e) {
@@ -78,37 +70,40 @@ public class KhachHangDAL extends connectSql {
 		}
 		return arrList;
 	}
+    public String layMaKHcuoi() throws SQLException {
+        String sql = "SELECT MAX(MaKH) FROM KHACHHANG";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString(1);
+            }
+        }
+        return null;
+    }
         
-        public boolean xoaKhachHang(String makh) throws SQLException {
-		String sql = "UPDATE KHACHHANG SET TrangThai = " + 0 + " where MaKH = " + makh;
+    public boolean anKhachHang(String id) throws SQLException {
+		String sql = "UPDATE KHACHHANG SET TrangThai = 0 WHERE MaKH = ?";
 		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+			pstm.setString(1, id);
 			int rowsUpdated = pstm.executeUpdate();
-
 			return rowsUpdated > 0;
 		}
 	}
-        public boolean themkhachhang(KhachHang kh, String condition, String oldMaKH) throws SQLException {
-		String sql = "";
-		if (condition.equals("themkhachhang")) {
-			sql = "INSERT INTO KHACHHANG (TenKH, SDT, TichDiem, TrangThai) VALUES (?, ?, ?, ?)";
-		}
+        public boolean themKhachHang(KhachHang kh) throws SQLException {
+		String sql = "INSERT INTO KHACHHANG (TenKH, SDT, TichDiem, TrangThai, MaKH) VALUES (?, ?, ?, ?, ?)";	
 		PreparedStatement pstm = conn.prepareStatement(sql);
-
-		try {
-			
+		try {		
 			pstm.setString(1, kh.getTenKh());
             pstm.setString(2, kh.getSoDienThoai());
 			pstm.setString(3, kh.getTichDiem());
 			pstm.setString(4, ""+1);
-
-			if (condition.equals("suakhachhang")) {
-				pstm.setInt(7, Integer.parseInt(oldMaKH));
-			}
-
+			pstm.setString(5, kh.getMaKh());
 			pstm.executeUpdate();
+			closeConnection();
 			return true;
 		} catch (Exception e) {
 			// TODO: handle exception
+			closeConnection();
 			return false;
 		}
 	}

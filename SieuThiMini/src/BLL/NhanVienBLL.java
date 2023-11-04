@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import DAL.NhanVienDAL;
+import DTO.ChucVu;
 import DTO.NhanVien;
 
 /**
@@ -16,10 +17,10 @@ import DTO.NhanVien;
  */
 public class NhanVienBLL {
 
-	public ArrayList<NhanVien> getNhanVien() throws SQLException {
+	public ArrayList<NhanVien> getNhanVien(String condition) throws SQLException {
 		NhanVienDAL nvd = new NhanVienDAL();
 		ArrayList<NhanVien> arr = new ArrayList<NhanVien>();
-		arr = nvd.docNhanVien("docnhanvien", null);
+		arr = nvd.docNhanVien(condition);
 		return arr;
 	}
 	public String getTenNV(String value) throws SQLException {
@@ -34,6 +35,29 @@ public class NhanVienBLL {
 		NhanVienDAL nvd = new NhanVienDAL();
 		return nvd.layMaNVcuoi();
 	}
+	public boolean hideNhanVien(String id) throws SQLException {
+		NhanVienDAL nvd = new NhanVienDAL();
+		return nvd.anNhanVien(id);
+	}
+	public boolean addNhanVien(NhanVien obj) throws SQLException {
+		NhanVienDAL nvd = new NhanVienDAL();
+		return nvd.themNhanVien(obj);
+	}
+	public ArrayList<ChucVu> getChucVu() throws SQLException {
+		NhanVienDAL nvd = new NhanVienDAL();
+		ArrayList<ChucVu> arr = new ArrayList<ChucVu>();
+		arr = nvd.docChucVu();
+		return arr;
+	}
+	public String getTenCV(String id) throws SQLException {
+		NhanVienDAL nvd = new NhanVienDAL();
+		return nvd.layTenCV(id);
+	}
+	public String getMaCV(String name) throws SQLException {
+		NhanVienDAL nvd = new NhanVienDAL();
+		return nvd.layMaCV(name);
+	}
+	
 	public static void main(String[] args) throws SQLException {
 		NhanVienBLL test = new NhanVienBLL();
 		System.out.println(""+test.getLastMaNV());

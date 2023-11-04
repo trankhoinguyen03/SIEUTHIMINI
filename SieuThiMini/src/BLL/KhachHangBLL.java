@@ -1,39 +1,30 @@
 
 package BLL;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import DAL.KhachHangDAL;
+import DAL.NhanVienDAL;
+import DTO.KhachHang;
+
 public class KhachHangBLL {
-    private String maKh, tenKh, soDienThoai, tichDiem;
-
-	public String getMaKh() {
-		return maKh;
+	public ArrayList<KhachHang> getKhachHang(String condition) throws SQLException {
+		KhachHangDAL khd = new KhachHangDAL();
+		ArrayList<KhachHang> arr = new ArrayList<KhachHang>();
+		arr = khd.docKhachHang(condition);
+		return arr;
 	}
-
-	public void setMaKh(String maKh) {
-		this.maKh = maKh;
+	public boolean hideKhachHang(String id) throws SQLException {
+		KhachHangDAL khd = new KhachHangDAL();
+		return khd.anKhachHang(id);
 	}
-
-	public String getTenKh() {
-		return tenKh;
+	public boolean addKhachHang(KhachHang obj) throws SQLException {
+		KhachHangDAL khd = new KhachHangDAL();
+		return khd.themKhachHang(obj);
 	}
-
-	public void setTenKh(String tenKh) {
-		this.tenKh = tenKh;
+	public String getLastMaKH() throws SQLException {
+		KhachHangDAL nvd = new KhachHangDAL();
+		return nvd.layMaKHcuoi();
 	}
-
-	public String getSoDienThoai() {
-		return soDienThoai;
-	}
-
-	public void setSoDienThoai(String soDienThoai) {
-		this.soDienThoai = soDienThoai;
-	}
-
-	public String getTichDiem() {
-		return tichDiem;
-	}
-
-	public void setTichDiem(String tichDiem) {
-		this.tichDiem = tichDiem;
-	}
-    
 }

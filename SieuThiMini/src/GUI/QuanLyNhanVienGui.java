@@ -44,8 +44,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.awt.event.ActionEvent;
@@ -55,7 +58,15 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import com.toedter.calendar.JDateChooser;
+
+import BLL.DangNhapBLL;
+import BLL.NhaCungCapBLL;
+import BLL.NhanVienBLL;
+import DTO.ChucVu;
+import DTO.NhaCungCap;
 import DTO.NhanVien;
+import DTO.TaiKhoan;
 import DAL.NhanVienDAL;
 
 
@@ -76,13 +87,13 @@ public class QuanLyNhanVienGui extends JFrame {
     private JPanel contentPane;
     private JTextField textFieldManv;
     private JTextField textFieldTennv;
+    private JDateChooser dateFieldNgaysinh;
     private JTextField textFieldNgaysinh;
     private JTextField textFieldCmnd;
     private JTextField textFieldDienthoai;
+    private JDateChooser dateFieldNgayvaolam;
     private JTextField textFieldNgayvaolam;
     private JTextField textFieldDiachi;
-    //private JTextField textFieldTaikhoan;
-    //private JTextField textFieldMatkhau;
     private JTable table;
 
     /**
@@ -135,44 +146,42 @@ public class QuanLyNhanVienGui extends JFrame {
     JLabel lbThongbao = new JLabel();
     String oldMaNV = null;
     private JTextField textFieldSearch;
-    boolean checkFix = false;
-
+    boolean checkHide = false;
+    
+    TaiKhoan taiKhoan = DangNhapBLL.taiKhoan;
     public void hienthinhanvien(String condition) throws SQLException {
-        NhanVienDAL nvDal = new NhanVienDAL();
+        NhanVienBLL nvBll = new NhanVienBLL();
         ArrayList<NhanVien> arrNv = new ArrayList<NhanVien>();
         if (condition == "hien thi") {
 
-            arrNv = nvDal.docNhanVien("docnhanvien", null);
+            arrNv = nvBll.getNhanVien("docnhanvien");
         }
         if (condition == "sapxeptheoten") {
-            arrNv = nvDal.docNhanVien("sapxeptheoten", null);
+            arrNv = nvBll.getNhanVien("sapxeptheoten");
         }
         if (condition == "sapxeptheoma") {
-            arrNv = nvDal.docNhanVien("sapxeptheoma", null);
+            arrNv = nvBll.getNhanVien("sapxeptheoma");
         }
         if (condition == "them") {
-
-            arrNv = nvDal.docNhanVien("docnhanvien", null);
-            /*
-			ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
-			DefaultComboBoxModel combo = new DefaultComboBoxModel();
-			comboBox.setModel(combo);
-			for (LoaiHang malh : arrMaLH) {
-				combo.addElement(malh.getTenLH());
-                        
-			}*/
+            arrNv = nvBll.getNhanVien("docnhanvien");
+            NhanVienBLL test = new NhanVienBLL();
+            ArrayList<ChucVu> arr = test.getChucVu();
+            DefaultComboBoxModel comboncc = new DefaultComboBoxModel();
+            comboBox.setModel(comboncc);
+            for (ChucVu macv : arr) {
+                comboncc.addElement(macv.getTenCV());
+            }
         }
 
-        String[] columnNames = {"Mã Nhân Viên", "Tên Nhân Viên", "Ngày Sinh", "Giới Tính", "Địa Chỉ", "CCCD", "SDT", "Ngày Vào Làm", "Chức Vụ"};
+        String[] columnNames = {"Mã Nhân Viên", "Tên Nhân Viên", "Ngày Sinh", "Giới Tính", "Địa Chỉ", "SDT", "CCCD", "Ngày Vào Làm", "Chức Vụ"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
         table.setModel(model);
         model.setRowCount(0);
         for (NhanVien nvdata : arrNv) {
-            
             Object[] row = new Object[]{nvdata.getMaNv(), nvdata.getTenNv(), nvdata.getNgaySinh(), nvdata.getGioiTinh(),
                 nvdata.getDiaChi(), nvdata.getSdt(), nvdata.getCccd(), nvdata.getNgayVaoLam(),
-                nvdata.getChucVu()};
+                nvBll.getTenCV(nvdata.getChucVu())};
 
             model.addRow(row);
         }
@@ -184,29 +193,18 @@ public class QuanLyNhanVienGui extends JFrame {
 
     public void resetValue() {
         textFieldManv.setText("");
-        textFieldManv.setEnabled(true);
         textFieldCmnd.setText("");
-        textFieldCmnd.setEnabled(true);
+        dateFieldNgayvaolam.setDate(null);
         textFieldNgayvaolam.setText("");
-        textFieldNgayvaolam.setEnabled(true);
+        dateFieldNgaysinh.setDate(null);
         textFieldNgaysinh.setText("");
-        textFieldNgaysinh.setEnabled(true);
         radioNam.setSelected(false);
-        radioNam.setEnabled(true);
         radioNu.setSelected(false);
-        radioNu.setEnabled(true);
         textFieldDienthoai.setText("");
-        textFieldDienthoai.setEnabled(true);
+        textFieldCmnd.setText("");
         textFieldTennv.setText("");
-        textFieldTennv.setEnabled(true);
         textFieldDiachi.setText("");
-        textFieldDiachi.setEnabled(true);
-		/*
-		 * textFieldTaikhoan.setText(""); textFieldTaikhoan.setEnabled(true);
-		 * textFieldMatkhau.setText(""); textFieldMatkhau.setEnabled(true);
-		 */
-        lbThemanh.setIcon(null);
-        btnCapNhatAnh.setEnabled(true);
+        comboBox.setSelectedItem(null);
         btnThem.setEnabled(true);
         btnXoa.setEnabled(false);
         btnLuu.setEnabled(false);
@@ -214,17 +212,15 @@ public class QuanLyNhanVienGui extends JFrame {
     }
 
     public void unSetEnable() {
-        textFieldManv.setEnabled(true);
         textFieldCmnd.setEnabled(true);
-        textFieldNgayvaolam.setEnabled(true);
-        textFieldNgaysinh.setEnabled(true);
+        dateFieldNgayvaolam.setEnabled(true);
+        dateFieldNgaysinh.setEnabled(true);
         radioNam.setEnabled(true);
         radioNu.setEnabled(true);
+        comboBox.setEnabled(true);
         textFieldDienthoai.setEnabled(true);
         textFieldTennv.setEnabled(true);
         textFieldDiachi.setEnabled(true);
-        //textFieldTaikhoan.setEnabled(true);
-        //textFieldMatkhau.setEnabled(true);
         btnCapNhatAnh.setEnabled(true);
         btnThem.setEnabled(true);
         btnXoa.setEnabled(false);
@@ -232,143 +228,116 @@ public class QuanLyNhanVienGui extends JFrame {
     }
 
     public void setEnable() {
-        textFieldManv.setEnabled(false);
         textFieldCmnd.setEnabled(false);
-        textFieldNgayvaolam.setEnabled(false);
-        textFieldNgaysinh.setEnabled(false);
+        dateFieldNgayvaolam.setEnabled(false);
+        dateFieldNgaysinh.setEnabled(false);
+        comboBox.setEnabled(false);
         radioNam.setEnabled(false);
         radioNu.setEnabled(false);
         textFieldDienthoai.setEnabled(false);
         textFieldTennv.setEnabled(false);
         textFieldDiachi.setEnabled(false);
-        //textFieldTaikhoan.setEnabled(false);
-        //textFieldMatkhau.setEnabled(false);
-        btnCapNhatAnh.setEnabled(false);
+    }
+    
+    public void hideField() {
+    	dateFieldNgaysinh.setVisible(false);
+    	dateFieldNgayvaolam.setVisible(false);
+    	textFieldNgaysinh.setVisible(true);
+    	textFieldNgayvaolam.setVisible(true);
+    }
+    
+    public void unHideField() {
+    	dateFieldNgaysinh.setVisible(true);
+    	dateFieldNgayvaolam.setVisible(true);
+    	textFieldNgaysinh.setVisible(false);
+    	textFieldNgayvaolam.setVisible(false);
     }
 
-    	public Boolean checkEmtyValue() throws SQLException {
-		// regular expression pattern
-		if(textFieldManv.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Mã nhân viên trống!");
-			textFieldManv.requestFocus();
-			return false;
-		}
-		if(!textFieldManv.getText().isEmpty()) {
-			NhanVienDAL nvd = new NhanVienDAL();
-			ArrayList<NhanVien> arrPro = new ArrayList<NhanVien>();
-			arrPro = nvd.docNhanVien("docnhanvien",null);
-			if(fixbtn) {
-				for(NhanVien nv:arrPro) {
-					if(Integer.parseInt(oldMaNV)!=Integer.parseInt(textFieldManv.getText()) && nv.getMaNv()== textFieldManv.getText()) {
-						JOptionPane.showMessageDialog(contentPane, "Mã nhân viên đã tồn tại!");
-						textFieldManv.requestFocus();
-						return false;
-						
-					}
-				}
-			}
-			if(addbtn) {
-				for(NhanVien nv:arrPro) {
-					if(nv.getMaNv()== textFieldManv.getText()) {
-						JOptionPane.showMessageDialog(contentPane, "Mã nhân viên đã tồn tại!");
-						textFieldManv.requestFocus();
-						return false;
-						
-					}
-				}
-			}
+	public String formatDateToString(java.util.Date date) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String dateString = dateFormat.format(date);
+		return dateString;
+	}
+    
+	public Boolean checkEmtyValue() throws SQLException {
+		// regular expression pattern	
 		if (textFieldTennv.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(contentPane, "Tên nhân viên rỗng!");
 			textFieldTennv.requestFocus();
 			return false;
+		} else {
+        	Pattern reg = Pattern.compile("^[A-Z][a-zàáạảãăẳẵắằặâấầẩẫậèéẻẽẹêếềễểệìíịĩỉýỳỹỷỵòóỏõọôỗổồốộơớờợỡởùúủũụưứừữửựđ]+( [A-Z][a-zàáạảãăẳẵắằặâấầẩẫậèéẻẽẹêếềễểệìíịĩỉýỳỹỷỵòóỏõọôỗổồốộơớờợỡởùúủũụưứừữửựđ]+)*( [A-Z][a-zàáạảãăẳẵắằặâấầẩẫậèéẻẽẹêếềễểệìíịĩỉýỳỹỷỵòóỏõọôỗổồốộơớờợỡởùúủũụưứừữửựđ]+)?$");
+            boolean kt = reg.matcher(textFieldTennv.getText()).matches();
+            if(kt == false) {
+	            JOptionPane.showMessageDialog(contentPane, "Tên phải in hoa chữ đầu và chỉ chứa các chữ cái");
+				textFieldTennv.requestFocus();
+				return false;
+            }
 		}
-                if (!textFieldTennv.getText().isEmpty()) {
-			Pattern reg = Pattern.compile("[0-9]*$");
-                        boolean kt = reg.matcher(textFieldTennv.getText()).matches();
-                        if(kt == true) {
-                            JOptionPane.showMessageDialog(contentPane, "Tên không chứa số!");
-			textFieldTennv.requestFocus();
-			return false;
-                        }
-		}
-                if (textFieldNgaysinh.getText().isEmpty()) {
+		java.util.Date fieldNgaySinh = dateFieldNgaysinh.getDate();
+        java.util.Date fieldNgayLam = dateFieldNgayvaolam.getDate();
+		LocalDate currentDate = LocalDate.now();
+		java.util.Date current = Date.valueOf(currentDate);
+        if (dateFieldNgaysinh.getDate() == null) {
 			JOptionPane.showMessageDialog(contentPane, "Ngày sinh rỗng!");
-			textFieldNgaysinh.requestFocus();
+			dateFieldNgaysinh.requestFocus();
 			return false;
-		}
-                if (!textFieldNgaysinh.getText().isEmpty()) {
-			Pattern reg = Pattern.compile("^\\d{4}[\\-](0?[1-9]|1[012])[\\-](0?[1-9]|[12][0-9]|3[01])$");
-                        boolean kt = reg.matcher(textFieldNgaysinh.getText()).matches();
-                        if(kt == false) {
-                            JOptionPane.showMessageDialog(contentPane, "Ngày sinh phải có định dạng yyyy-mm-dd!");
-			textFieldNgaysinh.requestFocus();
-			return false;
-                        }
+		} else {
+			String ngaySinh = formatDateToString(fieldNgaySinh);			 
+			String hienTai = currentDate.toString();
+			String namSinh = ngaySinh.substring(0, 4);
+			String namHienTai = hienTai.substring(0, 4);
+			int tuoi = Integer.parseInt(namHienTai) - Integer.parseInt(namSinh);
+			if(tuoi < 18) {
+				JOptionPane.showMessageDialog(contentPane, "Nhân viên chưa đủ 18!");
+				dateFieldNgaysinh.requestFocus();
+				return false;
+			}
 		}
 		if(!radioNam.isSelected() && !radioNu.isSelected()) {
-                    JOptionPane.showMessageDialog(contentPane, "Chưa chọn giới tính!");
-                    return false;
-                }	
-                
-                if (textFieldCmnd.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Cmnd rỗng!");
+            JOptionPane.showMessageDialog(contentPane, "Chưa chọn giới tính!");
+            return false;
+        }	      
+        if (textFieldCmnd.getText().isEmpty()) {
+			JOptionPane.showMessageDialog(contentPane, "Căn cước rỗng!");
 			textFieldCmnd.requestFocus();
 			return false;
+		} else {
+			Pattern reg = Pattern.compile("^[0-9]{12}$");
+            boolean kt = reg.matcher(textFieldCmnd.getText()).matches();
+            if(kt == false) {
+                JOptionPane.showMessageDialog(contentPane, "Căn cước công dân phải có 12 số!");
+                textFieldCmnd.requestFocus();
+                return false;
+            }
 		}
-                if (!textFieldCmnd.getText().isEmpty()) {
-			Pattern reg = Pattern.compile("^(0?)(0-9){8}|[0-9]{9}$");
-                        boolean kt = reg.matcher(textFieldCmnd.getText()).matches();
-                        if(kt == false) {
-                            JOptionPane.showMessageDialog(contentPane, "Cmnd phải có 9 số!");
-			textFieldCmnd.requestFocus();
-			return false;
-                        }
-		}
-                if (textFieldDienthoai.getText().isEmpty()) {
+        if (textFieldDienthoai.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(contentPane, "Số điện thoại rỗng!");
 			textFieldDienthoai.requestFocus();
 			return false;
+		} else {
+			Pattern reg = Pattern.compile("((09|03|07|08|05)+([0-9]{8})\\b)");
+            boolean kt = reg.matcher(textFieldDienthoai.getText()).matches();
+            if(kt == false) {
+                JOptionPane.showMessageDialog(contentPane, "Không tồn tại định dạng số điện thoại này!");
+                textFieldDienthoai.requestFocus();
+                return false;
+            }
 		}
-                if (!textFieldDienthoai.getText().isEmpty()) {
-			Pattern reg = Pattern.compile("^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$");
-                        boolean kt = reg.matcher(textFieldDienthoai.getText()).matches();
-                        if(kt == false) {
-                            JOptionPane.showMessageDialog(contentPane, "Không tồn tại định dạng số điện thoại này!");
-			textFieldDienthoai.requestFocus();
+        if (dateFieldNgayvaolam.getDate() == null) {
+			JOptionPane.showMessageDialog(contentPane, "Ngày vào làm rỗng!");
+			dateFieldNgayvaolam.requestFocus();
 			return false;
-                        }
-		}
-                if (textFieldNgayvaolam.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Ngày vào làm rỗng");
-			textFieldNgayvaolam.requestFocus();
+		} else if (fieldNgayLam.compareTo(current) > 0 ) {
+			JOptionPane.showMessageDialog(contentPane, "Ngày vào làm lớn hơn hiện tại!");
+			dateFieldNgayvaolam.requestFocus();
 			return false;
-
-		}
-                
-                if (textFieldNgayvaolam.getText().isEmpty()) {
-			Pattern reg = Pattern.compile("^\\d{4}[\\-](0?[1-9]|1[012])[\\-](0?[1-9]|[12][0-9]|3[01])$");
-                        boolean kt = reg.matcher(textFieldNgayvaolam.getText()).matches();
-                        if(kt == false) {
-                            JOptionPane.showMessageDialog(contentPane, "Ngày vào làm phải có định dạng yyyy-mm-dd!");
-			textFieldNgayvaolam.requestFocus();
-			return false;
-                        }
-		}
-		/*
-		 * if (textFieldTaikhoan.getText().isEmpty()) {
-		 * JOptionPane.showMessageDialog(contentPane, "Tài khoản rỗng!");
-		 * textFieldTaikhoan.requestFocus(); return false; } if
-		 * (textFieldMatkhau.getText().isEmpty()) {
-		 * JOptionPane.showMessageDialog(contentPane, "Mật khẩu rỗng!");
-		 * textFieldMatkhau.requestFocus(); return false; }
-		 */
-                if (textFieldDiachi.getText().isEmpty()) {
+		}  
+		if (textFieldDiachi.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(contentPane, "Địa chỉ rỗng!");
 			textFieldDiachi.requestFocus();
 			return false;
-		}
-		}
-		
+		}	
 		return true;
 	}
      
@@ -418,9 +387,14 @@ public class QuanLyNhanVienGui extends JFrame {
         JLabel lblNewLabel_4 = new JLabel("Ngày sinh");
         lblNewLabel_4.setBounds(20, 90, 100, 25);
 
+        dateFieldNgaysinh = new JDateChooser();
+        dateFieldNgaysinh.setBounds(130, 90, 200, 25);
+        dateFieldNgaysinh.setEnabled(false);
+        
         textFieldNgaysinh = new JTextField();
         textFieldNgaysinh.setBounds(130, 90, 200, 25);
         textFieldNgaysinh.setEnabled(false);
+        textFieldNgaysinh.setVisible(false);
         textFieldNgaysinh.setColumns(10);
 
         JLabel lblNewLabel_6 = new JLabel("Giới tính");
@@ -452,9 +426,14 @@ public class QuanLyNhanVienGui extends JFrame {
         JLabel lblNewLabel_9 = new JLabel("Ngày vào làm");
         lblNewLabel_9.setBounds(350, 90, 100, 25);
 
+        dateFieldNgayvaolam = new JDateChooser();
+        dateFieldNgayvaolam.setBounds(460, 90, 200, 25);
+        dateFieldNgayvaolam.setEnabled(false);
+        
         textFieldNgayvaolam = new JTextField();
         textFieldNgayvaolam.setBounds(460, 90, 200, 25);
         textFieldNgayvaolam.setEnabled(false);
+        textFieldNgayvaolam.setVisible(false);
         textFieldNgayvaolam.setColumns(10);
         
         JLabel lblNewLabel_Chucvu = new JLabel("Chức vụ");
@@ -464,31 +443,12 @@ public class QuanLyNhanVienGui extends JFrame {
         comboBox.setBounds(460, 130, 200, 25);
         
         JLabel lblNewLabel_13 = new JLabel("Địa chỉ");
-        lblNewLabel_13.setBounds(680, 10, 100, 25);
+        lblNewLabel_13.setBounds(350, 170, 100, 25);
 
         textFieldDiachi = new JTextField();
-        textFieldDiachi.setBounds(790, 10, 250, 50);
+        textFieldDiachi.setBounds(460, 170, 250, 25);
         textFieldDiachi.setEnabled(false);
         textFieldDiachi.setColumns(10);
-
-		/*
-		 * JLabel lblNewLabel_11 = new JLabel("Tài khoản");
-		 * lblNewLabel_11.setBounds(350, 130, 100, 25);
-		 * 
-		 * 
-		 * textFieldTaikhoan = new JTextField(); textFieldTaikhoan.setBounds(460, 130,
-		 * 200, 25); textFieldTaikhoan.setEnabled(false);
-		 * textFieldTaikhoan.setColumns(10);
-		 * 
-		 * 
-		 * JLabel lblNewLabel_12 = new JLabel("Mật khẩu"); lblNewLabel_12.setBounds(350,
-		 * 170, 100, 25);
-		 * 
-		 * 
-		 * textFieldMatkhau = new JTextField(); textFieldMatkhau.setBounds(460, 170,
-		 * 200, 25); textFieldMatkhau.setEnabled(false);
-		 * textFieldMatkhau.setColumns(10);
-		 */
 
         JPanel panel_6 = new JPanel();
         panel_6.setBounds(0, 210, 1067, 78);
@@ -501,98 +461,45 @@ public class QuanLyNhanVienGui extends JFrame {
         		btnLuu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (checkEmtyValue()) {
-						// -------------------Copy img vao thu muc Image cua project
-						if (selectedFile != null) {
-							Path sourcePath = selectedFile.toPath();
-							Path projectPath = Paths.get(System.getProperty("user.dir")); // get the path to the project
-																							// directory
-							Path imageDirectory = projectPath.resolve("src//GUI//Image"); // resolve the path to the Image
-
+						if (checkEmtyValue()) {
+							int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn thêm nhân viên "+textFieldManv.getText(), "Confirmation",
+									JOptionPane.YES_NO_OPTION);
+							if (confirmed == JOptionPane.YES_OPTION) {
+							NhanVien nv = new NhanVien();
+							NhanVienBLL luunv;
 							try {
-								Files.createDirectories(imageDirectory);
-							} catch (IOException e2) {
-								// TODO Auto-generated catch block
-								e2.printStackTrace();
-							} // create the Image directory if it does not exist
-							Path destinationPath = imageDirectory.resolve(selectedFile.getName());
-
-							try {
-								Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-						}
-					
-						NhanVien nv = new NhanVien();
-						NhanVienDAL luunv;
-						if(addbtn) {
-							try {
-								luunv = new NhanVienDAL();
-								nv.setMaNv(textFieldManv.getText());
-                                                                nv.setTenNv(textFieldTennv.getText());
-                                                                nv.setNgaySinh(textFieldNgaysinh.getText());
-                                                                String gioitinh;
-                                                                if(radioNam.isSelected()) gioitinh = "Nam";
-                                                                else gioitinh = "Nữ";
-                                                                nv.setGioiTinh(gioitinh);
-                                                                nv.setDiaChi(textFieldDiachi.getText());
-								nv.setCccd(textFieldCmnd.getText());
-                                                                nv.setSdt(textFieldDienthoai.getText());
-								nv.setNgayVaoLam(textFieldNgayvaolam.getText());
-								//nv.setTaiKhoan(textFieldTaikhoan.getText());
-								//nv.setMatKhau(textFieldMatkhau.getText());
-								boolean checkAddPro = luunv.themnhanvien(nv,"themnhanvien",null);
+								luunv = new NhanVienBLL();
+	                            nv.setMaNv(textFieldManv.getText());
+	                            nv.setTenNv(textFieldTennv.getText());
+	                    		java.util.Date fieldNgaySinh = dateFieldNgaysinh.getDate();
+	                            java.util.Date fieldNgayLam = dateFieldNgayvaolam.getDate();
+	                			String ngaySinh = formatDateToString(fieldNgaySinh);
+	                			String ngayLam = formatDateToString(fieldNgayLam);
+	                            nv.setNgaySinh(ngaySinh);
+	                            if(radioNam.isSelected()) {
+	                            	nv.setGioiTinh("Nam");
+	                            } else {
+	                            	nv.setGioiTinh("Nữ");
+	                            }
+	                            nv.setCccd(textFieldCmnd.getText());
+	                            nv.setSdt(textFieldDienthoai.getText());
+	                            nv.setNgayVaoLam(ngayLam);
+	                            nv.setDiaChi(textFieldDiachi.getText());
+	                            nv.setChucVu(luunv.getMaCV(comboBox.getSelectedItem().toString()));
+								boolean checkAddPro = luunv.addNhanVien(nv);
 								if (checkAddPro) {
 									JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
-									resetValue();
-                                                                        
+									resetValue();                                                                 
 									setEnable();
 									hienthinhanvien("hien thi");
-									addbtn = false;
 								} else {
 									JOptionPane.showMessageDialog(contentPane, "Thêm thất bại");
 								}
 							} catch (SQLException e2) {
 								// TODO Auto-generated catch block
 								e2.printStackTrace();
-							}
+							}	
 						}
-						if(fixbtn) {
-							
-							try {
-								luunv = new NhanVienDAL();
-								nv.setMaNv(textFieldManv.getText());
-                                                                nv.setTenNv(textFieldTennv.getText());
-                                                                nv.setNgaySinh(textFieldNgaysinh.getText());
-                                                                String gioitinh;
-                                                                if(radioNam.isSelected()) gioitinh = "Nam";
-                                                                else gioitinh = "Nữ";
-                                                                nv.setGioiTinh(gioitinh);
-                                                                nv.setDiaChi(textFieldDiachi.getText());
-								nv.setCccd(textFieldCmnd.getText());
-                                                                nv.setSdt(textFieldDienthoai.getText());
-								nv.setNgayVaoLam(textFieldNgayvaolam.getText());
-								//nv.setTaiKhoan(textFieldTaikhoan.getText());
-								//nv.setMatKhau(textFieldMatkhau.getText());
-								
-								boolean checkAddPro = luunv.themnhanvien(nv,"suanhanvien",oldMaNV);
-								if (checkAddPro) {
-									JOptionPane.showMessageDialog(contentPane, "Sửa thành công");
-									resetValue();
-									setEnable();
-									hienthinhanvien("hien thi");
-									fixbtn = false;
-								} else {
-									JOptionPane.showMessageDialog(contentPane, "Sửa thất bại");
-								}
-							} catch (SQLException e2) {
-								// TODO Auto-generated catch block
-								e2.printStackTrace();
-							}
-						}
-						
 					}
 				} catch (NumberFormatException | HeadlessException | SQLException e1) {
 					// TODO Auto-generated catch block
@@ -605,26 +512,32 @@ public class QuanLyNhanVienGui extends JFrame {
         		btnThem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-                                    addbtn = true;
-                                    fixbtn = false;
-                                    resetValue();
-                                    textFieldManv.setEnabled(false);
-                                    textFieldSearch.setEnabled(false);
-                                    NhanVienDAL nv;
-                                    nv = new NhanVienDAL();
-                                    int lastMaHD = nv.getLastMaNV();
-                                    textFieldManv.setText("" + (lastMaHD + 1));
-                                    btnThem.setEnabled(false);
-                                    btnLuu.setEnabled(true);
-                                    btnXoa.setEnabled(false);
-                                    try {
-                                        hienthinhanvien("them");
-                                    } catch (SQLException e3) {
-                                        // TODO Auto-generated catch block
-                                        e3.printStackTrace();
-                                    }
-                                    
-                                } catch (SQLException ex) {
+                    resetValue();
+                    unSetEnable();
+                    unHideField();
+                    NhanVienBLL nvbll;
+                    nvbll = new NhanVienBLL();
+                    String lastMaNv = nvbll.getLastMaNV();
+                    String maNv = lastMaNv.substring(lastMaNv.length()-3, lastMaNv.length());
+                    int check = Integer.parseInt(maNv);
+                    if(check < 9) {
+                    	textFieldManv.setText("NV00"+(check+1));
+                    } else if(check < 99) {
+                    	textFieldManv.setText("NV0"+(check+1));
+                    } else {
+                    	textFieldManv.setText("NV"+(check+1));
+                    }
+                    btnThem.setEnabled(false);
+                    btnLuu.setEnabled(true);
+                    btnXoa.setEnabled(false);
+                    try {
+                        hienthinhanvien("them");
+                    } catch (SQLException e3) {
+                        // TODO Auto-generated catch block
+                        e3.printStackTrace();
+                    }
+                    
+                } catch (SQLException ex) {
 					Logger.getLogger(QuanLyNhanVienGui.class.getName()).log(Level.SEVERE, null, ex);
 				}
 
@@ -633,32 +546,37 @@ public class QuanLyNhanVienGui extends JFrame {
         btnThem.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
        
+        
         btnXoa.setBounds(419, 10, 104, 53);
-
+        if(taiKhoan.getQuyen().equals("RL2")) {
+        	btnXoa.setVisible(true);
+        } else {
+        	btnXoa.setVisible(false);
+        }
         btnXoa.setEnabled(false);
         btnXoa.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Delete.png"))));
         btnXoa.setFocusPainted(false);
                 	btnXoa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa nhân viên này", "Confirmation",
+				int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn nhân viên "+textFieldManv.getText(), "Confirmation",
 						JOptionPane.YES_NO_OPTION);
-				if (confirmed == JOptionPane.YES_OPTION) {
-					NhanVienDAL deleteNv;
-					try {
-						deleteNv = new NhanVienDAL();
-						if (deleteNv.xoaNhanVien(textFieldManv.getText())) {
-							JOptionPane.showMessageDialog(contentPane, "Xóa thành công!");
-							hienthinhanvien("hien thi");
-							resetValue();
-							setEnable();
+					if (confirmed == JOptionPane.YES_OPTION) {
+						NhanVienBLL hideNv;
+						try {
+							hideNv = new NhanVienBLL();
+							if (hideNv.hideNhanVien(textFieldManv.getText())) {
+								JOptionPane.showMessageDialog(contentPane, "Ẩn thành công!");
+								hienthinhanvien("hien thi");
+								resetValue();
+								setEnable();
+							}
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+	
 					}
-
-				}
 
 			}
 		});
@@ -668,12 +586,15 @@ public class QuanLyNhanVienGui extends JFrame {
         panel_7.setBorder(new LineBorder(new Color(0, 0, 0)));
 
         JButton btnDongBo = new JButton("");
-        btnDongBo.setBounds(563, 10, 104, 53);
+        btnDongBo.setBounds(280, 10, 104, 53);
         btnDongBo.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(QuanLyNhanVienGui.class.getResource(".\\Image\\Refresh-icon.png"))));
         		btnDongBo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					resetValue();
+					setEnable();
+					unHideField();
 					hienthinhanvien("hien thi");
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
@@ -687,14 +608,13 @@ public class QuanLyNhanVienGui extends JFrame {
         btnSapxep.setFocusPainted(false);
         		btnSapxep.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				NhanVienDAL nvd;
-				if (radioSapxepten.isSelected()) {
-
-					
+				resetValue();
+				setEnable();
+				unHideField();
+				if (radioSapxepten.isSelected()) {				
 					try {
-						nvd = new NhanVienDAL();
-
 						hienthinhanvien("sapxeptheoten");
+						radioSapxepten.setSelected(false);;
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -702,12 +622,9 @@ public class QuanLyNhanVienGui extends JFrame {
 
 				}
 				if (radioSapxepma.isSelected()) {
-
-					
 					try {
-						nvd = new NhanVienDAL();
-
 						hienthinhanvien("sapxeptheoma");
+						radioSapxepma.setSelected(false);
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -760,25 +677,25 @@ public class QuanLyNhanVienGui extends JFrame {
 				String ngaySinh = table.getModel().getValueAt(row, 2).toString(); // get the value of the second column
 				String gioiTinh = table.getModel().getValueAt(row, 3).toString();
 				String diaChi = table.getModel().getValueAt(row, 4).toString();
-				String cmnd = table.getModel().getValueAt(row, 5).toString();
-				String sdt = table.getModel().getValueAt(row, 6).toString();
-                                String ngayVao = table.getModel().getValueAt(row, 7).toString();
-                                String taiKhoan = table.getModel().getValueAt(row, 8).toString();
-                                String matKhau = table.getModel().getValueAt(row, 9).toString();
+				String sdt = table.getModel().getValueAt(row, 5).toString();
+				String cccd = table.getModel().getValueAt(row, 6).toString();
+                String ngayVao = table.getModel().getValueAt(row, 7).toString();
+                String chucVu = table.getModel().getValueAt(row, 8).toString();
 //				String img = table.getModel().getValueAt(row, 10).toString();
 				textFieldManv.setText(maNV);
 				textFieldTennv.setText(tenNV);
-                                textFieldNgaysinh.setText(ngaySinh);
-                                if(gioiTinh.equals("Nam")) radioNam.setSelected(true);
-                                else radioNu.setSelected(true);
-                                textFieldDiachi.setText(diaChi);
-                                textFieldCmnd.setText(cmnd);
+                textFieldNgaysinh.setText(ngaySinh);
+                if(gioiTinh.equalsIgnoreCase("Nam")) radioNam.setSelected(true);
+                else radioNu.setSelected(true);
+                textFieldDiachi.setText(diaChi);
+                textFieldCmnd.setText(cccd);
 				textFieldDienthoai.setText(sdt);
-				textFieldNgayvaolam.setText(ngayVao);
-				//textFieldTaikhoan.setText(taiKhoan);
-				//textFieldMatkhau.setText(matKhau);
-				
+				textFieldNgayvaolam.setText(ngayVao);	
+                DefaultComboBoxModel combo = new DefaultComboBoxModel();
+                comboBox.setModel(combo);
+                combo.addElement(chucVu);
 				setEnable();
+				hideField();
 				btnXoa.setEnabled(true);
 				btnThem.setEnabled(true);
 				btnLuu.setEnabled(false);
@@ -821,10 +738,12 @@ public class QuanLyNhanVienGui extends JFrame {
         panel_5.add(lblNewLabel_3);
         panel_5.add(lblNewLabel_4);
         panel_5.add(textFieldTennv);
+        panel_5.add(dateFieldNgaysinh);
         panel_5.add(textFieldNgaysinh);
         panel_5.add(lblNewLabel_8);
         panel_5.add(lblNewLabel_9);
         panel_5.add(textFieldDienthoai);
+        panel_5.add(dateFieldNgayvaolam);
         panel_5.add(textFieldNgayvaolam);
         panel_5.add(lblNewLabel_13);
         panel_5.add(textFieldDiachi);
