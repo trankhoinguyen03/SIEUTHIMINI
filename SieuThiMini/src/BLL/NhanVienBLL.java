@@ -48,6 +48,10 @@ public class NhanVienBLL {
 		ArrayList<ChucVu> arr = new ArrayList<ChucVu>();
 		arr = nvd.docChucVu();
 		return arr;
+	}	
+	public String getChucVuNV(String id) throws SQLException {
+		NhanVienDAL nvd = new NhanVienDAL();
+		return nvd.docChucVuNV(id);
 	}
 	public String getTenCV(String id) throws SQLException {
 		NhanVienDAL nvd = new NhanVienDAL();

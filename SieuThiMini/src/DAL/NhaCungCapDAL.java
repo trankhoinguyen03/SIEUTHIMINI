@@ -52,37 +52,26 @@ public class NhaCungCapDAL extends connectSql {
 	
 	return null;
 	}
-	public int getLastMaNCC() throws SQLException {
-		String sql = "SELECT IDENT_CURRENT('NHACUNGCAP') AS MaNCC";
+	public String layMaNCCcuoi() throws SQLException {
+		String sql = "SELECT MAX(MaNCC) FROM NHACUNGCAP";
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
 		  if (rs.next()) {
-		        int maxColumnValue = rs.getInt("MaNCC");
+		        String maxColumnValue = rs.getString(1);
 		        return maxColumnValue;
 		    }
-		  return 0;
+		  return null;
 	}
-	public boolean ThemNhaCungCap(NhaCungCap Ncc,String condition) throws SQLException {
+	public boolean BtnNhaCungCap(NhaCungCap Ncc,String condition) throws SQLException {
 		String sql ="";
 		if(condition.equals("themnhacungcap")) {
-			sql = "insert into NHACUNGCAP (TenNCC,DiaChi,SDT,TrangThai) values (?,?,?,?)";
-		}
-		if(condition.equals("suanhacungcap")) {
-			sql = "update NHACUNGCAP set TenNCC = ?,DiaChi = ?,SDT = ?, TrangThai = ? where MaNCC = ? ";
+			sql = "insert into NHACUNGCAP (TenNCC,DiaChi,SDT,TrangThai,MaNCC) values (?,?,?,?,?)";
 		}
 		if(condition.equals("xoanhacungcap")) {
-			sql = "update NHACUNGCAP set TrangThai =" + 0 + " where MaNCC = ?";
+			sql = "update NHACUNGCAP set TrangThai = 0 where MaNCC = ?";
 		}
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		try {
-			
-			if(condition.equals("suanhacungcap")) {
-				pstm.setString(1, Ncc.getTenNCC());
-				pstm.setString(2, Ncc.getDiaChi());
-				pstm.setString(3, Ncc.getSoDT());
-				pstm.setString(4, ""+1);
-				pstm.setString(5,Ncc.getMaNCC());
-			}
 			if(condition.equals("xoanhacungcap")) {
 				pstm.setString(1, Ncc.getMaNCC());
 			}
@@ -90,7 +79,8 @@ public class NhaCungCapDAL extends connectSql {
 				pstm.setString(1, Ncc.getTenNCC());
 				pstm.setString(2,Ncc.getDiaChi());
 				pstm.setString(3,Ncc.getSoDT());
-				pstm.setInt(4, 1);
+				pstm.setString(4, "1");
+				pstm.setString(5, Ncc.getMaNCC());
 			}
 			
 			pstm.executeUpdate();

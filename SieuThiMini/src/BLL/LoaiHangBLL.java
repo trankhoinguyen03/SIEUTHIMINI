@@ -21,7 +21,7 @@ public class LoaiHangBLL {
 		LoaiHangDAL lhd = new LoaiHangDAL();
 		return lhd.layMaLh(value);
 	}
-	public int getLastMaLH() throws SQLException {
+	public String getLastMaLH() throws SQLException {
 		LoaiHangDAL lhd = new LoaiHangDAL();
 		return lhd.getLastMaLH();
 	}

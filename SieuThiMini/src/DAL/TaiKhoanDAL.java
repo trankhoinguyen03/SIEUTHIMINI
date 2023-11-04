@@ -29,7 +29,7 @@ public class TaiKhoanDAL extends connectSql {
 
 	
 
-	    public ArrayList<TaiKhoan> doctaikhoan(String condition, String value) {
+	    public ArrayList<TaiKhoan> docTaiKhoan(String condition) {
 	        String sql = "";
 	        ArrayList<TaiKhoan> arrList = new ArrayList<TaiKhoan>();
 	        try {
@@ -41,9 +41,6 @@ public class TaiKhoanDAL extends connectSql {
 	            }
 	            if (condition.equals("sapxeptheoma")) {
 	                sql = "select * from TAIKHOAN where TrangThai = 1 order by MaNV";
-	            }
-	            if (condition.equals("timkiem")) {
-	                sql = "select * from TAIKHOAN where TrangThai = 1 and MaNV LIKE %" + value + "% ";
 	            }
 	            PreparedStatement pstm = conn.prepareStatement(sql);
 	            ResultSet rs = pstm.executeQuery();
@@ -61,32 +58,41 @@ public class TaiKhoanDAL extends connectSql {
 	        return arrList;
 	    }
 	    
-	    public int getLastMaNV() throws SQLException {
-	        int lastMaNV = 0;
-	        String sql = "SELECT MAX(MaNV) FROM TAIKHOAN";
+	    public String layTenQuyen(String id) throws SQLException {
+	        String sql = "SELECT VaiTro FROM QUYEN WHERE MaQuyen = ?";
 	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        	pstmt.setString(1, id);
 	            ResultSet rs = pstmt.executeQuery();
 	            if (rs.next()) {
-	                lastMaNV = rs.getInt(1);
+	                return rs.getString(1);
 	            }
 	        }
-	        return lastMaNV;
+	        return null;
 	    }
 
-	    public boolean xoataikhoan(String manv) throws SQLException {
-	        String sql = "UPDATE TAIKHOAN SET TrangThai = " + 0 + " where MaNV = " + manv;
+	    public String layMaQuyen(String name) throws SQLException {
+	        String sql = "SELECT MaQuyen FROM QUYEN WHERE VaiTro LIKE ?";
+	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        	pstmt.setString(1, name);
+	            ResultSet rs = pstmt.executeQuery();
+	            if (rs.next()) {
+	                return rs.getString(1);
+	            }
+	        }
+	        return null;
+	    }
+	    
+	    public boolean anTaiKhoan(String id) throws SQLException {
+	        String sql = "UPDATE TAIKHOAN SET TrangThai =  0 WHERE MaNV = ?";
 	        try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
+	        	pstm.setString(1, id);
 	            int rowsUpdated = pstm.executeUpdate();
-
 	            return rowsUpdated > 0;
 	        }
 	    }
 
-	    public boolean themtaikhoan(TaiKhoan tk, String condition, String oldMaNV) throws SQLException {
-	        String sql = "";
-	        if (condition.equals("themtaikhoan")) {
-	            sql = "INSERT INTO TAIKHOAN (TenDangNhap, MatKhau, MaQuyen, TrangThai) VALUES (?, ?, ?, ?)";
-	        }
+	    public boolean themTaiKhoan(TaiKhoan tk) throws SQLException {
+	        String sql = "INSERT INTO TAIKHOAN (TenDangNhap, MatKhau, MaQuyen, TrangThai, MaNV) VALUES (?, ?, ?, ?, ?)";
 	        PreparedStatement pstm = conn.prepareStatement(sql);
 
 	        try {
@@ -95,12 +101,13 @@ public class TaiKhoanDAL extends connectSql {
 	            pstm.setString(2, tk.getMatKhau());
 	            pstm.setString(3, tk.getQuyen());
 	            pstm.setString(4, ""+1);
-
+	            pstm.setString(5, tk.getMaNV());
 	            pstm.executeUpdate();
-	            System.out.println(sql);
+	            closeConnection();
 	            return true;
 	        } catch (Exception e) {
 	            // TODO: handle exception
+	        	closeConnection();
 	            return false;
 	        }
 	    }

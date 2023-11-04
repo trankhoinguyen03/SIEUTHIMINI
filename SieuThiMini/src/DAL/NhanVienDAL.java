@@ -103,6 +103,18 @@ public class NhanVienDAL extends connectSql {
 	        return arrList;
 	    }
 	    
+	    public String docChucVuNV(String name) throws SQLException {
+	        String sql = "SELECT MaCV FROM NHANVIEN WHERE MaNV = ?";
+	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        	pstmt.setString(1, name);
+	            ResultSet rs = pstmt.executeQuery();
+	            if (rs.next()) {
+	                return rs.getString(1);
+	            }
+	        }
+	        return null;
+	    }
+	    
 	    public String layMaCV(String name) throws SQLException {
 	        String sql = "SELECT MaCV FROM CHUCVU WHERE TenCV LIKE ?";
 	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {

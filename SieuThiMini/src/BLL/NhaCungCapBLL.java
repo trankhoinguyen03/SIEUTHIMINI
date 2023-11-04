@@ -21,4 +21,12 @@ public class NhaCungCapBLL {
 		NhaCungCapDAL nccd = new NhaCungCapDAL();
 		return nccd.docMaNCC(value);
 	}
+	public String getLastMaNCC() throws SQLException {
+		NhaCungCapDAL nccd = new NhaCungCapDAL();
+		return nccd.layMaNCCcuoi();
+	}
+	public boolean BtnNhaCungCap(NhaCungCap obj, String value) throws SQLException {
+		NhaCungCapDAL nccd = new NhaCungCapDAL();
+		return nccd.BtnNhaCungCap(obj, value);
+	}
 }

@@ -48,16 +48,16 @@ public class LoaiHangDAL extends connectSql {
 		closeConnection();
 		return "";
 	}
-	public int getLastMaLH() throws SQLException {
+	public String getLastMaLH() throws SQLException {
 		String sql = "select top 1 MaLH from LOAIHANG order by MaLH DESC";
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
 		  if (rs.next()) {
-		        int maxColumnValue = rs.getInt("MaLH");
+		        String maxColumnValue = rs.getString("MaLH");
 		        return maxColumnValue;
 		  }
 		closeConnection();
-		return 0;
+		return null;
 	}
 	public String docLoaiHangMaLH(String value) throws SQLException{
 		String sql = "select TenLH from LOAIHANG where MaLH = ?";
@@ -85,10 +85,7 @@ public class LoaiHangDAL extends connectSql {
 	    String sql = "";
 	    switch (condition) {
 	        case "themloaihang":
-	            sql = "INSERT INTO LOAIHANG (TenLH, TrangThai) VALUES (?, ?)";
-	            break;
-	        case "sualoaihang":
-	            sql = "UPDATE LOAIHANG SET TenLH = ? WHERE MaLH = ?";
+	            sql = "INSERT INTO LOAIHANG (TenLH, TrangThai, MaLH) VALUES (?, ?, ?)";
 	            break;
 	        case "xoaloaihang":
 	            sql = "UPDATE LOAIHANG SET TrangThai = 0 WHERE MaLH = ?";
@@ -97,18 +94,14 @@ public class LoaiHangDAL extends connectSql {
 	            return false;
 	    }
 	    try (PreparedStatement pstm = conn.prepareStatement(sql)) {
-	        if (condition.equals("sualoaihang")) {
-	            pstm.setString(1, Lh.getTenLH());
-	            pstm.setString(2, Lh.getMaLH());
-	        }
 	        if (condition.equals("xoaloaihang")) {
 	            pstm.setString(1, Lh.getMaLH());
 	        }
 	        if (condition.equals("themloaihang")) {
 	            pstm.setString(1, Lh.getTenLH());
 	            pstm.setString(2, ""+1);
+	            pstm.setString(3, Lh.getMaLH());
 	        }
-
 	        int result = pstm.executeUpdate();
 	        if (result == 0) {
 	            return false;

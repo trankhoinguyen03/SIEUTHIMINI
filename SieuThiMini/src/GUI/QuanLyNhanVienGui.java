@@ -441,6 +441,7 @@ public class QuanLyNhanVienGui extends JFrame {
         
         comboBox = new JComboBox();
         comboBox.setBounds(460, 130, 200, 25);
+        comboBox.setEnabled(false);
         
         JLabel lblNewLabel_13 = new JLabel("Địa chỉ");
         lblNewLabel_13.setBounds(350, 170, 100, 25);
@@ -457,49 +458,61 @@ public class QuanLyNhanVienGui extends JFrame {
         btnLuu.setEnabled(false);
         btnLuu.setFocusPainted(false);
         btnLuu.setIcon(new ImageIcon(
-                Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Save.png"))));
-        		btnLuu.addActionListener(new ActionListener() {
+        Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Save.png"))));
+		btnLuu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-						if (checkEmtyValue()) {
-							int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn thêm nhân viên "+textFieldManv.getText(), "Confirmation",
-									JOptionPane.YES_NO_OPTION);
-							if (confirmed == JOptionPane.YES_OPTION) {
-							NhanVien nv = new NhanVien();
-							NhanVienBLL luunv;
-							try {
-								luunv = new NhanVienBLL();
-	                            nv.setMaNv(textFieldManv.getText());
-	                            nv.setTenNv(textFieldTennv.getText());
-	                    		java.util.Date fieldNgaySinh = dateFieldNgaysinh.getDate();
-	                            java.util.Date fieldNgayLam = dateFieldNgayvaolam.getDate();
-	                			String ngaySinh = formatDateToString(fieldNgaySinh);
-	                			String ngayLam = formatDateToString(fieldNgayLam);
-	                            nv.setNgaySinh(ngaySinh);
-	                            if(radioNam.isSelected()) {
-	                            	nv.setGioiTinh("Nam");
-	                            } else {
-	                            	nv.setGioiTinh("Nữ");
-	                            }
-	                            nv.setCccd(textFieldCmnd.getText());
-	                            nv.setSdt(textFieldDienthoai.getText());
-	                            nv.setNgayVaoLam(ngayLam);
-	                            nv.setDiaChi(textFieldDiachi.getText());
-	                            nv.setChucVu(luunv.getMaCV(comboBox.getSelectedItem().toString()));
-								boolean checkAddPro = luunv.addNhanVien(nv);
-								if (checkAddPro) {
-									JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
-									resetValue();                                                                 
-									setEnable();
-									hienthinhanvien("hien thi");
-								} else {
-									JOptionPane.showMessageDialog(contentPane, "Thêm thất bại");
-								}
-							} catch (SQLException e2) {
-								// TODO Auto-generated catch block
-								e2.printStackTrace();
-							}	
-						}
+					if (checkEmtyValue()) {
+        				boolean flag = true;
+        				if(taiKhoan.getQuyen().equals("RL2")) {
+        					if(comboBox.getSelectedItem().toString().equals("ADMIN")) {
+        						flag = false;
+        						JOptionPane.showMessageDialog(contentPane, "Không thể thêm người có chức vụ cao hơn bạn!");
+        					} else if(comboBox.getSelectedItem().toString().equals("QUẢN LÝ")) {
+        						flag = false;
+        						JOptionPane.showMessageDialog(contentPane, "Không thể thêm người có chức vụ bằng bạn!");
+        					}
+        				}
+        				if(flag) {
+        					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn thêm nhân viên "+textFieldManv.getText(), "Confirmation",
+    								JOptionPane.YES_NO_OPTION);
+    						if (confirmed == JOptionPane.YES_OPTION) {
+    							NhanVien nv = new NhanVien();
+    							NhanVienBLL luunv;
+    							try {
+    								luunv = new NhanVienBLL();
+    		                        nv.setMaNv(textFieldManv.getText());
+    		                        nv.setTenNv(textFieldTennv.getText());
+    		                		java.util.Date fieldNgaySinh = dateFieldNgaysinh.getDate();
+    		                        java.util.Date fieldNgayLam = dateFieldNgayvaolam.getDate();
+    		            			String ngaySinh = formatDateToString(fieldNgaySinh);
+    		            			String ngayLam = formatDateToString(fieldNgayLam);
+    		                        nv.setNgaySinh(ngaySinh);
+    		                        if(radioNam.isSelected()) {
+    		                        	nv.setGioiTinh("Nam");
+    		                        } else {
+    		                        	nv.setGioiTinh("Nữ");
+    		                        }
+    		                        nv.setCccd(textFieldCmnd.getText());
+    		                        nv.setSdt(textFieldDienthoai.getText());
+    		                        nv.setNgayVaoLam(ngayLam);
+    		                        nv.setDiaChi(textFieldDiachi.getText());
+    		                        nv.setChucVu(luunv.getMaCV(comboBox.getSelectedItem().toString()));
+    								boolean checkAddPro = luunv.addNhanVien(nv);
+    								if (checkAddPro) {
+    									JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
+    									resetValue();                                                                 
+    									setEnable();
+    									hienthinhanvien("hien thi");
+    								} else {
+    									JOptionPane.showMessageDialog(contentPane, "Thêm thất bại");
+    								}
+    							} catch (SQLException e2) {
+    								// TODO Auto-generated catch block
+    								e2.printStackTrace();
+    							}	
+    						}
+        				}						
 					}
 				} catch (NumberFormatException | HeadlessException | SQLException e1) {
 					// TODO Auto-generated catch block
@@ -548,19 +561,28 @@ public class QuanLyNhanVienGui extends JFrame {
        
         
         btnXoa.setBounds(419, 10, 104, 53);
-        if(taiKhoan.getQuyen().equals("RL2")) {
-        	btnXoa.setVisible(true);
-        } else {
-        	btnXoa.setVisible(false);
-        }
         btnXoa.setEnabled(false);
         btnXoa.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Delete.png"))));
         btnXoa.setFocusPainted(false);
-                	btnXoa.addActionListener(new ActionListener() {
+    	btnXoa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn nhân viên "+textFieldManv.getText(), "Confirmation",
-						JOptionPane.YES_NO_OPTION);
+				boolean flag = true;
+				if(taiKhoan.getQuyen().equals("RL2")) {
+					if(taiKhoan.getMaNV().equals(textFieldManv.getText())) {
+						flag = false;
+						JOptionPane.showMessageDialog(contentPane, "Không thể ẩn chính bạn!");
+					} else if(comboBox.getSelectedItem().toString().equals("ADMIN")) {
+						flag = false;
+						JOptionPane.showMessageDialog(contentPane, "Không thể ẩn người có chức vụ cao hơn bạn!");
+					} else if(comboBox.getSelectedItem().toString().equals("QUẢN LÝ")) {
+						flag = false;
+						JOptionPane.showMessageDialog(contentPane, "Không thể ẩn người có chức vụ bằng bạn!");
+					}
+				}
+				if(flag) {
+					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn nhân viên "+textFieldManv.getText(), "Confirmation",
+							JOptionPane.YES_NO_OPTION);
 					if (confirmed == JOptionPane.YES_OPTION) {
 						NhanVienBLL hideNv;
 						try {
@@ -575,9 +597,9 @@ public class QuanLyNhanVienGui extends JFrame {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-	
-					}
 
+					}
+				}
 			}
 		});
 
@@ -789,11 +811,17 @@ public class QuanLyNhanVienGui extends JFrame {
         JButton btnNewButton = new JButton("Hệ Thống");
         btnNewButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		 QuanLyHome home=new QuanLyHome();
-                 setVisible(false);
-              
-                 home.setVisible(true);
-                 home.setLocationRelativeTo(null);
+        		if(taiKhoan.getQuyen().equals("RL2")) {
+	           		QuanLyHome home=new QuanLyHome();
+	                setVisible(false);               
+	                home.setVisible(true);
+	                home.setLocationRelativeTo(null);
+        		} else {
+        			AdminHome home=new AdminHome();
+	                setVisible(false);               
+	                home.setVisible(true);
+	                home.setLocationRelativeTo(null);
+        		}      		
         	}
         });
         btnNewButton.setBounds(938, 153, 119, 39);

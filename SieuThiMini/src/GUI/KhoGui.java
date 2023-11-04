@@ -68,7 +68,10 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import BLL.DangNhapBLL;
+import BLL.KhoBLL;
+import BLL.SanPhamBLL;
 import DTO.Kho;
+import DTO.SanPham;
 import DTO.TaiKhoan;
 import DAL.KhoDAL;
 
@@ -124,7 +127,6 @@ public class KhoGui extends JFrame {
 	 * 
 	 * @throws SQLException
 	 */
-	JComboBox comboBox;
 	JLabel lbThemanh = new JLabel();
 	File selectedFile;
 	ImageIcon icon = new ImageIcon();
@@ -136,15 +138,13 @@ public class KhoGui extends JFrame {
 	JButton btnThem = new JButton("Thêm");
 	JButton btnLuu = new JButton("Lưu");
 	int lastRow = 0;
-	JRadioButton radio1 = new JRadioButton("Tên sản phẩm");
+	JRadioButton radio1 = new JRadioButton("Mã Sản Phẩm");
 	JLabel lblNewLabel = new JLabel("KHO");
-	JRadioButton radio2 = new JRadioButton("Tên loại hàng");
+	JRadioButton radio2 = new JRadioButton("Số Lượng");
 	ButtonGroup btg = new ButtonGroup();
 	JScrollPane scrollPane = new JScrollPane();
 	boolean addbtn, fixbtn = false;
-	JComboBox comboBoxSearch = new JComboBox();
 	int rsRenderType = 0;
-	JTextField textFieldSearch = new JTextField();
 	JTextField textFieldTo = new JTextField();
 	JTextField textFieldFrom = new JTextField();
 	boolean btnfind = false;
@@ -175,16 +175,16 @@ public class KhoGui extends JFrame {
 
 	public void hienThiKho() throws SQLException {
 
-		KhoDAL khoDal = new KhoDAL();
+		KhoBLL khoBll = new KhoBLL();
+		SanPhamBLL spBll = new SanPhamBLL();
 		ArrayList<Kho> arrKho = new ArrayList<Kho>();
-		String[] columnNames = { "Mã Sản Phẩm", "Số Lượng" };
+		String[] columnNames = { "Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng" };
 		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 		table.setModel(model);
 		model.setRowCount(0);
-		arrKho = khoDal.dockho();
+		arrKho = khoBll.getKho();
 		for (Kho khodata : arrKho) {
-
-			Object[] row = new Object[] { khodata.getMaSP(), khodata.getSoLuong() };
+			Object[] row = new Object[] { khodata.getMaSP(),spBll.getTenSP(khodata.getMaSP()), khodata.getSoLuong() };
 			model.addRow(row);
 		}
 		JTableHeader header = table.getTableHeader();
@@ -211,51 +211,16 @@ public class KhoGui extends JFrame {
 		textFieldHansd.setEnabled(true);
 		textFieldTensp.setText("");
 		textFieldTensp.setEnabled(true);
-		comboBox.setEnabled(true);
 		lbThemanh.setIcon(null);
 		btnCapNhatAnh.setEnabled(true);
 		btnThem.setEnabled(true);
 		btnXoa.setEnabled(false);
 		btnSua.setEnabled(false);
 		btnLuu.setEnabled(false);
-		comboBox.setSelectedItem(null);
 
 
 	}
 
-	public void unSetEnable() {
-		textFieldImg.setEnabled(true);
-		textFieldMasp.setEnabled(true);
-		textFieldDonvi.setEnabled(true);
-		textFieldGiaban.setEnabled(true);
-		textFieldGianhap.setEnabled(true);
-		textFieldHansd.setEnabled(true);
-		textFieldTensp.setEnabled(true);
-
-		comboBox.setEnabled(true);
-		btnCapNhatAnh.setEnabled(true);
-		btnThem.setEnabled(true);
-		btnXoa.setEnabled(false);
-		btnSua.setEnabled(false);
-		btnLuu.setEnabled(false);
-
-
-	}
-
-	public void setEnable() {
-
-		textFieldImg.setEnabled(false);
-
-		textFieldMasp.setEnabled(false);
-
-		textFieldDonvi.setEnabled(false);
-		textFieldGiaban.setEnabled(false);
-		textFieldGianhap.setEnabled(false);
-		textFieldHansd.setEnabled(false);
-		textFieldTensp.setEnabled(false);
-		comboBox.setEnabled(false);
-		btnCapNhatAnh.setEnabled(false);
-	}
 
 	public Boolean checkEmtyValue() throws SQLException {
 		// regular expression pattern
@@ -473,13 +438,7 @@ public class KhoGui extends JFrame {
 
 		});
 
-		JLabel lblNewLabel_6 = new JLabel("Loại sản phẩm");
-		lblNewLabel_6.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_6.setFont(new Font("Arial", Font.BOLD, 12));
 
-		comboBox = new JComboBox();
-		comboBox.setFont(new Font("Arial", Font.BOLD, 14));
-		comboBox.setEnabled(false);
 
 		JLabel lblNewLabel_7 = new JLabel("Đơn vị");
 		lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
@@ -535,33 +494,12 @@ public class KhoGui extends JFrame {
 		JPanel panel_7 = new JPanel();
 		panel_7.setBorder(new LineBorder(new Color(0, 0, 0)));
 
-		JButton btnDongBo = new JButton("");
-		btnDongBo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit()
-				.createImage(KhoGui.class.getResource(".\\Image\\Refresh-icon.png"))));
-		btnDongBo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					hienThiKho();
-					resetValue();
-					setEnable();
-					btg.clearSelection();
-					comboBoxSearch.setSelectedItem("Tất cả");
-
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-		btnDongBo.setFocusPainted(false);
 
 		JButton btnSapxep = new JButton("Sắp xếp");
 		btnSapxep.setFont(new Font("Arial", Font.BOLD, 12));
 		btnSapxep.setFocusPainted(false);
 		btnSapxep.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				KhoDAL spd;
-				// Create an ArrayList to store the data from the JTable
 				ArrayList<Kho> data = new ArrayList<>();
 
 				// Get the number of rows and columns in the JTable
@@ -569,39 +507,42 @@ public class KhoGui extends JFrame {
 				// Loop through each row in the JTable and add the data to the ArrayList
 				for (int i = 0; i < numRows; i++) {
 					Kho sp = new Kho();
+					sp.setMaSP((String) table.getValueAt(i, 0));
+					sp.setSoLuong((String) table.getValueAt(i, 2));
 					data.add(sp);
-
 				}
-				/*
-				 * if (radio1.isSelected()) {
-				 * 
-				 * 
-				 * Collections.sort(data, new Comparator<SanPham>() { public int compare(SanPham
-				 * sp1, SanPham sp2) { return sp1.getTenSp().compareTo(sp2.getTenSp()); } });
-				 * 
-				 * 
-				 * 
-				 * }
-				 */
-				/*
-				 * if (radio2.isSelected()) {
-				 * 
-				 * Collections.sort(data, new Comparator<SanPham>() { public int compare(SanPham
-				 * sp1, SanPham sp2) { return Float.compare(sp1.getGiaBan(), sp2.getGiaBan()); }
-				 * }); }
-				 */
-				/*
-				 * String[] columnNames = { "Mã Sản Phẩm", "Số Lượng" }; DefaultTableModel model
-				 * = new DefaultTableModel(columnNames, 0);
-				 * 
-				 * table.setModel(model); model.setRowCount(0); for (Kho kho : data) {
-				 * NumberFormat numberFormat = NumberFormat.getInstance(Locale.US); String
-				 * formatGiaBan = numberFormat.format(sp.getGiaBan()); String formatGiaMua =
-				 * numberFormat.format(sp.getGiaMua()); Object[] row = {};//sp.getMaLh(),
-				 * sp.getMaSp(), sp.getTenSp(),sp.getDonVi(),sp.getHanSuDung(),formatGiaMua,
-				 * formatGiaBan,sp.getImg() }; model.addRow(row); }
-				 */
+				  if (radio1.isSelected()) {
+					  Collections.sort(data, new Comparator<Kho>() {
+						  public int compare(Kho sp1, Kho sp2) { 
+							  return sp1.getMaSP().compareTo(sp2.getMaSP()); 
+						  } 
+					  });
+				  }
+				 
 				
+				  if (radio2.isSelected()) {
+					  Collections.sort(data, new Comparator<Kho>(){
+							public int compare(Kho sp1, Kho sp2) {
+								return Integer.parseInt(sp1.getSoLuong()) - Integer.parseInt(sp2.getSoLuong());
+							}
+					  });
+				  }
+				 
+				
+				  String[] columnNames = { "Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng" };
+				  DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+				  SanPhamBLL spbll;
+				  try {
+					  spbll = new SanPhamBLL();
+					  table.setModel(model);
+					  model.setRowCount(0);
+					  for (Kho sp : data) {
+					  Object[] row = { sp.getMaSP(), spbll.getTenSP(sp.getMaSP()) ,sp.getSoLuong()};
+					  model.addRow(row); }	
+				  } catch (SQLException e1) {
+					  
+				  }
+		
 			}
 		});
 
@@ -659,11 +600,6 @@ public class KhoGui extends JFrame {
 				textFieldGiaban.setText(giaBan);
 				textFieldDonvi.setText(donVi);
 
-				setEnable();
-				btnXoa.setEnabled(true);
-				btnSua.setEnabled(true);
-				btnThem.setEnabled(true);
-				btnLuu.setEnabled(false);
 
 				String img = null;
 				Image image = null;
@@ -776,33 +712,7 @@ public class KhoGui extends JFrame {
 		JPanel panel_7_1 = new JPanel();
 		panel_7_1.setBorder(null);
 
-		comboBoxSearch.setFont(new Font("Arial", Font.BOLD, 14));
-
-		comboBoxSearch.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				btg.clearSelection();
-				textFieldFrom.setText("");
-				textFieldTo.setText("");
-				textFieldSearch.setText("");
-				/*
-				 * try { SanPhamBLL spbll = new SanPhamBLL(); rsRenderType =
-				 * spbll.renderProType(comboBoxSearch.getSelectedItem().toString());
-				 * 
-				 * if (rsRenderType > 0) {
-				 * 
-				 * hienthisanpham("hienthitheoid");
-				 * 
-				 * } if (rsRenderType == 0) { hienthisanpham("hien thi");
-				 * 
-				 * }
-				 * 
-				 * } catch (SQLException e1) { // TODO Auto-generated catch block
-				 * e1.printStackTrace(); }
-				 */
-
-			}
-		});
+	
 
 		textFieldFrom.setColumns(10);
 		textFieldFrom.addKeyListener(new KeyAdapter() {
@@ -858,9 +768,7 @@ public class KhoGui extends JFrame {
 		lblNewLabel_16.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_16.setFont(new Font("Arial", Font.BOLD, 14));
 
-		textFieldSearch.setColumns(10);
 
-		JButton btnTimKiem = new JButton("Tìm Kiếm");
 		/*
 		 * btnTimKiem.addActionListener(new ActionListener() { public void
 		 * actionPerformed(ActionEvent e) {
@@ -908,8 +816,6 @@ public class KhoGui extends JFrame {
 		 * 
 		 * } });
 		 */
-		btnTimKiem.setFont(new Font("Arial", Font.BOLD, 12));
-		btnTimKiem.setFocusPainted(false);
 		GroupLayout gl_panel_7_1 = new GroupLayout(panel_7_1);
 		gl_panel_7_1.setHorizontalGroup(
 			gl_panel_7_1.createParallelGroup(Alignment.TRAILING)
@@ -917,14 +823,7 @@ public class KhoGui extends JFrame {
 					.addGap(24)
 					.addComponent(panel_7, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
 					.addGap(24)
-					.addComponent(btnTimKiem, GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(textFieldSearch, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-					.addGap(37)
-					.addComponent(comboBoxSearch, 0, 200, Short.MAX_VALUE)
-					.addGap(49)
-					.addComponent(btnDongBo,GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-					.addGap(3)
 					.addComponent(btnNewButton,GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
 					.addGap(3))
 					
@@ -943,14 +842,10 @@ public class KhoGui extends JFrame {
 					.addContainerGap()
 					.addGroup(gl_panel_7_1.createParallelGroup(Alignment.TRAILING)
 						.addComponent(panel_7, GroupLayout.DEFAULT_SIZE,30, Short.MAX_VALUE)
-						.addComponent(btnTimKiem, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
 						.addGroup(gl_panel_7_1.createSequentialGroup()
 							.addGap(0)
 							.addGroup(gl_panel_7_1.createParallelGroup(Alignment.BASELINE)
-								.addComponent(textFieldSearch, GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-								.addComponent(btnDongBo,GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
 								.addComponent(btnNewButton,GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-								.addComponent(comboBoxSearch, GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
 								.addGap(0)))))
 									//.addComponent(lblNewLabel_15, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
 								//.addGroup(gl_panel_7_1.createSequentialGroup()

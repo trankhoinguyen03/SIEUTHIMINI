@@ -18,7 +18,7 @@ public class KhoDAL extends connectSql {
 	}
 	
 
-	public ArrayList<Kho> dockho(){
+	public ArrayList<Kho> docKho(){
 		ArrayList<Kho> arrKho = new ArrayList<Kho>();
 		try {
 			String sql = "select * from KHO where TrangThai = 1";

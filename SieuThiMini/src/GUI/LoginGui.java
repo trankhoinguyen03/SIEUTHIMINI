@@ -127,7 +127,8 @@ public class LoginGui extends JFrame {
 							if(tk.getQuyen().equals("RL1")) {
 								AdminHome admin=new AdminHome();
 					            setVisible(false);
-					             
+					            DangNhapBLL.taiKhoan = tk;
+					            
 					            admin.setVisible(true);
 								admin.setLocationRelativeTo(null);
 							}

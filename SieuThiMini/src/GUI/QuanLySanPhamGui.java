@@ -70,6 +70,7 @@ import javax.swing.table.TableColumn;
 import BLL.DangNhapBLL;
 import BLL.KhoBLL;
 import BLL.LoaiHangBLL;
+import BLL.NhaCungCapBLL;
 import BLL.SanPhamBLL;
 import DTO.LoaiHang;
 import DTO.NhaCungCap;
@@ -265,8 +266,8 @@ public class QuanLySanPhamGui extends JFrame {
 
 	public void hienThiNhaCungCap() throws SQLException {
 		ArrayList<NhaCungCap> arrNCC = new ArrayList<NhaCungCap>();
-		NhaCungCapDAL ncc = new NhaCungCapDAL();
-		arrNCC = ncc.docNhaCungCap();
+		NhaCungCapBLL ncc = new NhaCungCapBLL();
+		arrNCC = ncc.getNhaCungCap();
 		String[] columnNames = { "Mã Nhà Cung Cấp", "Tên Nhà Cung Cấp", "Địa Chỉ", "Số Điện Thoại" };
 		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 		table_2.setModel(model);
@@ -329,11 +330,9 @@ public class QuanLySanPhamGui extends JFrame {
 		//btnCapNhatAnh.setEnabled(true);
 		//btnThem.setEnabled(true);
 		btnAn.setEnabled(false);
-//		Tabbed 2
 		btnThem_1.setEnabled(true);
 		btnAn_1.setEnabled(false);
 		btnLuu_1.setEnabled(false);
-		textMaSP1.setEnabled(true);
 		textTenSp.setEnabled(true);
 
 	}
@@ -349,9 +348,6 @@ public class QuanLySanPhamGui extends JFrame {
 		textFieldNsx.setEnabled(false);
 		textFieldTensp.setEnabled(false);
 		btnAn.setEnabled(false);
-//		Tabbed 2
-
-		textMaSP1.setEnabled(false);
 		textTenSp.setEnabled(false);
 	}
 
@@ -505,30 +501,19 @@ public class QuanLySanPhamGui extends JFrame {
 
 		}
 		if (!textTenNcc.getText().isEmpty()) {
-			NhaCungCapDAL NCCD = new NhaCungCapDAL();
+			NhaCungCapBLL NCCD = new NhaCungCapBLL();
 			ArrayList<NhaCungCap> arrNcc = new ArrayList<NhaCungCap>();
-			arrNcc = NCCD.docNhaCungCap();
+			arrNcc = NCCD.getNhaCungCap();
 
 			for (NhaCungCap lh : arrNcc) {
 
-				if (fixbtn && oldTenNcc.equals(textTenNcc.getText()) == false
-						&& lh.getTenNCC().equals(textTenNcc.getText())) {
+				if (lh.getTenNCC().equalsIgnoreCase(textTenNcc.getText())) {
 					JOptionPane.showMessageDialog(contentPane, "Tên Nhà Cung Cấp Đã Tồn Tại!");
 					textTenNcc.requestFocus();
 					textTenNcc.selectAll();
-
-					return false;
-				}
-
-				if (addbtn && lh.getTenNCC().equals(textTenNcc.getText())) {
-					JOptionPane.showMessageDialog(contentPane, "Tên Nhà Cung Cấp Đã Tồn Tại!");
-					textTenNcc.requestFocus();
-					textTenNcc.selectAll();
-
 					return false;
 				}
 			}
-
 		}
 		if (textDiaChiCC.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(contentPane, "Địa Chỉ Nhà Cung Cấp Trống!");
@@ -541,11 +526,13 @@ public class QuanLySanPhamGui extends JFrame {
 			return false;
 		}
 		if (!textSDTNCC.getText().isEmpty()) {
-			if (!validatePhone(textSDTNCC.getText())) {
-				JOptionPane.showMessageDialog(contentPane, "Số Điện Thoại Không hợp lệ,gồm 10 số và bắt đầu bằng 0");
-				textSDTNCC.requestFocus();
-				return false;
-			}
+			Pattern reg = Pattern.compile("((09|03|07|08|05)+([0-9]{8})\\b)");
+            boolean kt = reg.matcher(textSDTNCC.getText()).matches();
+            if(kt == false) {
+                JOptionPane.showMessageDialog(contentPane, "Không tồn tại định dạng số điện thoại này!");
+                textSDTNCC.requestFocus();
+                return false;
+            }
 
 		}
 		return true;
@@ -1241,8 +1228,8 @@ public class QuanLySanPhamGui extends JFrame {
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 
 		textTenSp = new JTextField();
-		textTenSp.setFont(new Font("Arial", Font.BOLD, 10));
 		textTenSp.setEnabled(false);
+		textTenSp.setFont(new Font("Arial", Font.BOLD, 10));
 		textTenSp.setColumns(10);
 
 		JLabel lblNewLabel_5 = new JLabel("Tên Loại Hàng");
@@ -1251,22 +1238,29 @@ public class QuanLySanPhamGui extends JFrame {
 		btnThem_1.setFont(new Font("Arial", Font.BOLD, 14));
 		btnThem_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				resetValue();
+				textMaSP1.setText("");
+				textTenSp.setText("");
 				textTenSp.setEnabled(true);
 				btnLuu_1.setEnabled(true);
 				try {
-					LoaiHangBLL lhb = new LoaiHangBLL();
-					int maLh = lhb.getLastMaLH();
-					maLh++;
-					textMaSP1.setText("" + maLh);
+					LoaiHangBLL lhbll = new LoaiHangBLL();
+                    String lastMaNv = lhbll.getLastMaLH();
+                    String maNv = lastMaNv.substring(lastMaNv.length()-3, lastMaNv.length());
+                    int check = Integer.parseInt(maNv);
+                    if(check < 9) {
+                    	textMaSP1.setText("LH00"+(check+1));
+                    } else if(check < 99) {
+                    	textMaSP1.setText("LH0"+(check+1));
+                    } else {
+                    	textMaSP1.setText("LH"+(check+1));
+                    }
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
+				btnThem_1.setEnabled(false);
+				btnAn_1.setEnabled(false);
 				textMaSP1.setEnabled(false);
-				addbtn = true;
-				fixbtn = false;
 
 			}
 		});
@@ -1280,16 +1274,14 @@ public class QuanLySanPhamGui extends JFrame {
 		btnAn_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-
 					LoaiHang LH = new LoaiHang();
 					LH.setMaLH(textMaSP1.getText());
 					LoaiHangBLL lhb = new LoaiHangBLL();
-					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa loại hàng này", "Confirmation",
+					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn loại hàng "+textMaSP1.getText(), "Confirmation",
 							JOptionPane.YES_NO_OPTION);
 					if (confirmed == JOptionPane.YES_OPTION) {
 						if (lhb.BtnLoaiHang(LH, "xoaloaihang")) {
-
-							JOptionPane.showMessageDialog(contentPane, "Xóa Loại Hàng Thành Công!");
+							JOptionPane.showMessageDialog(contentPane, "Ẩn Loại Hàng Thành Công!");
 							resetValue();
 							hienThiLoaiHang();
 							btnAn_1.setEnabled(false);
@@ -1309,6 +1301,11 @@ public class QuanLySanPhamGui extends JFrame {
 				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Delete.png"))));
 		btnAn_1.setFocusPainted(false);
 		btnAn_1.setEnabled(false);
+		if(taiKhoan.getQuyen().equals("RL2")) {
+			btnAn_1.setVisible(true);
+		} else {
+			btnAn_1.setVisible(false);
+		}
 		btnLuu_1.setFont(new Font("Arial", Font.BOLD, 14));
 		btnLuu_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1318,7 +1315,9 @@ public class QuanLySanPhamGui extends JFrame {
 						LH.setMaLH(textMaSP1.getText());
 						LH.setTenLH(textTenSp.getText());
 						LoaiHangBLL LHD;
-						if (addbtn) {
+						int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn thêm loại hàng "+textMaSP1.getText(), "Confirmation",
+								JOptionPane.YES_NO_OPTION);
+						if (confirmed == JOptionPane.YES_OPTION) {
 							try {
 								LHD = new LoaiHangBLL();
 								if (LHD.BtnLoaiHang(LH, "themloaihang")) {
@@ -1331,21 +1330,6 @@ public class QuanLySanPhamGui extends JFrame {
 								JOptionPane.showMessageDialog(contentPane, "Thêm Thất bại!");
 							}
 						}
-						if (fixbtn) {
-							try {
-								LHD = new LoaiHangBLL();
-								if (LHD.BtnLoaiHang(LH, "sualoaihang")) {
-									JOptionPane.showMessageDialog(contentPane, "Sửa Thành công!");
-									resetValue();
-									btnThem_1.setEnabled(true);
-									hienThiLoaiHang();
-									fixbtn = false;
-								}
-							} catch (SQLException e1) {
-								JOptionPane.showMessageDialog(contentPane, "Sửa Thất bại!");
-							}
-						}
-
 					}
 				} catch (NumberFormatException | HeadlessException | SQLException e1) {
 					// TODO Auto-generated catch block
@@ -1417,11 +1401,10 @@ public class QuanLySanPhamGui extends JFrame {
 				int row = table_1.getSelectedRow(); // get the selected row
 				String maLh = table_1.getModel().getValueAt(row, 0).toString();
 				String tenLh = table_1.getModel().getValueAt(row, 1).toString(); // get the value of the first column
-
 				textMaSP1.setText(maLh);
 				textTenSp.setText(tenLh);
-
 				setEnable();
+				textMaSP1.setEnabled(false);
 				btnAn_1.setEnabled(true);
 				btnThem_1.setEnabled(true);
 				btnLuu_1.setEnabled(false);
@@ -1522,28 +1505,31 @@ public class QuanLySanPhamGui extends JFrame {
 		panel_10.setLayout(gl_panel_10);
 		btnThem_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				textNhaCC.setText("");
 				textDiaChiCC.setText("");
 				textSDTNCC.setText("");
 				textTenNcc.setText("");
-//				textNhaCC.setEnabled(true);
 				textDiaChiCC.setEnabled(true);
 				textSDTNCC.setEnabled(true);
 				textTenNcc.setEnabled(true);
 				btnAn_2.setEnabled(false);
 				btnLuu_2.setEnabled(true);
+				btnThem_2.setEnabled(false);
 				try {
-					NhaCungCapDAL LHD = new NhaCungCapDAL();
-					int maNcc = LHD.getLastMaNCC();
-					maNcc++;
-					textNhaCC.setText("" + maNcc);
+					NhaCungCapBLL nccbll = new NhaCungCapBLL();
+					String lastMaNcc = nccbll.getLastMaNCC();
+                    String maNcc = lastMaNcc.substring(lastMaNcc.length()-3, lastMaNcc.length());
+                    int check = Integer.parseInt(maNcc);
+                    if(check < 9) {
+                    	textNhaCC.setText("CC00"+(check+1));
+                    } else if(check < 99) {
+                    	textNhaCC.setText("CC0"+(check+1));
+                    } else {
+                    	textNhaCC.setText("CC"+(check+1));
+                    }
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
-				addbtn = true;
-				fixbtn = false;
 			}
 		});
 
@@ -1559,15 +1545,14 @@ public class QuanLySanPhamGui extends JFrame {
 				try {
 
 					NhaCungCap NCC = new NhaCungCap();
-
 					NCC.setMaNCC(textNhaCC.getText());
-					NhaCungCapDAL LHD = new NhaCungCapDAL();
-					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa nhà cung cấp này", "Confirmation",
+					NhaCungCapBLL LHB = new NhaCungCapBLL();
+					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn nhà cung cấp "+textNhaCC.getText(), "Confirmation",
 							JOptionPane.YES_NO_OPTION);
 					if (confirmed == JOptionPane.YES_OPTION) {
-						if (LHD.ThemNhaCungCap(NCC, "xoanhacungcap")) {
+						if (LHB.BtnNhaCungCap(NCC, "xoanhacungcap")) {
 
-							JOptionPane.showMessageDialog(contentPane, "Xóa Nhà Cung Cấp Thành Công!");
+							JOptionPane.showMessageDialog(contentPane, "Ẩn Nhà Cung Cấp Thành Công!");
 							resetValueTabbed3();
 							hienThiNhaCungCap();
 							btnAn_2.setEnabled(false);
@@ -1585,6 +1570,11 @@ public class QuanLySanPhamGui extends JFrame {
 		});
 		btnAn_2.setFocusPainted(false);
 		btnAn_2.setEnabled(false);
+		if(taiKhoan.getQuyen().equals("RL2")) {
+			btnAn_2.setVisible(true);
+		} else {
+			btnAn_2.setVisible(false);
+		}
 		btnLuu_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -1594,11 +1584,13 @@ public class QuanLySanPhamGui extends JFrame {
 						NCC.setTenNCC(textTenNcc.getText());
 						NCC.setDiaChi(textDiaChiCC.getText());
 						NCC.setSoDT(textSDTNCC.getText());
-						NhaCungCapDAL NCCD;
-						if (addbtn) {
+						NhaCungCapBLL NCCB;
+						int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn thêm nhà cung cấp "+textNhaCC.getText(), "Confirmation",
+								JOptionPane.YES_NO_OPTION);
+						if (confirmed == JOptionPane.YES_OPTION) {
 							try {
-								NCCD = new NhaCungCapDAL();
-								if (NCCD.ThemNhaCungCap(NCC, "themnhacungcap")) {
+								NCCB = new NhaCungCapBLL();
+								if (NCCB.BtnNhaCungCap(NCC, "themnhacungcap")) {
 									JOptionPane.showMessageDialog(contentPane, "Thêm Thành công!");
 									resetValueTabbed3();
 									hienThiNhaCungCap();
@@ -1608,21 +1600,6 @@ public class QuanLySanPhamGui extends JFrame {
 								JOptionPane.showMessageDialog(contentPane, "Thêm Thất bại!");
 							}
 						}
-						if (fixbtn) {
-							try {
-								NCCD = new NhaCungCapDAL();
-								if (NCCD.ThemNhaCungCap(NCC, "suanhacungcap")) {
-									JOptionPane.showMessageDialog(contentPane, "Sửa Thành công!");
-									resetValueTabbed3();
-									btnThem_2.setEnabled(true);
-									hienThiNhaCungCap();
-									fixbtn = false;
-								}
-							} catch (SQLException e1) {
-								JOptionPane.showMessageDialog(contentPane, "Sửa Thất bại!");
-							}
-						}
-
 					}
 				} catch (NumberFormatException | HeadlessException | SQLException e1) {
 					// TODO Auto-generated catch block
