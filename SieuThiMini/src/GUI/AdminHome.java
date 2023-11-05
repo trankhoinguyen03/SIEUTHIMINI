@@ -117,8 +117,9 @@ public class AdminHome extends javax.swing.JFrame {
         			.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
         				.addGroup(jPanel1Layout.createSequentialGroup()
         					.addGap(51)
-        					.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
-        						.addGroup(jPanel1Layout.createSequentialGroup()
+        					.addGroup(jPanel1Layout.createParallelGroup(Alignment.TRAILING)
+        						.addComponent(jLabel1, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 937, GroupLayout.PREFERRED_SIZE)
+        						.addGroup(Alignment.LEADING, jPanel1Layout.createSequentialGroup()
         							.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
         								.addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
         								.addComponent(jButton7, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE))
@@ -127,8 +128,7 @@ public class AdminHome extends javax.swing.JFrame {
         							.addGap(65)
         							.addComponent(jButton11, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE)
         							.addGap(59)
-        							.addComponent(jButton12, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE))
-        						.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 937, GroupLayout.PREFERRED_SIZE)))
+        							.addComponent(jButton12, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE))))
         				.addGroup(jPanel1Layout.createSequentialGroup()
         					.addGap(316)
         					.addComponent(jLabel2)))
@@ -155,9 +155,9 @@ public class AdminHome extends javax.swing.JFrame {
         						.addComponent(jButton7, GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE))
         					.addComponent(jButton12, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         				.addComponent(jButton11, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE))
-        			.addPreferredGap(ComponentPlacement.RELATED, 267, Short.MAX_VALUE)
+        			.addGap(192)
         			.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
-        			.addGap(91))
+        			.addContainerGap(127, Short.MAX_VALUE))
         );
         jPanel1.setLayout(jPanel1Layout);
 

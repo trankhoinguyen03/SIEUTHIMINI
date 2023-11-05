@@ -1,22 +1,20 @@
 package DTO;
 
 public class DoanhThu {
-private int MaSP,LoiNhuan;
-
-public int getMaSP() {
-	return MaSP;
-}
-
-public void setMaSP(int maSP) {
-	MaSP = maSP;
-}
-
-public int getLoiNhuan() {
-	return LoiNhuan;
-}
-
-public void setLoiNhuan(int loiNhuan) {
-	LoiNhuan = loiNhuan;
-}
-
+	private String time;
+	private int loiNhuan;
+	
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	}
+	public int getLoiNhuan() {
+		return loiNhuan;
+	}
+	public void setLoiNhuan(int loiNhuan) {
+		this.loiNhuan = loiNhuan;
+	}
+	
 }
