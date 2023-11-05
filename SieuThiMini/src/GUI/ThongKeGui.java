@@ -49,9 +49,13 @@ import java.text.SimpleDateFormat;
 import java.util.Locale.Category;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -113,7 +117,6 @@ public class ThongKeGui extends JFrame {
 	private JTable table_1;
 	JDateChooser jDateChooser1 = new JDateChooser();
 	JDateChooser jDateChooser1_1 = new JDateChooser();
-	JComboBox comboBox = new JComboBox();
 	JLabel lblTextMoney = new JLabel("");
 	JLabel lblTextMoney_1 = new JLabel("");
 	JButton btnNewButton_1_2 = new JButton("In Thống Kê");
@@ -143,11 +146,7 @@ public class ThongKeGui extends JFrame {
 		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 		ThongKeBLL tkbll = new ThongKeBLL();
 		ArrayList<NhapHang> arr = new ArrayList<NhapHang>();
-		arr = tkbll.renderPurchaseOrder(condition);
-		if(arr.isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Không tồn tại Phiếu nhập cho loại hàng này!");
-			return;
-		}
+		arr = tkbll.renderPurchaseOrder();
 		table_1.setModel(model);
 		model.setRowCount(0);
 		for (NhapHang nhdata : arr) {
@@ -159,8 +158,6 @@ public class ThongKeGui extends JFrame {
 		JTableHeader header = table_1.getTableHeader();
 		Font headerFont = header.getFont(); // get the current font of the header
 		header.setFont(new Font(headerFont.getName(), Font.BOLD, 14)); // set the new font for the header with size 16
-		lastRow = table_1.getRowCount() - 1; // get index of the last row
-		lastValueMaSp = table_1.getValueAt(lastRow, 1); // get the value at the last row and column n
 	}
 	public void showTableOutput(String condition) throws SQLException {
 		String[] columnNames = { "Mã Hóa Đơn", "Nhân Viên", "Khách Hàng", "Tổng Tiền", "Ngày Lập" };
@@ -170,45 +167,22 @@ public class ThongKeGui extends JFrame {
 		  ArrayList<HoaDon> arr = new ArrayList<HoaDon>();
 		  
 		  arr = tkbll.RenderOrders();
-		  if(arr.isEmpty()) {
-			  JOptionPane.showMessageDialog(contentPane,
-			  "Không tồn tại hóa đơn cho loại hàng này!"); return; }
 		  
-		  table.setModel(model); model.setRowCount(0); for (HoaDon hddata :
-		  arr) {
-		  
-		  Object[] row = new Object[]{hddata.getMaHD(),hddata.getMaNV(),hddata.getMaKH(),hddata.getTongTienSauKM(),
-				  hddata.getThoiDiemLap() };
-		  
-		  model.addRow(row); }
+		  table.setModel(model);
+		  model.setRowCount(0); 
+		  for (HoaDon hddata : arr) {			  
+			  Object[] row = new Object[]{hddata.getMaHD(),hddata.getMaNV(),hddata.getMaKH(),hddata.getTongTienSauKM(),
+					  hddata.getThoiDiemLap() };
+			  
+			  model.addRow(row); 
+		  }
 		 
 		JTableHeader header = table.getTableHeader();
 		Font headerFont = header.getFont(); // get the current font of the header
 		header.setFont(new Font(headerFont.getName(), Font.BOLD, 14)); // set the new font for the header with size 16
-		lastRow = table.getRowCount() - 1; // get index of the last row
-		//lastValueMaSp = table.getValueAt(lastRow, 1); // get the value at the last row and column n
 	}
-
-	/*
-	 * public int getChiPhi(String malh) throws SQLException { ThongKeBLL tkbll =
-	 * new ThongKeBLL(); java.util.Date dateFromUtil = jDateChooser1.getDate();
-	 * java.util.Date dateToUtil = jDateChooser1_1.getDate(); java.sql.Date
-	 * dateFromSql = new java.sql.Date(dateFromUtil.getTime()); java.sql.Date
-	 * dateToSql = new java.sql.Date(dateToUtil.getTime()); return
-	 * tkbll.getTongChiPhi(formatDateToString(dateFromSql),
-	 * formatDateToString(dateToSql),malh); }
-	 * 
-	 * public int getDoanhThu(String malh) throws SQLException { ThongKeBLL tkbll =
-	 * new ThongKeBLL(); java.util.Date dateFromUtil = jDateChooser1.getDate();
-	 * java.util.Date dateToUtil = jDateChooser1_1.getDate(); java.sql.Date
-	 * dateFromSql = new java.sql.Date(dateFromUtil.getTime()); java.sql.Date
-	 * dateToSql = new java.sql.Date(dateToUtil.getTime()); return
-	 * tkbll.getTongDoanhThu(formatDateToString(dateFromSql),
-	 * formatDateToString(dateToSql),malh); }
-	 */
-	public static void exportData(ArrayList<DoanhThu> doanhThuList,int tienChiPhi,int tienDoanhThu) throws SQLException {
+	public static void exportData(ArrayList<DoanhThu> doanhThuList, int tienDoanhThu) throws SQLException {
 	    // Create a file chooser to let the user select the location to save the file
-		
 	    JFileChooser fileChooser = new JFileChooser();
 	    fileChooser.setDialogTitle("Save Excel File");
 	    int userSelection = fileChooser.showSaveDialog(null);
@@ -222,7 +196,6 @@ public class ThongKeGui extends JFrame {
 	        try {
 	            WritableWorkbook workbook = Workbook.createWorkbook(fileToSave);
 	            WritableSheet sheet = workbook.createSheet("Sheet1", 0);
-	            
 	            // Add title row
 	            Label titleLabel = new Label(0, 0, "Doanh Thu");
 	            WritableCellFormat titleFormat = new WritableCellFormat();
@@ -235,24 +208,25 @@ public class ThongKeGui extends JFrame {
 	            titleLabel.setCellFormat(titleFormat);
 
 	            // Export column headers to Excel file
-	            Label maSPLabel = new Label(0, 1, "MaSP");
-	            Label loiNhuanLabel = new Label(1, 1, "LoiNhuan");
-	            sheet.addCell(maSPLabel);
+	            Label thoiGianLabel = new Label(0, 1, "Thời Gian");
+	            Label loiNhuanLabel = new Label(1, 1, "Lợi Nhuận");
+	            sheet.addCell(thoiGianLabel);
 	            sheet.addCell(loiNhuanLabel);
 
 	            // Export data rows to Excel file
 	            int rowCount = doanhThuList.size();
 	            for (int i = 0; i < rowCount; i++) {
 	                DoanhThu doanhThu = doanhThuList.get(i);
-	                Label maSPValue = new Label(0, i + 2, String.valueOf(doanhThu.getMaSP()));
-	                Label loiNhuanValue = new Label(1, i + 2, String.valueOf(doanhThu.getLoiNhuan()));
-	                sheet.addCell(maSPValue);
+	                Label thoiGianValue = new Label(0, i + 2, String.valueOf(doanhThu.getTime()));
+	                Locale locale = new Locale("vi", "VN");
+	                NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+	                String money = currencyFormatter.format(doanhThu.getLoiNhuan());               
+	                Label loiNhuanValue = new Label(1, i + 2, money);
+	                sheet.addCell(thoiGianValue);
 	                sheet.addCell(loiNhuanValue);
 	                sheet.setColumnView(i, 30);
 	            }
-	            Label chiPhiLabel = new Label(0, rowCount+4, "Tổng Chi Phí");
-	            Label doanhThuLabel = new Label(1, rowCount+4, "Tổng Doanh Thu");
-	            sheet.addCell(chiPhiLabel);
+	            Label doanhThuLabel = new Label(0, rowCount+3, "Tổng Doanh Thu");
                 sheet.addCell(doanhThuLabel);
               
              // Create a red font
@@ -262,11 +236,12 @@ public class ThongKeGui extends JFrame {
                 WritableCellFormat cellFormat = new WritableCellFormat(font);
 
                 // Set the text color of the cell to red
-                Label chiPhi = new Label(0, rowCount+5, tienChiPhi+"", cellFormat);
-                Label doanhThu = new Label(1, rowCount+5, tienDoanhThu+"", cellFormat);
+                Locale locale = new Locale("vi", "VN");
+                NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+                String moneyDoanhThu = currencyFormatter.format(tienDoanhThu);
+                Label doanhThu = new Label(1, rowCount+3, moneyDoanhThu, cellFormat);
 
                 // Add the cells to the sheet
-                sheet.addCell(chiPhi);
                 sheet.addCell(doanhThu);
 
 	            workbook.write();
@@ -279,55 +254,81 @@ public class ThongKeGui extends JFrame {
 	}
 
 
-	
-	public void renderIdLoaiHang() throws SQLException {
-
-		LoaiHangDAL test = new LoaiHangDAL();
-		ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
-		DefaultComboBoxModel combo = new DefaultComboBoxModel();
-		
-		comboBox.setModel(combo);
-		combo.addElement("Tất cả");
-		for (LoaiHang malh : arrMaLH) {
-			combo.addElement(malh.getTenLH());
-
-		}
-		
-		comboBox.setSelectedItem("Tất cả");
-	}
 	public String formatDateToString(Date date) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String dateString = dateFormat.format(date);
 		return dateString;
 	}
-	public void drawChart(String malh) throws SQLException {
+	public void drawChart() throws SQLException {
 	    // create dataset
 		ThongKeBLL tkbll = new ThongKeBLL();
 		ArrayList<DoanhThu> arr = new ArrayList<DoanhThu>();
+		List<String> arrTimeDup = new ArrayList<String>();
+		ArrayList<HoaDon> arrhd = new ArrayList<HoaDon>();
+		ArrayList<NhapHang> arrpn = new ArrayList<NhapHang>();
 		java.util.Date dateFromUtil = jDateChooser1.getDate();
 		java.util.Date dateToUtil = jDateChooser1_1.getDate();
 		java.sql.Date dateFromSql = new java.sql.Date(dateFromUtil.getTime());
 		java.sql.Date dateToSql = new java.sql.Date(dateToUtil.getTime());
-		
-		/*
-		 * arr = tkbll.getDataDoanhThu(formatDateToString(dateFromSql),
-		 * formatDateToString(dateToSql),malh); DefaultCategoryDataset dataset = new
-		 * DefaultCategoryDataset(); for(DoanhThu dt: arr) { SanPhamDAL lhd = new
-		 * SanPhamDAL(); dataset.addValue(dt.getLoiNhuan(), "Series 1",
-		 * lhd.getNameSanPham(dt.getMaSP())); }
-		 * 
-		 * // create chart JFreeChart chart = ChartFactory.createBarChart(
-		 * "LỢI NHUẬN SIÊU THỊ", "Category", "Value", dataset, PlotOrientation.VERTICAL,
-		 * false, true, false );
-		 */
+		arrhd = tkbll.thongKeHD(formatDateToString(dateFromSql),formatDateToString(dateToSql));
+		arrpn = tkbll.thongKePN(formatDateToString(dateFromSql),formatDateToString(dateToSql));
+		for(NhapHang datapn: arrpn) {
+			String timepn = datapn.getNgayNhap().substring(0,7);
+			int tienNhap = Integer.parseInt(datapn.getTongTien());
+			DoanhThu data = new DoanhThu();
+			data.setTime(timepn);
+			data.setLoiNhuan(0-tienNhap);
+			arr.add(data);
+		}
+		for(HoaDon datahd: arrhd) {
+			String timehd = datahd.getThoiDiemLap().substring(0,7);
+			int tienBan = Integer.parseInt(datahd.getTongTienSauKM());
+			DoanhThu data = new DoanhThu();
+			data.setTime(timehd);
+			data.setLoiNhuan(0+tienBan);
+			arr.add(data);
+		}
+		for(DoanhThu data: arr) {			
+			arrTimeDup.add(data.getTime());	
+		}
+		List<String> arrTime = arrTimeDup.stream().distinct().collect(Collectors.toList());
+		ArrayList<DoanhThu> arrChart = new ArrayList<DoanhThu>();
+		for(String time: arrTime) {
+			DoanhThu data = new DoanhThu();
+			data.setLoiNhuan(0);
+			data.setTime(time);
+			arrChart.add(data);
+		}
+		for(DoanhThu dataChart: arrChart) {
+			for(DoanhThu data: arr) {
+				if(dataChart.getTime().equals(data.getTime())) {
+					dataChart.setLoiNhuan(dataChart.getLoiNhuan() + data.getLoiNhuan());
+				}
+			}
+		}
+		Collections.sort(arrChart, new Comparator<DoanhThu>() {
+		    public int compare(DoanhThu dt1, DoanhThu dt2) {
+		        return dt1.getTime().compareTo(dt2.getTime());
+		    }
+		});
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		for(DoanhThu dt: arrChart) {			
+			dataset.addValue(dt.getLoiNhuan(), "Lợi nhuận", dt.getTime()); 
+		}
+		  
+		// create chart 
+		JFreeChart chart = ChartFactory.createBarChart(
+		"LỢI NHUẬN SIÊU THỊ", "Thời gian", "Nghìn đồng", dataset, PlotOrientation.VERTICAL,
+		false, true, false );
+		 
 	    
 	    // create frame to display chart
 	    JFrame frame = new JFrame("Chart");
 	    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		/*
-		 * ChartPanel chartPanel = new ChartPanel(chart);
-		 * frame.getContentPane().add(chartPanel);
-		 */
+		
+	    ChartPanel chartPanel = new ChartPanel(chart);
+		frame.getContentPane().add(chartPanel);
+		 
 	    frame.pack();
 	    frame.setVisible(true);
 	    frame.setLocationRelativeTo(null);
@@ -389,23 +390,6 @@ public class ThongKeGui extends JFrame {
 					.addContainerGap(25, Short.MAX_VALUE))
 		);
 		panel_2.setLayout(gl_panel_2);
-		comboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					LoaiHangDAL lhd = new LoaiHangDAL();
-					showTableOutput(lhd.layMaLh(comboBox.getSelectedItem().toString())+"");
-					showTableInput(lhd.layMaLh(comboBox.getSelectedItem().toString())+"");
-					
-					
-
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				
-			}
-		});
 		
 		JLabel lblNewLabel_1 = new JLabel("Thống kê từ ngày");
 		lblNewLabel_1.setFont(new Font("Arial", Font.BOLD, 12));
@@ -427,19 +411,11 @@ public class ThongKeGui extends JFrame {
 			
 				try {
 					if(jDateChooser1.getDate()== null || jDateChooser1_1.getDate()==null) {
-						JOptionPane.showMessageDialog(contentPane, "Ngày thống kê trống!");
-						
-					}
-					else {
-						
-						LoaiHangDAL lhd = new LoaiHangDAL();
-						
-						drawChart(lhd.layMaLh(comboBox.getSelectedItem().toString())+"");
-						NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-						//String formatChiPhi = numberFormat.format(Integer.parseInt(getChiPhi(lhd.getMaLh(comboBox.getSelectedItem().toString())+"")+"") );
-						//String formatDoanhThu = numberFormat.format(Integer.parseInt( getDoanhThu(lhd.getMaLh(comboBox.getSelectedItem().toString())+"")+""));
-						//lblTextMoney.setText("Tổng Chi Phí : "+formatChiPhi+" VND");
-						//lblTextMoney_1.setText("Tổng Doanh Thu : "+formatDoanhThu+" VND");
+						JOptionPane.showMessageDialog(contentPane, "Ngày thống kê trống!");				
+					} else if(jDateChooser1.getDate().compareTo(jDateChooser1_1.getDate()) >0) {
+						JOptionPane.showMessageDialog(contentPane, "Ngày thống kê không hợp lệ!");
+					} else {											
+						drawChart();
 						btnNewButton_1_2.setEnabled(true);
 						
 					}
@@ -460,18 +436,61 @@ public class ThongKeGui extends JFrame {
 
 
 				ThongKeBLL tkbll = new ThongKeBLL();
-				ArrayList<DoanhThu> arr = new ArrayList<DoanhThu>();
-				java.util.Date dateFromUtil = jDateChooser1.getDate();
-				java.util.Date dateToUtil = jDateChooser1_1.getDate();
-				java.sql.Date dateFromSql = new java.sql.Date(dateFromUtil.getTime());
-				java.sql.Date dateToSql = new java.sql.Date(dateToUtil.getTime());
-				LoaiHangDAL lhd;
-				String malh="";
 				try {
-					lhd = new LoaiHangDAL();
-					malh = lhd.layMaLh(comboBox.getSelectedItem().toString())+"";
-					
-					//arr = tkbll.getDataDoanhThu(formatDateToString(dateFromSql), formatDateToString(dateToSql),malh);
+					ArrayList<DoanhThu> arr = new ArrayList<DoanhThu>();
+					List<String> arrTimeDup = new ArrayList<String>();
+					ArrayList<HoaDon> arrhd = new ArrayList<HoaDon>();
+					ArrayList<NhapHang> arrpn = new ArrayList<NhapHang>();
+					java.util.Date dateFromUtil = jDateChooser1.getDate();
+					java.util.Date dateToUtil = jDateChooser1_1.getDate();
+					java.sql.Date dateFromSql = new java.sql.Date(dateFromUtil.getTime());
+					java.sql.Date dateToSql = new java.sql.Date(dateToUtil.getTime());
+					arrhd = tkbll.thongKeHD(formatDateToString(dateFromSql),formatDateToString(dateToSql));
+					arrpn = tkbll.thongKePN(formatDateToString(dateFromSql),formatDateToString(dateToSql));
+					for(NhapHang datapn: arrpn) {
+						String timepn = datapn.getNgayNhap().substring(0,7);
+						int tienNhap = Integer.parseInt(datapn.getTongTien());
+						DoanhThu data = new DoanhThu();
+						data.setTime(timepn);
+						data.setLoiNhuan(0-tienNhap);
+						arr.add(data);
+					}
+					for(HoaDon datahd: arrhd) {
+						String timehd = datahd.getThoiDiemLap().substring(0,7);
+						int tienBan = Integer.parseInt(datahd.getTongTienSauKM());
+						DoanhThu data = new DoanhThu();
+						data.setTime(timehd);
+						data.setLoiNhuan(0+tienBan);
+						arr.add(data);
+					}
+					for(DoanhThu data: arr) {			
+						arrTimeDup.add(data.getTime());	
+					}
+					List<String> arrTime = arrTimeDup.stream().distinct().collect(Collectors.toList());
+					ArrayList<DoanhThu> arrChart = new ArrayList<DoanhThu>();
+					for(String time: arrTime) {
+						DoanhThu data = new DoanhThu();
+						data.setLoiNhuan(0);
+						data.setTime(time);
+						arrChart.add(data);
+					}
+					for(DoanhThu dataChart: arrChart) {
+						for(DoanhThu data: arr) {
+							if(dataChart.getTime().equals(data.getTime())) {
+								dataChart.setLoiNhuan(dataChart.getLoiNhuan() + data.getLoiNhuan());
+							}
+						}
+					}
+					Collections.sort(arrChart, new Comparator<DoanhThu>() {
+					    public int compare(DoanhThu dt1, DoanhThu dt2) {
+					        return dt1.getTime().compareTo(dt2.getTime());
+					    }
+					});
+					int tongDoanhThu = 0;
+					for(DoanhThu data: arrChart) {			
+						tongDoanhThu += data.getLoiNhuan();
+					}
+					exportData(arrChart, tongDoanhThu);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -510,8 +529,6 @@ public class ThongKeGui extends JFrame {
 							.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(jDateChooser1_1, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-							.addGap(18)
-							.addComponent(comboBox, 0, 172, Short.MAX_VALUE)
 							.addGap(40)
 							.addComponent(btnNewButton_1_1, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
 							.addGap(18)
@@ -533,7 +550,6 @@ public class ThongKeGui extends JFrame {
 									.addContainerGap()
 									.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
 										.addComponent(btnNewButton_1_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
 										.addComponent(btnNewButton_1_2, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)))
 								.addGroup(gl_panel_1.createSequentialGroup()
 									.addGap(29)
@@ -668,6 +684,5 @@ public class ThongKeGui extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 		showTableInput("0");
 		showTableOutput("0");
-		renderIdLoaiHang();
 	}
 }

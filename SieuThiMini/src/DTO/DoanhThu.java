@@ -1,7 +1,14 @@
 package DTO;
 
 public class DoanhThu {
-	private String time;
+	private String id, time;
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	private int loiNhuan;
 	
 	public String getTime() {

@@ -11,19 +11,22 @@ import DTO.PhieuNhapChiTiet;
 import DTO.NhapHang;
 
 public class ThongKeBLL {
-	public ArrayList<HoaDon> RenderOrders () throws SQLException{
-		ArrayList<HoaDon> arrHd = new ArrayList<HoaDon>();
+	public ArrayList<HoaDon> RenderOrders() throws SQLException{
 		ThongKeDAL tkd = new ThongKeDAL();
-		arrHd = tkd.RenderOrders();
-		return arrHd;
+		return tkd.RenderOrders();
+	
 	}
-	public ArrayList<NhapHang> renderPurchaseOrder(String conditon) throws SQLException{
-		ArrayList<NhapHang> arr = new ArrayList<NhapHang>();
+	public ArrayList<HoaDon> thongKeHD(String start, String end) throws SQLException{
 		ThongKeDAL tkd = new ThongKeDAL();
-		if(conditon.equals("0")) {
-			return arr = tkd.readPurchaseOrder("readall");
-		}
-		return arr = tkd.readPurchaseOrderMaLH(conditon);
+		return tkd.thongKeHD(start, end);
+	
 	}
-
+	public ArrayList<NhapHang> renderPurchaseOrder() throws SQLException{
+		ThongKeDAL tkd = new ThongKeDAL();
+		return tkd.readPurchaseOrder();
+	}
+	public ArrayList<NhapHang> thongKePN(String start, String end) throws SQLException{
+		ThongKeDAL tkd = new ThongKeDAL();
+		return tkd.thongKePN(start, end);
+	}
 }
