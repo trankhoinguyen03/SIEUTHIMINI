@@ -102,8 +102,8 @@ public class QuanLyKhachHangGui extends JFrame {
     Object lastValueMaKh;
     JButton btnXoa = new JButton("Ẩn");
     boolean isNumber = true;
-    JButton btnThem = new JButton("Thêm");
-    JButton btnLuu = new JButton("Lưu");
+    //JButton btnThem = new JButton("Thêm");
+    //JButton btnLuu = new JButton("Lưu");
     int lastRow;
     JRadioButton radio1 = new JRadioButton("Mã khách hàng");
     JRadioButton radio2 = new JRadioButton("Tên");
@@ -176,17 +176,13 @@ public class QuanLyKhachHangGui extends JFrame {
         textFieldMakh.setText("");
         textFieldTenkh.setText("");
         textFieldSDT.setText("");
-        btnThem.setEnabled(true);
         btnXoa.setEnabled(false);
-        btnLuu.setEnabled(false);
     }
 
     public void unSetEnable() {
         textFieldTenkh.setEnabled(true);
         textFieldSDT.setEnabled(true);
-        btnThem.setEnabled(true);
         btnXoa.setEnabled(false);
-        btnLuu.setEnabled(false);
     }
 
     public void setEnable() {
@@ -301,84 +297,8 @@ public class QuanLyKhachHangGui extends JFrame {
 
         JPanel panel_6 = new JPanel();
         panel_6.setBounds(0, 210, 1067, 78);
-        btnLuu.setBounds(10, 10, 104, 53);
-
-        btnLuu.setEnabled(false);
-        btnLuu.setFocusPainted(false);
-        btnLuu.setIcon(new ImageIcon(
-                Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Save.png"))));
-        btnLuu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    if (checkEmtyValue()) {
-                    	int confirmed = JOptionPane.showConfirmDialog(null, "Bạn có muốn thêm khách hàng "+textFieldMakh.getText(),
-        						  "Confirmation", JOptionPane.YES_NO_OPTION);
-        				if (confirmed == JOptionPane.YES_OPTION) {
-	                        KhachHang kh = new KhachHang();
-	                        KhachHangBLL luukh;
-                            try {
-                                luukh = new KhachHangBLL();
-                                kh.setMaKh(textFieldMakh.getText());
-                                kh.setTenKh(textFieldTenkh.getText());
-                                kh.setSoDienThoai(textFieldSDT.getText());
-                                kh.setTichDiem("0");
-                                boolean checkAddPro = luukh.addKhachHang(kh);
-                                if (checkAddPro) {
-                                    JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
-                                    resetValue();
-                                    setEnable();
-                                    hienthikhachhang("hien thi");
-                                } else {
-                                    JOptionPane.showMessageDialog(contentPane, "Thêm thất bại");
-                                }
-                            } catch (SQLException e2) {
-                                // TODO Auto-generated catch block
-                                e2.printStackTrace();
-                            }
-        				}
-			  		}
-                } catch (NumberFormatException | HeadlessException | SQLException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-            }
-        });
-        btnThem.setBounds(146, 10, 104, 53);
-        btnThem.setFocusPainted(false);
-        btnThem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	try {
-                    resetValue();
-                    unSetEnable();
-                    KhachHangBLL khbll;
-                    khbll = new KhachHangBLL();
-                    String lastMaKh = khbll.getLastMaKH();
-                    String maKh = lastMaKh.substring(lastMaKh.length()-3, lastMaKh.length());
-                    int check = Integer.parseInt(maKh);
-                    if(check < 9) {
-                    	textFieldMakh.setText("KH00"+(check+1));
-                    } else if(check < 99) {
-                    	textFieldMakh.setText("KH0"+(check+1));
-                    } else {
-                    	textFieldMakh.setText("KH"+(check+1));
-                    }
-                    btnThem.setEnabled(false);
-                    btnLuu.setEnabled(true);
-                    try {
-                        hienthikhachhang("them");
-                    } catch (SQLException e3) {
-                        // TODO Auto-generated catch block
-                        e3.printStackTrace();
-                    }
-            	} catch (SQLException ex) {
-					Logger.getLogger(QuanLyKhachHangGui.class.getName()).log(Level.SEVERE, null, ex);
-				}
-            }
-        });
-        btnThem.setIcon(new ImageIcon(
-                Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
-		
-		  btnXoa.setBounds(419, 10, 104, 53);
+        		
+		  btnXoa.setBounds(10, 10, 104, 53);
 		  if(taiKhoan.getQuyen().equals("RL2")) {
 			  btnXoa.setVisible(true);
 		  } else {
@@ -416,7 +336,7 @@ public class QuanLyKhachHangGui extends JFrame {
         panel_7.setBorder(new LineBorder(new Color(0, 0, 0)));
 
         JButton btnDongBo = new JButton("");
-        btnDongBo.setBounds(280, 10, 104, 53);
+        btnDongBo.setBounds(146, 10, 104, 53);
         btnDongBo.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(QuanLyKhachHangGui.class.getResource(".\\Image\\Refresh-icon.png"))));
         btnDongBo.addActionListener(new ActionListener() {
@@ -509,8 +429,6 @@ public class QuanLyKhachHangGui extends JFrame {
                 textFieldSDT.setText(Sdt);
                 setEnable();
                 btnXoa.setEnabled(true);
-                btnThem.setEnabled(true);
-                btnLuu.setEnabled(false);
             }
 
         });
@@ -521,8 +439,6 @@ public class QuanLyKhachHangGui extends JFrame {
         panel_8.add(lbThongbao);
         panel_8.add(scrollPane);
         panel_6.setLayout(null);
-        panel_6.add(btnLuu);
-        panel_6.add(btnThem);
         panel_6.add(btnXoa);
         panel_6.add(btnDongBo);
         panel_6.add(panel_7);
