@@ -2,7 +2,8 @@
 package DTO;
 
 public class KhachHang {
-    private String maKh, tenKh, soDienThoai, tichDiem;
+    private String maKh, tenKh, soDienThoai;
+    private int tichDiem;
 
 	public String getMaKh() {
 		return maKh;
@@ -28,12 +29,13 @@ public class KhachHang {
 		this.soDienThoai = soDienThoai;
 	}
 
-	public String getTichDiem() {
+	public int getTichDiem() {
 		return tichDiem;
 	}
 
-	public void setTichDiem(String tichDiem) {
+	public void setTichDiem(int tichDiem) {
 		this.tichDiem = tichDiem;
 	}
+
     
 }

@@ -181,15 +181,15 @@ public class SanPhamDAL extends connectSql {
             return null; // or throw an exception
         }
     }
-	public  float getgia(String tensp) throws SQLException {
-        float giatien = 0;
+	public int getgia(String tensp) throws SQLException {
+        int giatien = 0;
         
         String sql = "SELECT GiaBan FROM SANPHAM where TenSP=?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) { 
             pstmt.setString(1,tensp);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                giatien = rs.getFloat("GiaBan");
+                giatien = rs.getInt("GiaBan");
             }
         }
         return giatien;
@@ -217,16 +217,16 @@ public class SanPhamDAL extends connectSql {
         }
         return null;
     }
-	public int getma(String tensp) throws SQLException {
+	public String getma(String tensp) throws SQLException {
         String sql = "SELECT MaSP FROM SANPHAM where TenSP=?";
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 		    pstmt.setString(1,tensp);
 		    pstmt.setFetchSize(100); // chỉ định số lượng bản ghi được trả về trong mỗi lần truy xuất
 		    ResultSet rs = pstmt.executeQuery();
 		    if (rs.next()) {
-		        return rs.getInt("MaSP");
+		        return rs.getString("MaSP");
 		    } else {
-		        return -1;
+		        return null;
 		    }
 		}
 	}

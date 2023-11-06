@@ -51,7 +51,7 @@ public class ChiTietHoaDonDAL extends connectSql {
             pstm.setString(1,hdct.getMaHd());
 			pstm.setString(2,hdct.getMaSp());
 			pstm.setString(3, hdct.getSoLuong());
-			pstm.setString(4, hdct.getThanhTien());
+			pstm.setString(4, Integer.parseInt(hdct.getThanhTien())+"");
 			pstm.setString(5, ""+1);
 //			if(condition.equals("suahoadon")) {
 //				System.out.println(hd.getMaHd());

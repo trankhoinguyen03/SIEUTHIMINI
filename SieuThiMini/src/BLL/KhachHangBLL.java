@@ -27,4 +27,5 @@ public class KhachHangBLL {
 		KhachHangDAL nvd = new KhachHangDAL();
 		return nvd.layMaKHcuoi();
 	}
+	
 }

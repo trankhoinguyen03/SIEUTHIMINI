@@ -13,7 +13,9 @@ import java.util.List;
 import DTO.HoaDon;
 
 public class HoaDonDAL extends connectSql{
-    public HoaDonDAL() throws SQLException{
+    private static final String TichDiem = null;
+
+	public HoaDonDAL() throws SQLException{
             super();
     }
     public ArrayList<HoaDon> docHoaDon(String condition, String value){
@@ -34,7 +36,6 @@ public class HoaDonDAL extends connectSql{
 				hd.setTongTien(rs.getString("TongTien"));
 				hd.setTongTienSauKM(rs.getString("TongTienSauKM"));
 				hd.setThoiDiemLap(rs.getString("ThoiDiemLap"));
-				hd.setKhuyenMai(rs.getString("MaKM"));
 			}
         }catch (Exception e){
 }
@@ -55,32 +56,24 @@ public class HoaDonDAL extends connectSql{
 		        return -1; // or throw an exception
 		    }
 	}
-public boolean xoaHoaDon(String maHoaDon) throws SQLException {
-  String sql = "DELETE FROM HOADON WHERE MaHD = ?";
-   try (PreparedStatement pstm = conn.prepareStatement(sql)) {
-       pstm.setString(1, maHoaDon);
-      int rowsDeleted = pstm.executeUpdate();
-  }
-   
-        return true;
-}
+
  public boolean themhoadon(HoaDon hd,String condition,String MaHDcu) throws SQLException {
+	
 		String sql = "";
 		if(condition.equals("themhoadon")) {
-			sql =  "INSERT INTO HOADON ( MaNV, MaKH, TongTien, TongTienSauKM, ThoiDiemLap, MaKM, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?)";
+			sql =  "INSERT INTO DSHOADON (MaHD, MaNV, MaKH, TongTien, TongTienSauKM, ThoiDiemLap, MaKM,TrangThai) VALUES (?,?,?,?,?,?,?,?)";
 		}
 		PreparedStatement pstm = conn.prepareStatement(sql);
-			
 		try {
 
-//			pstm.setInt(1,hd.getMaHd());
-			pstm.setString(1, hd.getMaNV());
-			pstm.setString(2, hd.getMaKH());
-			pstm.setString(3, hd.getTongTien());
-			pstm.setString(4,hd.getTongTienSauKM());
-			pstm.setString(5, hd.getThoiDiemLap());
-			pstm.setString(6,hd.getKhuyenMai());
-			pstm.setString(7, ""+1);
+			pstm.setString(1,hd.getMaHD());
+			pstm.setString(2, hd.getMaNV());
+			pstm.setString(3, hd.getMaKH());
+			pstm.setString(4, Integer.parseInt(hd.getTongTien())+"");
+			pstm.setString(5, Integer.parseInt(hd.getTongTienSauKM())+"");
+			pstm.setString(6, hd.getThoiDiemLap());
+			pstm.setString(7, hd.getKhuyenMai());
+			pstm.setString(8, ""+1);
 			
 			
 			pstm.executeUpdate();
@@ -90,13 +83,13 @@ public boolean xoaHoaDon(String maHoaDon) throws SQLException {
 			return false;
 		}
 } 
- public int getLastMaHD() throws SQLException {
-        int lastMaHD = 0;
-        String sql = "SELECT MAX(MaHD) FROM HOADON";
+ public String getLastMaHD() throws SQLException {
+        String lastMaHD = "HD000";
+        String sql = "SELECT MAX(MaHD) FROM DSHOADON";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                lastMaHD = rs.getInt(1);
+                lastMaHD = rs.getString(1);
             }
         }
         return lastMaHD;
@@ -139,37 +132,171 @@ try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
     }
 }
 }
- public int getTongKho(int masp) throws SQLException {
-	 String sql = "{ call tongkhoa(?) }"; // Modify the SQL statement to use the correct number of parameters
-		
-		
-	    CallableStatement cstmt = conn.prepareCall(sql);
-	    cstmt.setInt(1,masp);
-	    ResultSet rs = cstmt.executeQuery();
-	while(rs.next()) {
-		return rs.getInt("SoLuongHang");
+ 
+	 public boolean updatehoadon(HoaDon hd, String mahd) throws SQLException {
+		    String updateSQL = "UPDATE DSHOADON SET TongTien = ?, TongTienSauKM = ? WHERE MaHD = ?";
+		    boolean success = false;
+
+		    try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+		        pstmt.setString(1, Integer.parseInt(hd.getTongTien())+"");
+		        pstmt.setString(2, Integer.parseInt(hd.getTongTienSauKM())+"");
+		        pstmt.setString(3, mahd);
+
+		        int affectedRows = pstmt.executeUpdate();
+
+		        if (affectedRows > 0) {
+		            // Nếu có hàng bị ảnh hưởng bởi cập nhật
+		            success = true; // Đặt biến success thành true
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        // Xử lý lỗi khi cập nhật không thành công
+		    }
+
+		    return success; // Trả về giá trị success để biết kết quả cập nhật
+		}
+
+
+ public String getMucGiam(String makm) throws SQLException{
+	 String giamgia="0";
+	 String sql="Select MucGiam FROM KHUYENMAI,DSHOADON WHERE KHUYENMAI.MaKM=DSHOADON.MaKM and DSHOADON.MaKM=? ";
+	 try (PreparedStatement pstmt = conn.prepareStatement(sql)) { 
+     	 pstmt.setString(1, makm);
+         ResultSet rs = pstmt.executeQuery();
+         if (rs.next()) {
+             giamgia = rs.getString("MucGiam");
+         }
+     }
+     return giamgia;
+ }
+ public int getdiemtong(String makh, String makm) throws SQLException {
+	    int diem = 0;
+	    String updateSQL = "UPDATE KHACHHANG SET TichDiem = " +
+	        "CASE " +
+	            "WHEN D.MaKM = 'KM1' THEN TichDiem - 0 " +
+	            "WHEN D.MaKM = 'KM2' THEN TichDiem - 15 " +
+	            "WHEN D.MaKM = 'KM3' THEN TichDiem - 30 " +
+	            "WHEN D.MaKM = 'KM4' THEN TichDiem - 45 " +
+	        "END " +
+	        "FROM KHACHHANG K " +
+	        "INNER JOIN DSHOADON D ON K.MaKH = D.MaKH " +
+	        "WHERE D.MaKM = ? " +
+	        "AND K.MaKH = ?";
+
+	    try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+	        pstmt.setString(1, makm);
+	        pstmt.setString(2, makh);
+	        int affectedRows = pstmt.executeUpdate();
+	        if (affectedRows > 0) {
+	            String selectSQL = "SELECT TichDiem FROM KHACHHANG WHERE MaKH = ?";
+	            try (PreparedStatement selectStmt = conn.prepareStatement(selectSQL)) {
+	                selectStmt.setString(1, makh);
+	                ResultSet resultSet = selectStmt.executeQuery();
+	                if (resultSet.next()) {
+	                    diem = resultSet.getInt("TichDiem");
+	                }
+	            }
+	        }
+	    }
+	    return diem;
 	}
-	return 1;
- }
- public int getTongBan(int masp) throws SQLException {
-	 String sql = "{ call tongban(?) }"; // Modify the SQL statement to use the correct number of parameters
-		
-		
-	    CallableStatement cstmt = conn.prepareCall(sql);
-	    cstmt.setInt(1,masp);
-	    ResultSet rs = cstmt.executeQuery();
-	while(rs.next()) {
-		return rs.getInt("SoLuongHang");
+
+ public int gettangdiemtong(String makh, String tongtien) throws SQLException {
+	    int diem = 0;
+
+	    String updateSQL = "UPDATE KHACHHANG " +
+	        "SET TichDiem = " +
+	        "CASE " +
+	            "WHEN D.TongTien > 50000 AND D.TongTien <= 100000 THEN TichDiem + 5 " +
+	            "WHEN D.TongTien > 100000 AND D.TongTien <= 200000 THEN TichDiem + 8 " +
+	            "WHEN D.TongTien > 200000 AND D.TongTien <=350000 THEN TichDiem + 12 " +
+	            "WHEN D.TongTien >350000 THEN TichDiem + 20 " +
+	        "END " +
+	        "FROM KHACHHANG K " +
+	        "INNER JOIN DSHOADON D ON K.MaKH = D.MaKH " +
+	        "WHERE D.TongTien = ? AND K.MaKH = ?";
+
+	    try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+	        pstmt.setString(1, makh);
+	        pstmt.setString(2, tongtien);
+	        int affectedRows = pstmt.executeUpdate();
+	        if (affectedRows > 0) {
+	            String selectSQL = "SELECT TichDiem FROM KHACHHANG WHERE MaKH = ?";
+	            try (PreparedStatement selectStmt = conn.prepareStatement(selectSQL)) {
+	                selectStmt.setString(1, makh);
+	                ResultSet resultSet = selectStmt.executeQuery();
+	                if (resultSet.next()) {
+	                    diem = resultSet.getInt("TichDiem");
+	                }
+	            }
+	        }
+	    }
+	    return diem;
 	}
-	return 1;
- }
- public int getSoLuongTonKho(int masp) throws SQLException {
-	 return getTongKho(masp)-getTongBan(masp);
- }
+
+ public  String getdiemthuong(String makh) throws SQLException {
+     String diemthuong = "0";
+     
+     String sql = "SELECT TichDiem FROM KHACHHANG where makh=?";
+     try (PreparedStatement pstmt = conn.prepareStatement(sql)) { 
+     	 pstmt.setString(1, makh);
+         ResultSet rs = pstmt.executeQuery();
+         if (rs.next()) {
+             diemthuong = rs.getString("TichDiem");
+         }
+     }
+     return diemthuong;
+}
+ 
+ 
+// int TichDiemnew=T
+// String sql="UPDATE KHACHHANG SET TichDiem="
+ public int getTongKho(String masp) throws SQLException {
+	 String sql = "{ call soluongkho(?) }";
+
+	    try (CallableStatement cstmt = conn.prepareCall(sql)) {
+	        cstmt.setString(1, masp);
+	        try (ResultSet rs = cstmt.executeQuery()) {
+	            if (rs.next()) {
+	                return rs.getInt("soluong");
+	            }
+	        }
+	    } catch (SQLException e) {
+	        // Xử lý exception, có thể throw hoặc log lỗi
+	        e.printStackTrace();
+	    }
+	    return 0; // hoặc giá trị mặc định khác nếu không có kết quả
+	}
+
+	public int getTongBan(String masp) throws SQLException {
+		String sql = "{ call soluongban(?) }";
+
+	    try (CallableStatement cstmt = conn.prepareCall(sql)) {
+	        cstmt.setString(1, masp);
+	        try (ResultSet rs = cstmt.executeQuery()) {
+	            if (rs.next()) {
+	                return rs.getInt("soluong");
+	            }
+	        }
+	    } catch (SQLException e) {
+	        // Xử lý exception, có thể throw hoặc log lỗi
+	        e.printStackTrace();
+	    }
+	    return 0; // hoặc giá trị mặc định khác nếu không có kết quả
+	}
+
+	public int getSoLuongTonKho(String masp) throws SQLException {
+	    int tongKho = getTongKho(masp);
+	    int tongBan = getTongBan(masp);
+	    return tongKho - tongBan;
+	}
+
  public static void main(String[] args) throws SQLException {
 	HoaDonDAL hdd = new HoaDonDAL();
-	System.out.println(hdd.getSoLuongTonKho(3));
+	System.out.println(hdd.getSoLuongTonKho("SP002"));
 }
+
+
 }
 
 

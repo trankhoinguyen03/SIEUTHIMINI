@@ -298,3 +298,28 @@ INSERT INTO CHITIETHOADON(MaHD,MaSP,SoLuong,ThanhTien,TrangThai) VALUES ('HD008'
 INSERT INTO CHITIETHOADON(MaHD,MaSP,SoLuong,ThanhTien,TrangThai) VALUES ('HD009','SP009','3','60000','1')
 INSERT INTO CHITIETHOADON(MaHD,MaSP,SoLuong,ThanhTien,TrangThai) VALUES ('HD010','SP010','3','60000','1')
 GO
+
+CREATE PROCEDURE soluongkho
+    @masp_param VARCHAR(255)
+AS
+BEGIN
+    SELECT soluong
+    FROM KHO
+    WHERE masp = @masp_param;
+END
+
+CREATE PROCEDURE tongkho
+    @masp varchar
+AS
+BEGIN
+    SELECT * FROM CHITIETHOADON WHERE @masp = @masp
+END
+
+CREATE PROCEDURE soluongban
+    @masp_param VARCHAR(255)
+AS
+BEGIN
+    SELECT soluong
+    FROM CHITIETHOADON
+    WHERE masp = @masp_param;
+END
