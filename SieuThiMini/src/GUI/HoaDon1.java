@@ -250,6 +250,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 		            String mahd = TFmahd.getText();
 		            hd.setTongTien(TFtongtien.getText());
 		            hd.setTongTienSauKM(TFtong.getText());
+		            hd.setKhuyenMai(TFmagiam.getText());
 		            boolean updateSuccess = hdd.updatehoadon(hd, mahd);
 
 		            if (updateSuccess) {
@@ -1629,44 +1630,44 @@ public class HoaDon1 extends javax.swing.JFrame {
 							add = false;
 							}
 						}
-					}
-					ChiTietHoaDonDAL hdctdal = new ChiTietHoaDonDAL();
-					ChiTietHoaDon hdct = new ChiTietHoaDon();
-	
-					hdct.setMaHd(TFmahd.getText());
-					hdct.setMaSp(TFmahh.getText());
-					hdct.setSoLuong(TFsoluong.getText());
-					hdct.setThanhTien(TFthanhtien.getText());
-					if(TFsoluong.getText().equals("")) {
-						JOptionPane.showMessageDialog(rootPane, "Số lượng rỗng");
-					} else {						
-						boolean kiemtra2 = hdctdal.themhoadon(hdct, "themhoadon");
-						int soluong = Integer.parseInt(TFsoluong.getText());
-						if (kiemtra2 && soluong > 0) {
-							KhachHang kh=new KhachHang();
-							KhuyenMai km=new KhuyenMai();
-							HoaDonDAL hdd=new HoaDonDAL();					
-							String mucgiam=hdd.getMucGiam(TFmagiam.getText());
-							int tongtien1 = Integer.parseInt(TFtongtien.getText());
-			            	int giatri=Integer.parseInt(mucgiam);
-			            	int thanhtien2= Integer.parseInt(TFthanhtien.getText());
-						    tongtien1 += thanhtien2;
-						    TFtongtien.setText(String.valueOf(tongtien1));
-			            	int tongtien=Integer.parseInt(TFtongtien.getText());
-			            	int giamgia=giatri*tongtien/100;
-			            	TFgiamgia.setText(""+giamgia);
-							JOptionPane.showMessageDialog(rootPane, "Thêm thành công");
-							hiennut();
-							hientext();
-						} else {
-							JOptionPane.showMessageDialog(rootPane, "Thêm thất bại");
+						ChiTietHoaDonDAL hdctdal = new ChiTietHoaDonDAL();
+						ChiTietHoaDon hdct = new ChiTietHoaDon();
+		
+						hdct.setMaHd(TFmahd.getText());
+						hdct.setMaSp(TFmahh.getText());
+						hdct.setSoLuong(TFsoluong.getText());
+						hdct.setThanhTien(TFthanhtien.getText());
+						if(TFsoluong.getText().equals("")) {
+							JOptionPane.showMessageDialog(rootPane, "Số lượng rỗng");
+						} else {						
+							boolean kiemtra2 = hdctdal.themhoadon(hdct, "themhoadon");
+							int soluong = Integer.parseInt(TFsoluong.getText());
+							if (kiemtra2 && soluong > 0) {
+								KhachHang kh=new KhachHang();
+								KhuyenMai km=new KhuyenMai();
+								HoaDonDAL hdd=new HoaDonDAL();					
+								String mucgiam=hdd.getMucGiam(TFmagiam.getText());
+								int tongtien1 = Integer.parseInt(TFtongtien.getText());
+				            	int giatri=Integer.parseInt(mucgiam);
+				            	int thanhtien2= Integer.parseInt(TFthanhtien.getText());
+							    tongtien1 += thanhtien2;
+							    TFtongtien.setText(String.valueOf(tongtien1));
+				            	int tongtien=Integer.parseInt(TFtongtien.getText());
+				            	int giamgia=giatri*tongtien/100;
+				            	TFgiamgia.setText(""+giamgia);
+								JOptionPane.showMessageDialog(rootPane, "Thêm thành công");
+								hiennut();
+								hientext();
+							} else {
+								JOptionPane.showMessageDialog(rootPane, "Thêm thất bại");
+							}
+						hienthisanpham("hien thi");
 						}
-					hienthisanpham("hien thi");
 				}
 			} catch (SQLException ex) {
 				Logger.getLogger(HoaDon1.class.getName()).log(Level.SEVERE, null, ex);
 	
-			}	 
+			}
 	}
 
 	public void start() {

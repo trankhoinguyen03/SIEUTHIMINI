@@ -134,7 +134,7 @@ try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 }
  
 	 public boolean updatehoadon(HoaDon hd, String mahd) throws SQLException {
-		    String updateSQL = "UPDATE DSHOADON SET TongTien = ?, TongTienSauKM = ?, KhuyenMai = ? WHERE MaHD = ?";
+		    String updateSQL = "UPDATE DSHOADON SET TongTien = ?, TongTienSauKM = ?, MaKM = ? WHERE MaHD = ?";
 		    boolean success = false;
 
 		    try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
@@ -160,7 +160,7 @@ try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
  public String getMucGiam(String makm) throws SQLException{
 	 String giamgia="0";
-	 String sql="Select MucGiam FROM KHUYENMAI,DSHOADON WHERE KHUYENMAI.MaKM=DSHOADON.MaKM and DSHOADON.MaKM=? ";
+	 String sql="Select MucGiam FROM KHUYENMAI WHERE MaKM=? ";
 	 try (PreparedStatement pstmt = conn.prepareStatement(sql)) { 
      	 pstmt.setString(1, makm);
          ResultSet rs = pstmt.executeQuery();
