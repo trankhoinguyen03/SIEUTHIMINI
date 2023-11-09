@@ -2213,7 +2213,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 		ArrayList<SanPham> arrSp = new ArrayList<SanPham>();
 		ArrayList<HoaDon> arrHd = new ArrayList<HoaDon>();
 		if (condition == "them") {
-			arrSp = SpDal.docSanPham("docsanpham", null);
+			arrSp = SpDal.docSanPham("banhang", null);
 			DefaultComboBoxModel combo = new DefaultComboBoxModel();
 			CBtenhh.setModel(combo);
 			for (SanPham tenSp : arrSp) {

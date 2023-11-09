@@ -35,6 +35,9 @@ public class SanPhamDAL extends connectSql {
 		String part1 ="";
 		ArrayList<SanPham> arrList = new ArrayList<SanPham>();
 		try {
+			if (condition.equals("banhang")) {
+				sql = "select * from SANPHAM where TrangThai = 1 order by MaSP";
+			}
 			if (condition.equals("docsanpham")) {
 				sql = "select * from SANPHAM order by MaSP";
 			}
