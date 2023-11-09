@@ -464,7 +464,7 @@ public class NhapHangGui extends JFrame {
                 SanPhamBLL testsp = new SanPhamBLL();
                 ArrayList<SanPham> arrMaSP = testsp.getSanPham();
                 for (SanPham masp : arrMaSP) {
-                    if(masp.getTenSp().equalsIgnoreCase(textFieldSanPhamMoi.getText()) && masp.getTrinhTrang().equals("1")) {
+                    if(masp.getTenSp().equalsIgnoreCase(textFieldSanPhamMoi.getText())) {
                     	flag = false;
                     }
                 }
@@ -514,6 +514,8 @@ public class NhapHangGui extends JFrame {
             }
             java.util.Date nsx = dateFieldNsx.getDate();
             java.util.Date hsd = dateFieldHsd.getDate();
+            LocalDate currentDate = LocalDate.now();
+            Date now = Date.valueOf(currentDate);
             if(dateFieldNsx.getDate() == null) {
             	JOptionPane.showMessageDialog(contentPane, "Ngày sản xuất rỗng!");
             	dateFieldNsx.requestFocus();
@@ -522,8 +524,12 @@ public class NhapHangGui extends JFrame {
             	JOptionPane.showMessageDialog(contentPane, "Hạn sử dụng rỗng!");
             	dateFieldHsd.requestFocus();
                 return false;
+            } else if(!(hsd.compareTo(now) > 0)) {
+            	JOptionPane.showMessageDialog(contentPane, "Hạn sử dụng phải lớn hơn hiện tại!");
+            	dateFieldHsd.requestFocus();
+                return false;
             } else if(nsx.compareTo(hsd) > 0) {
-            	JOptionPane.showMessageDialog(contentPane, "Ngày sản xuất lớn hơn hạn sử dụng!");
+            	JOptionPane.showMessageDialog(contentPane, "Ngày sản xuất đang lớn hơn hạn sử dụng!");
             	dateFieldNsx.requestFocus();
                 return false;
             }

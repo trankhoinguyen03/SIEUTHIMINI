@@ -35,11 +35,8 @@ public class SanPhamDAL extends connectSql {
 		String part1 ="";
 		ArrayList<SanPham> arrList = new ArrayList<SanPham>();
 		try {
-			if (condition.equals("banhang")) {
-				sql = "select * from SANPHAM where TrangThai = 1 order by MaSP";
-			}
 			if (condition.equals("docsanpham")) {
-				sql = "select * from SANPHAM order by MaSP";
+				sql = "select * from SANPHAM where HSD > GETDATE() order by MaSP";
 			}
 			if (condition.equals("timkiem")) {
 				
@@ -85,7 +82,7 @@ public class SanPhamDAL extends connectSql {
 				sp.setNgaySanXuat(rs.getString("NSX"));
 				sp.setHanSuDung(rs.getString("HSD"));
 				sp.setMaLh(rs.getString("MaLH"));
-				sp.setTrinhTrang(rs.getString("TrangThai"));
+				sp.setTinhTrang(rs.getString("TrangThai"));
 				arrList.add(sp);
 			}
 		} catch (Exception e) {
@@ -111,10 +108,10 @@ public class SanPhamDAL extends connectSql {
 	}
 
 	public boolean anSanPham(String masp) throws SQLException {
-		String sql = "UPDATE SANPHAM SET TrangThai = " + 0 + " where MaSP = " + masp;
+		String sql = "UPDATE SANPHAM SET TrangThai = 0 where MaSP LIKE ?";
 		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+			pstm.setString(1, masp);
 			int rowsUpdated = pstm.executeUpdate();
-
 			return rowsUpdated > 0;
 		}
 	}
@@ -188,7 +185,7 @@ public class SanPhamDAL extends connectSql {
 	public int getgia(String tensp) throws SQLException {
         int giatien = 0;
         
-        String sql = "SELECT GiaBan FROM SANPHAM where TenSP=?";
+        String sql = "SELECT GiaBan FROM SANPHAM where TenSP=? and HSD > GETDATE()";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) { 
             pstmt.setString(1,tensp);
             ResultSet rs = pstmt.executeQuery();
@@ -222,7 +219,7 @@ public class SanPhamDAL extends connectSql {
         return null;
     }
 	public String getma(String tensp) throws SQLException {
-        String sql = "SELECT MaSP FROM SANPHAM where TenSP=?";
+        String sql = "SELECT MaSP FROM SANPHAM where TenSP = ? and HSD > GETDATE()";
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 		    pstmt.setString(1,tensp);
 		    pstmt.setFetchSize(100); // chỉ định số lượng bản ghi được trả về trong mỗi lần truy xuất

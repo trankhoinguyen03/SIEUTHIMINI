@@ -31,9 +31,6 @@ public class SanPhamBLL {
 			Date hsd = Date.valueOf(data.getHanSuDung());
 			if(now.compareTo(hsd) > 0) {
 				data.setTenSp(data.getTenSp()+" (hết hạn)");
-				hideSanPham(data.getMaSp());
-				KhoBLL kho = new KhoBLL();
-				kho.hideSanPham(data.getMaSp());
 			}
 		}
 		return arr;
@@ -64,6 +61,13 @@ public class SanPhamBLL {
 	}
 	public boolean addSanPham(SanPham obj) throws SQLException {
 		SanPhamDAL spd = new SanPhamDAL();
+		LocalDate currentDate = LocalDate.now();
+		Date now = Date.valueOf(currentDate);
+		Date hsd = Date.valueOf(obj.getHanSuDung());
+		if(now.compareTo(hsd) > 0) {
+			obj.setTenSp(obj.getTenSp()+" (hết hạn)");
+			obj.setTinhTrang("0");
+		}
 		return spd.themSanPham(obj);
 	}
 	public static void main(String[] args) throws SQLException {

@@ -50,8 +50,9 @@ public class KhoDAL extends connectSql {
 	}
 	
 	public boolean anSanPham(String masp) throws SQLException {
-		String sql = "UPDATE KHO SET TrangThai = " + 0 + " where MaSP = " + masp;
+		String sql = "UPDATE KHO SET TrangThai = 0 where MaSP = ?";
 		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+			pstm.setString(1, masp);
 			int rowsUpdated = pstm.executeUpdate();
 
 			return rowsUpdated > 0;

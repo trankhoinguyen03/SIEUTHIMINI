@@ -178,14 +178,20 @@ public class KhoGui extends JFrame {
 		KhoBLL khoBll = new KhoBLL();
 		SanPhamBLL spBll = new SanPhamBLL();
 		ArrayList<Kho> arrKho = new ArrayList<Kho>();
+		ArrayList<SanPham> arrsp = new ArrayList<SanPham>();
 		String[] columnNames = { "Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng" };
 		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 		table.setModel(model);
 		model.setRowCount(0);
+		arrsp = spBll.getSanPham();
 		arrKho = khoBll.getKho();
 		for (Kho khodata : arrKho) {
-			Object[] row = new Object[] { khodata.getMaSP(),spBll.getTenSP(khodata.getMaSP()), khodata.getSoLuong() };
-			model.addRow(row);
+			for(SanPham spdata: arrsp) {
+				if(khodata.getMaSP().equals(spdata.getMaSp())) {
+					Object[] row = new Object[] { khodata.getMaSP(),spBll.getTenSP(khodata.getMaSP()), khodata.getSoLuong() };
+					model.addRow(row);
+				}
+			}
 		}
 		JTableHeader header = table.getTableHeader();
 		Font headerFont = header.getFont(); // get the current font of the header
