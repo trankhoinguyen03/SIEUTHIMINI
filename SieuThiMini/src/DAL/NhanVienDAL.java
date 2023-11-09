@@ -21,13 +21,13 @@ public class NhanVienDAL extends connectSql {
 	        ArrayList<NhanVien> arrList = new ArrayList<NhanVien>();
 	        try {
 	            if (condition.equals("sapxeptheoten")) {
-	                sql = "select * from NHANVIEN where TrangThai = 1 order by TenNV";
+	                sql = "select * from NHANVIEN where order by TenNV";
 	            }
 	            if (condition.equals("docnhanvien")) {
-	                sql = "select * from NHANVIEN where TrangThai = 1";
+	                sql = "select * from NHANVIEN";
 	            }
 	            if (condition.equals("sapxeptheoma")) {
-	                sql = "select * from NHANVIEN where TrangThai = 1 order by MaNV";
+	                sql = "select * from NHANVIEN where order by MaNV";
 	            }
 	            PreparedStatement pstm = conn.prepareStatement(sql);
 	            ResultSet rs = pstm.executeQuery();
@@ -42,6 +42,7 @@ public class NhanVienDAL extends connectSql {
 	                nv.setCccd(rs.getString("CCCD"));
 	                nv.setNgayVaoLam(rs.getString("NgayVaoLam"));
 	                nv.setChucVu(rs.getString("MaCV"));
+	                nv.setTinhTrang(rs.getString("TrangThai"));
 	                arrList.add(nv);
 	            }
 	        } catch (Exception e) {

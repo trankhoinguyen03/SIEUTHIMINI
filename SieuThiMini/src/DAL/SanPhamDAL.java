@@ -36,19 +36,19 @@ public class SanPhamDAL extends connectSql {
 		ArrayList<SanPham> arrList = new ArrayList<SanPham>();
 		try {
 			if (condition.equals("docsanpham")) {
-				sql = "select * from SANPHAM where TrangThai = 1 order by MaSP";
+				sql = "select * from SANPHAM order by MaSP";
 			}
 			if (condition.equals("timkiem")) {
 				
 				 if(value.contains("LH")) {
 				
-					 sql = "select * from SANPHAM where TrangThai = 1 and MaLH LIKE ?";
+					 sql = "select * from SANPHAM where MaLH LIKE ?";
 				 }
 				 else if(value.contains("SP")) {
-					 sql = "select * from SANPHAM where TrangThai = 1 and MaSP LIKE ?";
+					 sql = "select * from SANPHAM where MaSP LIKE ?";
 				 }
 				 else {
-					 sql = "select * from SANPHAM where TrangThai = 1 and GiaBan LIKE ?";
+					 sql = "select * from SANPHAM where GiaBan LIKE ?";
 				 }
 
 			}
@@ -82,6 +82,7 @@ public class SanPhamDAL extends connectSql {
 				sp.setNgaySanXuat(rs.getString("NSX"));
 				sp.setHanSuDung(rs.getString("HSD"));
 				sp.setMaLh(rs.getString("MaLH"));
+				sp.setTrinhTrang(rs.getString("TrangThai"));
 				arrList.add(sp);
 			}
 		} catch (Exception e) {

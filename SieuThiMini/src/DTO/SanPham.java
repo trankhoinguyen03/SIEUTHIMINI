@@ -2,7 +2,7 @@ package DTO;
 
 public class SanPham {
 	private String giaMua,giaBan;
-	private String maSp,maLh,tenSp,ngaySanXuat,hanSuDung,img,donVi;
+	private String maSp,maLh,tenSp,ngaySanXuat,hanSuDung, trinhTrang;
 	public String getMaSp() {
 		return maSp;
 	}
@@ -44,6 +44,12 @@ public class SanPham {
 	}
 	public void setHanSuDung(String hanSuDung) {
 		this.hanSuDung = hanSuDung;
+	}
+	public String getTrinhTrang() {
+		return trinhTrang;
+	}
+	public void setTrinhTrang(String trinhTrang) {
+		this.trinhTrang = trinhTrang;
 	}
 
 	

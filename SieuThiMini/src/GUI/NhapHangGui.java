@@ -141,7 +141,7 @@ public class NhapHangGui extends JFrame {
     ImageIcon icon = new ImageIcon();
     JButton btnCapNhatAnh = new JButton();
     Object lastValueMaPn;
-    JButton btnAn = new JButton("Ẩn");
+    //JButton btnAn = new JButton("Ẩn");
     JButton btnThemSp = new JButton("Chi tiết");
     boolean check = true;
     JButton btnThem = new JButton("Thêm phiếu");
@@ -320,7 +320,7 @@ public class NhapHangGui extends JFrame {
             dateFieldHsd.setEnabled(false);
             btnThem.setEnabled(true);
             btnLuu.setEnabled(false);
-            btnAn.setEnabled(false);
+            //btnAn.setEnabled(false);
         }
         if (condition == "themphieunhap") {
         	comboBoxNhaCC.setSelectedItem(null);
@@ -328,7 +328,7 @@ public class NhapHangGui extends JFrame {
             textFieldMapn.setText("");
             btnThem.setEnabled(false);
             btnLuu.setEnabled(true);
-            btnAn.setEnabled(false);
+            //btnAn.setEnabled(false);
         }
         if (condition == "themchitiet") {
         	comboBoxSanPham.setSelectedItem(null);
@@ -338,7 +338,7 @@ public class NhapHangGui extends JFrame {
             btnThem.setEnabled(false);
             btnThemSp.setEnabled(false);
             btnLuu.setEnabled(true);
-            btnAn.setEnabled(false);
+            //btnAn.setEnabled(false);
         }
         if (condition == "themsanphammoi") {
         	comboBoxLoaiHang.setSelectedItem(null);
@@ -356,7 +356,7 @@ public class NhapHangGui extends JFrame {
             btnThem.setEnabled(false);
             btnChitiet.setEnabled(false);
             btnLuu.setEnabled(true);
-            btnAn.setEnabled(false);
+            //btnAn.setEnabled(false);
         }
 
     }
@@ -464,7 +464,7 @@ public class NhapHangGui extends JFrame {
                 SanPhamBLL testsp = new SanPhamBLL();
                 ArrayList<SanPham> arrMaSP = testsp.getSanPham();
                 for (SanPham masp : arrMaSP) {
-                    if(masp.getTenSp().equalsIgnoreCase(textFieldSanPhamMoi.getText())) {
+                    if(masp.getTenSp().equalsIgnoreCase(textFieldSanPhamMoi.getText()) && masp.getTrinhTrang().equals("1")) {
                     	flag = false;
                     }
                 }
@@ -880,59 +880,36 @@ public class NhapHangGui extends JFrame {
         btnThemSp.setFocusPainted(false);
         btnThemSp.setVisible(false);
 		  
-		  btnAn.setBounds(469, 10, 104, 53);
-		  if(taiKhoan.getQuyen().equals("RL2")) {
-			  btnAn.setVisible(true);
-		  } else {
-			  btnAn.setVisible(false);
-		  }
-		  btnAn.setEnabled(false);
-		  btnAn.setIcon(new ImageIcon(
-		  Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
-		  ".\\Image\\Delete.png"))));
-		  btnAn.setFocusPainted(false);
-		  btnAn.addActionListener(new ActionListener() {
-			  public void actionPerformed(ActionEvent e) { 
-				  if(checkHide) {
-					  int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn phiếu nhập "+textFieldMapn.getText(),
-							  "Confirmation", JOptionPane.YES_NO_OPTION);
-					  if (confirmed == JOptionPane.YES_OPTION) {
-						  NhapHangBLL testnh;
-						  try {
-							  testnh = new NhapHangBLL();
-							  if (testnh.hidePhieuNhap(textFieldMapn.getText())) {
-								  JOptionPane.showMessageDialog(contentPane, "Ẩn thành công!");
-								  hienthiphieunhap("themphieunhap");
-								  resetValue("load");
-								  setEnable();
-							  }
-						  } catch (SQLException e1) { // TODO Auto-generated catch block
-							  e1.printStackTrace();
-						  	}
-					  }
-				  } else {
-					  int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn chi tiết này",
-							  "Confirmation", JOptionPane.YES_NO_OPTION);
-					  if (confirmed == JOptionPane.YES_OPTION) {
-						  ChiTietPhieuNhapBLL testct;
-						  SanPhamBLL testsp;
-						  try {
-							  testct = new ChiTietPhieuNhapBLL();
-							  testsp = new SanPhamBLL();
-							  if (testct.hideChiTietPN(testsp.getMaSP(comboBoxSanPham.getSelectedItem().toString()) ,textFieldMapn.getText())) {
-								  JOptionPane.showMessageDialog(contentPane, "Ẩn thành công!");
-								  hienthiphieunhap("themchitiet");
-								  resetValue("themchitiet");
-								  setEnable();
-							  }
-						  } catch (SQLException e1) { // TODO Auto-generated catch block
-							  e1.printStackTrace();
-						  	}
-					  }
-				  }
-
-			  }
-		  });
+		/*
+		 * btnAn.setBounds(469, 10, 104, 53); if(taiKhoan.getQuyen().equals("RL2")) {
+		 * btnAn.setVisible(true); } else { btnAn.setVisible(false); }
+		 * btnAn.setEnabled(false); btnAn.setIcon(new ImageIcon(
+		 * Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
+		 * ".\\Image\\Delete.png")))); btnAn.setFocusPainted(false);
+		 * btnAn.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { if(checkHide) { int confirmed =
+		 * JOptionPane.showConfirmDialog(null,
+		 * "Bạn muốn ẩn phiếu nhập "+textFieldMapn.getText(), "Confirmation",
+		 * JOptionPane.YES_NO_OPTION); if (confirmed == JOptionPane.YES_OPTION) {
+		 * NhapHangBLL testnh; try { testnh = new NhapHangBLL(); if
+		 * (testnh.hidePhieuNhap(textFieldMapn.getText())) {
+		 * JOptionPane.showMessageDialog(contentPane, "Ẩn thành công!");
+		 * hienthiphieunhap("themphieunhap"); resetValue("load"); setEnable(); } } catch
+		 * (SQLException e1) { // TODO Auto-generated catch block e1.printStackTrace();
+		 * } } } else { int confirmed = JOptionPane.showConfirmDialog(null,
+		 * "Bạn muốn ẩn chi tiết này", "Confirmation", JOptionPane.YES_NO_OPTION); if
+		 * (confirmed == JOptionPane.YES_OPTION) { ChiTietPhieuNhapBLL testct;
+		 * SanPhamBLL testsp; try { testct = new ChiTietPhieuNhapBLL(); testsp = new
+		 * SanPhamBLL(); if
+		 * (testct.hideChiTietPN(testsp.getMaSP(comboBoxSanPham.getSelectedItem().
+		 * toString()) ,textFieldMapn.getText())) {
+		 * JOptionPane.showMessageDialog(contentPane, "Ẩn thành công!");
+		 * hienthiphieunhap("themchitiet"); resetValue("themchitiet"); setEnable(); } }
+		 * catch (SQLException e1) { // TODO Auto-generated catch block
+		 * e1.printStackTrace(); } } }
+		 * 
+		 * } });
+		 */
 		 
 
         JButton btnDongBo = new JButton("");
@@ -1069,7 +1046,7 @@ public class NhapHangGui extends JFrame {
         		lblNewLabel_11.setVisible(false);
                 btnLuu.setEnabled(false);
                 btnThem.setEnabled(true);
-                btnAn.setEnabled(true);
+                //btnAn.setEnabled(true);
                 checkHide = true;
                 btnThemSp.setVisible(true);
                 btnThemSp.setEnabled(true);
@@ -1129,7 +1106,7 @@ public class NhapHangGui extends JFrame {
         		lblNewLabel_11.setVisible(false);
                 btnLuu.setEnabled(false);
                 btnThem.setEnabled(true);
-                btnAn.setEnabled(true);
+                //btnAn.setEnabled(true);
                 checkHide = false;
                 btnThemSp.setVisible(true);
                 btnThemSp.setEnabled(true);
@@ -1172,7 +1149,7 @@ public class NhapHangGui extends JFrame {
         panel_6.add(btnLuu);
         panel_6.add(btnThem);
         panel_6.add(btnThemSp);
-        panel_6.add(btnAn);
+        //panel_6.add(btnAn);
         panel_6.add(btnDongBo);
         panel_6.add(btnChitiet);
         icon = new ImageIcon(

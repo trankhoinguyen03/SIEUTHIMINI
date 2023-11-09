@@ -100,7 +100,7 @@ public class QuanLyKhachHangGui extends JFrame {
     File selectedFile;
     ImageIcon icon = new ImageIcon();
     Object lastValueMaKh;
-    JButton btnXoa = new JButton("Ẩn");
+    //JButton btnXoa = new JButton("Ẩn");
     boolean isNumber = true;
     JButton btnThem = new JButton("Thêm");
     JButton btnLuu = new JButton("Lưu");
@@ -177,7 +177,7 @@ public class QuanLyKhachHangGui extends JFrame {
         textFieldTenkh.setText("");
         textFieldSDT.setText("");
         btnThem.setEnabled(true);
-        btnXoa.setEnabled(false);
+        //btnXoa.setEnabled(false);
         btnLuu.setEnabled(false);
     }
 
@@ -185,7 +185,7 @@ public class QuanLyKhachHangGui extends JFrame {
         textFieldTenkh.setEnabled(true);
         textFieldSDT.setEnabled(true);
         btnThem.setEnabled(true);
-        btnXoa.setEnabled(false);
+        //btnXoa.setEnabled(false);
         btnLuu.setEnabled(false);
     }
 
@@ -378,38 +378,26 @@ public class QuanLyKhachHangGui extends JFrame {
         btnThem.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
 		
-		  btnXoa.setBounds(419, 10, 104, 53);
-		  if(taiKhoan.getQuyen().equals("RL2")) {
-			  btnXoa.setVisible(true);
-		  } else {
-			  btnXoa.setVisible(false);
-		  }
-		  btnXoa.setEnabled(false);
-		  btnXoa.setIcon(new ImageIcon(
-				  Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
-						  ".\\Image\\Delete.png")))); btnXoa.setFocusPainted(false);
-		  btnXoa.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  int confirmed = JOptionPane.showConfirmDialog(null, "Bạn có muốn ẩn khách hàng "+textFieldMakh.getText(),
-						  "Confirmation", JOptionPane.YES_NO_OPTION);
-				  if (confirmed == JOptionPane.YES_OPTION) { 
-					  KhachHangBLL hideKh; 
-					  try { 
-						  hideKh = new KhachHangBLL(); 
-						  if (hideKh.hideKhachHang(textFieldMakh.getText())) {
-							  JOptionPane.showMessageDialog(contentPane, "Ẩn khách hàng thành công!");
-							  hienthikhachhang("hien thi");
-							  resetValue();
-							  setEnable(); 
-							  } 
-						  } catch
-					  			(SQLException e1) { // TODO Auto-generated catch block e1.printStackTrace();
-						  }
-		  
-				  }
-			  }
-		  });
-		 
+		/*
+		 * btnXoa.setBounds(419, 10, 104, 53); if(taiKhoan.getQuyen().equals("RL2")) {
+		 * btnXoa.setVisible(true); } else { btnXoa.setVisible(false); }
+		 * btnXoa.setEnabled(false); btnXoa.setIcon(new ImageIcon(
+		 * Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(
+		 * ".\\Image\\Delete.png")))); btnXoa.setFocusPainted(false);
+		 * btnXoa.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { int confirmed =
+		 * JOptionPane.showConfirmDialog(null,
+		 * "Bạn có muốn ẩn khách hàng "+textFieldMakh.getText(), "Confirmation",
+		 * JOptionPane.YES_NO_OPTION); if (confirmed == JOptionPane.YES_OPTION) {
+		 * KhachHangBLL hideKh; try { hideKh = new KhachHangBLL(); if
+		 * (hideKh.hideKhachHang(textFieldMakh.getText())) {
+		 * JOptionPane.showMessageDialog(contentPane, "Ẩn khách hàng thành công!");
+		 * hienthikhachhang("hien thi"); resetValue(); setEnable(); } } catch
+		 * (SQLException e1) { // TODO Auto-generated catch block e1.printStackTrace();
+		 * }
+		 * 
+		 * } } });
+		 */		 
 
         JPanel panel_7 = new JPanel();
         panel_7.setBounds(697, 10, 370, 53);
@@ -508,7 +496,7 @@ public class QuanLyKhachHangGui extends JFrame {
                 textFieldTenkh.setText(TenKH);
                 textFieldSDT.setText(Sdt);
                 setEnable();
-                btnXoa.setEnabled(true);
+                //btnXoa.setEnabled(true);
                 btnThem.setEnabled(true);
                 btnLuu.setEnabled(false);
             }
@@ -523,7 +511,7 @@ public class QuanLyKhachHangGui extends JFrame {
         panel_6.setLayout(null);
         panel_6.add(btnLuu);
         panel_6.add(btnThem);
-        panel_6.add(btnXoa);
+        //panel_6.add(btnXoa);
         panel_6.add(btnDongBo);
         panel_6.add(panel_7);
         icon = new ImageIcon(

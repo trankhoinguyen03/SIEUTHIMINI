@@ -148,7 +148,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 		btnluu.setEnabled(false);
 		btnthanhtoan.setEnabled(false);
 		btnthem.setEnabled(true);
-		btnthemsanpham2.setEnabled(false);
+		//btnthemsanpham2.setEnabled(false);
 		jButton6.setEnabled(false);
 
 	}
@@ -156,23 +156,14 @@ public class HoaDon1 extends javax.swing.JFrame {
 	public void hiennut() {
 		btnsua.setEnabled(true);
 		btnluu.setEnabled(true);
-		btnthanhtoan.setEnabled(true);
 		btnthem.setEnabled(true);
+		btngg.setEnabled(true);
 	}
 
 	public void hientext() {
 		TFtenkh.setEnabled(true);
 	   TFngay.setEnabled(true);
 		TFsoluong.setEnabled(true);
-		TFmahh.setEnabled(true);
-		TFthanhtien.setEnabled(true);
-		TFgia.setEnabled(true);
-		TFmahh.setEnabled(true);
-		TFtongtien.setEnabled(true);
-		TFdiemthuong.setEnabled(true);
-		TFtienkhach.setEnabled(true);
-		TFgiamgia.setEnabled(true);
-		TFtienthoi.setEnabled(true);
 		CBtenhh.setEnabled(true);
 	}
 
@@ -243,9 +234,11 @@ public class HoaDon1 extends javax.swing.JFrame {
 		jLabel11 = new javax.swing.JLabel();
 		jLabel12 = new javax.swing.JLabel();
 		TFtongtien = new javax.swing.JTextField();
+		TFtongtien.setText("0");
 		TFtongtien.setEnabled(false);
 		btngg = new javax.swing.JButton();
 		btngg.setText("Giảm Giá");
+		btngg.setEnabled(false);
 		btnsua = new javax.swing.JButton();
 		btnluu = new javax.swing.JButton();
 		jButton6 = new javax.swing.JButton();
@@ -269,7 +262,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 		            if (add) {
 		                hd.setTongTien(TFtongtien.getText());
 		                hd.setTongTienSauKM(TFtong.getText());
-		                
+		                hd.setKhuyenMai(TFmagiam.getText());
 		                boolean kiemtra = hdd.updatehoadon(hd, mahd);
 		                
 		                if (kiemtra) {
@@ -368,15 +361,17 @@ public class HoaDon1 extends javax.swing.JFrame {
 		jLabel15 = new javax.swing.JLabel();
 		jLabel16 = new javax.swing.JLabel();
 		TFtienkhach = new javax.swing.JTextField();
+		TFtienkhach.setEnabled(false);
 		TFtienthoi = new javax.swing.JTextField();
 		TFdiemthuong = new javax.swing.JTextField();
 		TFgiamgia = new javax.swing.JTextField();
 		btnthanhtoan = new javax.swing.JButton();
 		TFmahd = new javax.swing.JTextField();
-		btnthemsanpham2 = new javax.swing.JButton();
+		//btnthemsanpham2 = new javax.swing.JButton();
 		jLabel21 = new javax.swing.JLabel();
 		TFtong = new javax.swing.JTextField();
 		TFtong.setText("0");
+		TFtong.setEnabled(false);
 		jPanel5 = new javax.swing.JPanel();
 		jPanel6 = new javax.swing.JPanel();
 		jButton7 = new javax.swing.JButton();
@@ -536,15 +531,9 @@ public class HoaDon1 extends javax.swing.JFrame {
 			}
 		});
 		TFsoluong.addKeyListener(new java.awt.event.KeyAdapter() {
-			public int tongtien=0;
 			private int soluongtruocdo=0;
-			
 			public void keyReleased(KeyEvent e) {
-				btnxacnhan.setEnabled(true);				
-				btnthanhtoan.setEnabled(true);
-				btngg.setEnabled(true);
-				  
-					
+				btnluu.setEnabled(true);
 					    try {
 					        int soluong = Integer.parseInt(TFsoluong.getText());
 					      soluongtruocdo=soluong;
@@ -554,16 +543,16 @@ public class HoaDon1 extends javax.swing.JFrame {
 					            if(soluong>tonkho)
 					            {
 					                JOptionPane.showMessageDialog(rootPane, "Số lượng tồn kho không đủ!còn lại:"+tonkho);
+					                TFsoluong.requestFocus();
+					                TFsoluong.setText("");
+					                btnluu.setEnabled(false);
 					            }
 					            else
 					            {
 					                 int gia = Integer.parseInt(TFgia.getText());
 					        int thanhtien = soluong * gia;
 					        TFthanhtien.setText(String.valueOf(thanhtien));
-					         int thanhtien2= Integer.parseInt(TFthanhtien.getText());
-					        
-					       tongtien += thanhtien2;
-					    TFtongtien.setText(String.valueOf(tongtien));
+					       
 					            }
 					        } catch (SQLException ex) {
 					            Logger.getLogger(HoaDon1.class.getName()).log(Level.SEVERE, null, ex);
@@ -572,7 +561,9 @@ public class HoaDon1 extends javax.swing.JFrame {
 					      
 					    } catch (NumberFormatException e1) {
 					    	  JOptionPane.showMessageDialog(rootPane, "Số lượng không hợp lệ!");
-					       
+					    	  TFsoluong.requestFocus();
+					    	  TFsoluong.setText("");
+					    	  btnluu.setEnabled(false);
 					    }
 					
 //					        float value = Float.parseFloat(TFtongtien.getText());
@@ -727,7 +718,8 @@ public class HoaDon1 extends javax.swing.JFrame {
 		btngg.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 			    hiennut();
-			    hientext();
+			    antext();
+			    btnluu.setEnabled(false);
 			    TFdiemthuong.setEnabled(false);
 			    int choice = JOptionPane.showConfirmDialog(rootPane, "Bạn có muốn dùng điểm thưởng để giảm giá không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
 			   
@@ -829,6 +821,8 @@ public class HoaDon1 extends javax.swing.JFrame {
 			        } catch (SQLException e) {
 			            e.printStackTrace();
 			        }
+			        btnxacnhan.setEnabled(true);
+			        btngg.setEnabled(false);
 			    } else {
 			        // Nếu người dùng không chọn YES
 			        // Đặt giá trị diemthuong về 0
@@ -849,8 +843,8 @@ public class HoaDon1 extends javax.swing.JFrame {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-			       
-	            	
+			       btnxacnhan.setEnabled(true);
+			       btngg.setEnabled(false);
 			        
 			    }
 			}
@@ -1004,7 +998,12 @@ public class HoaDon1 extends javax.swing.JFrame {
 		btnthanhtoan.setText("Thanh Toán");
 		btnthanhtoan.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				  try {
+				if(TFtienkhach.getText().equals("")) {
+					JOptionPane.showMessageDialog(rootPane, "Chưa nhập số tiền của khách!");
+				} else if (!TFtienkhach.getText().matches("\\d+")) {
+					JOptionPane.showMessageDialog(rootPane, "Tiền khách phải là số!");
+				} else {
+					try {
 						HoaDonDAL hdd=new HoaDonDAL();
 						String makh=TFmakh.getText();
 						String tongtien1=TFtongtien.getText();
@@ -1015,8 +1014,6 @@ public class HoaDon1 extends javax.swing.JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}              
-				 hiennut();
-			        hientext();
 			        int tongtien = Integer.parseInt(TFtong.getText());
 			        int tienkhach = Integer.parseInt(TFtienkhach.getText());
 			        if (tienkhach < tongtien) {
@@ -1027,11 +1024,13 @@ public class HoaDon1 extends javax.swing.JFrame {
 			         // Format the tienthoilai value as currency
 			         String formattedTienthoilai = currencyFormat.format(tienthoilai);
 			            TFtienthoi.setText(String.valueOf(tienthoilai));
+			            btnthem.setEnabled(true);
+			            btnthanhtoan.setEnabled(false);
 			            jButton6.setEnabled(true);
-			        
-			                               
-
-			        }}
+			        }
+				}
+				  
+	        }
 		});
 
 		TFmahd.addActionListener(new java.awt.event.ActionListener() {
@@ -1040,14 +1039,15 @@ public class HoaDon1 extends javax.swing.JFrame {
 			}
 		});
 
-		btnthemsanpham2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-		btnthemsanpham2.setIcon(new ImageIcon(HoaDon1.class.getResource("/GUI/Image/Add.png"))); // NOI18N
-		btnthemsanpham2.setText("Sản Phẩm");
-		btnthemsanpham2.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btnthemsanpham2ActionPerformed(evt);
-			}
-		});
+		/*
+		 * btnthemsanpham2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+		 * btnthemsanpham2.setIcon(new
+		 * ImageIcon(HoaDon1.class.getResource("/GUI/Image/Add.png"))); // NOI18N
+		 * btnthemsanpham2.setText("Sản Phẩm"); btnthemsanpham2.addActionListener(new
+		 * java.awt.event.ActionListener() { public void
+		 * actionPerformed(java.awt.event.ActionEvent evt) {
+		 * btnthemsanpham2ActionPerformed(evt); } });
+		 */
 
 		jLabel21.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
 		jLabel21.setText("Tổng Tiền Sau Khi Giảm:");
@@ -1106,6 +1106,10 @@ public class HoaDon1 extends javax.swing.JFrame {
 					int tongdiem=hdd.getdiemtong(makh,magiam);
 					KhachHang kh=new KhachHang();
 					kh.setTichDiem(tongdiem);
+					btngg.setEnabled(false);
+					btnxacnhan.setEnabled(false);
+					TFtienkhach.setEnabled(true);
+					btnthanhtoan.setEnabled(true);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -1147,8 +1151,8 @@ public class HoaDon1 extends javax.swing.JFrame {
 							.addComponent(btngg, GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
 							.addGap(14)
 							.addComponent(btnsua, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
-							.addComponent(btnthemsanpham2, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)))
+							.addGap(18)))
+							//.addComponent(btnthemsanpham2, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)))
 					.addGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
 						.addGroup(jPanel4Layout.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
@@ -1225,7 +1229,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 							.addComponent(btnthanhtoan, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btngg, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnsua, GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-							.addComponent(btnthemsanpham2, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
+							//.addComponent(btnthemsanpham2, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnxacnhan, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnluu, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap())
@@ -1364,24 +1368,24 @@ public class HoaDon1 extends javax.swing.JFrame {
 
 		GroupLayout gl_panel_table = new GroupLayout(panel_table);
 		gl_panel_table.setHorizontalGroup(
-			gl_panel_table.createParallelGroup(Alignment.LEADING)
+			gl_panel_table.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_table.createSequentialGroup()
-					.addGap(56)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 1396, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(36, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_panel_table.createSequentialGroup()
 					.addContainerGap(542, Short.MAX_VALUE)
 					.addComponent(lblNewLabel_sp, GroupLayout.PREFERRED_SIZE, 424, GroupLayout.PREFERRED_SIZE)
 					.addGap(522))
+				.addGroup(Alignment.LEADING, gl_panel_table.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 1396, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(111, Short.MAX_VALUE))
 		);
 		gl_panel_table.setVerticalGroup(
 			gl_panel_table.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_table.createSequentialGroup()
 					.addGap(24)
 					.addComponent(lblNewLabel_sp, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGap(18)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 326, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(312, Short.MAX_VALUE))
+					.addContainerGap(300, Short.MAX_VALUE))
 		);
 		jtable1 = new JTable();
 		scrollPane.setViewportView(jtable1);
@@ -1525,12 +1529,8 @@ public class HoaDon1 extends javax.swing.JFrame {
 			hienthisanpham("them");
 			btnluu.setEnabled(true);
 			TFngay.setEnabled(true);
-			TFmahd.setEnabled(false);
 			TFtenkh.setEnabled(true);
-			TFmahh.setEnabled(true);
 			TFsoluong.setEnabled(true);
-			TFgia.setEnabled(true);
-			TFtienkhach.setEnabled(true);
 			CBtenhh.setEnabled(true);
 			HoaDonDAL hoadonDAL = new HoaDonDAL();
 			String lastMaHD = hoadonDAL.getLastMaHD();
@@ -1600,90 +1600,73 @@ public class HoaDon1 extends javax.swing.JFrame {
 //	}
 
 	 private void btnluuActionPerformed(java.awt.event.ActionEvent evt) {
-		btnxacnhan.setEnabled(true);
-		try {
-			HoaDonDAL goiham = new HoaDonDAL();
-			btnthemsanpham2.setEnabled(true);
-			
-			btnthanhtoan.setEnabled(true);
-		
+		 	try {
+		 		HoaDonDAL goiham = new HoaDonDAL();					
 				HoaDon hd = new HoaDon();
 				HoaDonDAL hdDAL = new HoaDonDAL();
-				if (add) {
-					
-					hd.setMaHD(TFmahd.getText());
-					hd.setMaNV(TFmanv.getText());
-					hd.setMaKH(TFmakh.getText());
-					hd.setTongTien(TFtongtien.getText());
-					hd.setTongTienSauKM(TFtong.getText());
-					hd.setKhuyenMai(TFmagiam.getText());
-					java.util.Date dateFromUtil = TFngay.getDate();
-					System.out.println(dateFromUtil);
-					if (dateFromUtil != null) {
-						 java.sql.Date dateFromSql = new java.sql.Date(dateFromUtil.getTime());
-						 hd.setThoiDiemLap(formatDateToString(dateFromSql));
-
-					} else {
-						JOptionPane.showMessageDialog(rootPane, "Ngày chưa hợp lệ");
-
-					}
-					
-				
-					boolean kiemtra = goiham.themhoadon(hd, "themhoadon", null);
-					if (kiemtra) {
-
-						hiennut();
-						hientext();
-						btnthanhtoan.setEnabled(true);
-						hienthisanpham("hien thi");
-						add = false;
-
-					}
-
-				}
-				if (addsp) {
-					hienthisanpham("hien thi");
-					addsp = false;
-				}
-				
-
-				
-				ChiTietHoaDonDAL hdctdal = new ChiTietHoaDonDAL();
-				ChiTietHoaDon hdct = new ChiTietHoaDon();
-
-				hdct.setMaHd(TFmahd.getText());
-				hdct.setMaSp(TFmahh.getText());
-				hdct.setSoLuong(TFsoluong.getText());
-				hdct.setThanhTien(TFthanhtien.getText());
-				boolean kiemtra2 = hdctdal.themhoadon(hdct, "themhoadon");
-				int soluong = Integer.parseInt(TFsoluong.getText());
-				if (kiemtra2 && soluong > 0) {
-					KhachHang kh=new KhachHang();
-					KhuyenMai km=new KhuyenMai();
-					HoaDonDAL hdd=new HoaDonDAL();
-					
-					String mucgiam=hdd.getMucGiam(TFmagiam.getText());
-	            	int giatri=Integer.parseInt(mucgiam);
-	            	int tongtien=Integer.parseInt(TFtongtien.getText());
-	            	int giamgia=giatri*tongtien/100;
-	            	TFgiamgia.setText(""+giamgia);
-					JOptionPane.showMessageDialog(rootPane, "Thêm thành công");
-
+				boolean flag = false;
+				if(TFmakh.getText().equals("")) {
+					JOptionPane.showMessageDialog(rootPane, "Chưa nhận diện được khách hàng, hãy nhập tên khách hàng và nhấn enter!");
+					TFtenkh.requestFocus();
+				} else if (TFngay.getDate() == null) {
+					JOptionPane.showMessageDialog(rootPane, "Ngày chưa hợp lệ");
+					TFngay.requestFocus();
 				} else {
-					JOptionPane.showMessageDialog(rootPane, "Thêm thất bại");
+					if (add) {					
+						hd.setMaHD(TFmahd.getText());
+						hd.setMaNV(TFmanv.getText());
+						hd.setMaKH(TFmakh.getText());
+						hd.setTongTien("0");
+						hd.setTongTienSauKM("0");
+						hd.setKhuyenMai("KM1");
+						java.util.Date dateFromUtil = TFngay.getDate();
+						java.sql.Date dateFromSql = new java.sql.Date(dateFromUtil.getTime());
+						hd.setThoiDiemLap(formatDateToString(dateFromSql));
+						boolean kiemtra = goiham.themhoadon(hd, "themhoadon", null);
+						if (kiemtra) {
+							JOptionPane.showMessageDialog(rootPane, "Thêm hóa đơn");
+							hienthisanpham("hien thi");
+							add = false;
+							}
+						}
+					}
+					ChiTietHoaDonDAL hdctdal = new ChiTietHoaDonDAL();
+					ChiTietHoaDon hdct = new ChiTietHoaDon();
+	
+					hdct.setMaHd(TFmahd.getText());
+					hdct.setMaSp(TFmahh.getText());
+					hdct.setSoLuong(TFsoluong.getText());
+					hdct.setThanhTien(TFthanhtien.getText());
+					if(TFsoluong.getText().equals("")) {
+						JOptionPane.showMessageDialog(rootPane, "Số lượng rỗng");
+					} else {						
+						boolean kiemtra2 = hdctdal.themhoadon(hdct, "themhoadon");
+						int soluong = Integer.parseInt(TFsoluong.getText());
+						if (kiemtra2 && soluong > 0) {
+							KhachHang kh=new KhachHang();
+							KhuyenMai km=new KhuyenMai();
+							HoaDonDAL hdd=new HoaDonDAL();					
+							String mucgiam=hdd.getMucGiam(TFmagiam.getText());
+							int tongtien1 = Integer.parseInt(TFtongtien.getText());
+			            	int giatri=Integer.parseInt(mucgiam);
+			            	int thanhtien2= Integer.parseInt(TFthanhtien.getText());
+						    tongtien1 += thanhtien2;
+						    TFtongtien.setText(String.valueOf(tongtien1));
+			            	int tongtien=Integer.parseInt(TFtongtien.getText());
+			            	int giamgia=giatri*tongtien/100;
+			            	TFgiamgia.setText(""+giamgia);
+							JOptionPane.showMessageDialog(rootPane, "Thêm thành công");
+							hiennut();
+							hientext();
+						} else {
+							JOptionPane.showMessageDialog(rootPane, "Thêm thất bại");
+						}
+					hienthisanpham("hien thi");
 				}
-				hiennut();
-				hientext();
-				btnthanhtoan.setEnabled(true);
-			
-
-			
-
-		} catch (SQLException ex) {
-			Logger.getLogger(HoaDon1.class.getName()).log(Level.SEVERE, null, ex);
-
-		}
-		 
+			} catch (SQLException ex) {
+				Logger.getLogger(HoaDon1.class.getName()).log(Level.SEVERE, null, ex);
+	
+			}	 
 	}
 
 	public void start() {
@@ -1752,6 +1735,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 			TFmahh.setText (ma);
 			int giatien = sanphamDAL.getgia(tensp);
 			TFgia.setText("" + giatien);
+			TFsoluong.setText("");
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -1766,10 +1750,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 			addsp = true;
 			hienthisanpham("them");
 			btnluu.setEnabled(true);
-			TFmahh.setEnabled(true);
 			TFsoluong.setEnabled(true);
-			TFgia.setEnabled(true);
-			TFtienkhach.setEnabled(true);
 			CBtenhh.setEnabled(true);
 			TFsoluong.setText("");
 		} catch (SQLException e) {
@@ -2162,7 +2143,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 	private javax.swing.JButton btnsua;
 	private javax.swing.JButton btnthanhtoan;
 	private javax.swing.JButton btnthem;
-	private javax.swing.JButton btnthemsanpham2;
+	//private javax.swing.JButton btnthemsanpham2;
 	private javax.swing.JButton btngg;
 	private javax.swing.JButton jButton6;
 	private javax.swing.JButton jButton7;
@@ -2239,15 +2220,14 @@ public class HoaDon1 extends javax.swing.JFrame {
 				combo.addElement(tenSp.getTenSp());
 
 			}
-
 		}
 		
 		
 		if (condition == "hien thi") {
 		    String masanpham = TFmahh.getText();
 		    int soluong = Integer.parseInt(TFsoluong.getText());
-		    double thanhtien = Double.parseDouble(TFthanhtien.getText());
-
+		    int thanhtien = Integer.parseInt(TFthanhtien.getText());
+		    
 		    boolean found = false;
 
 		    for (int i = 0; i < model.getRowCount(); i++) {
@@ -2255,7 +2235,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 		        if (productId.equals(masanpham)) {
 		            int oldQuantity = (int) model.getValueAt(i, 2);
 		            model.setValueAt(oldQuantity + soluong, i, 2);
-		            double thanhtien2=(double) model.getValueAt(i, 3);
+		            int thanhtien2=(int) model.getValueAt(i, 3);
 		            model.setValueAt(thanhtien2 + thanhtien, i, 3);
 		            found = true;
 		        }

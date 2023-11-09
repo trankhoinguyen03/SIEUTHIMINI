@@ -1,6 +1,9 @@
 package BLL;
 
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 
 import DAL.SanPhamDAL;
@@ -22,6 +25,17 @@ public class SanPhamBLL {
 		SanPhamDAL spd = new SanPhamDAL();
 		ArrayList<SanPham> arr = new ArrayList<SanPham>();
 		arr = spd.docSanPham("docsanpham", null);
+		LocalDate currentDate = LocalDate.now();
+		Date now = Date.valueOf(currentDate);
+		for(SanPham data: arr) {
+			Date hsd = Date.valueOf(data.getHanSuDung());
+			if(now.compareTo(hsd) > 0) {
+				data.setTenSp(data.getTenSp()+" (hết hạn)");
+				hideSanPham(data.getMaSp());
+				KhoBLL kho = new KhoBLL();
+				kho.hideSanPham(data.getMaSp());
+			}
+		}
 		return arr;
 	}
 	public boolean hideSanPham(String value) throws SQLException {

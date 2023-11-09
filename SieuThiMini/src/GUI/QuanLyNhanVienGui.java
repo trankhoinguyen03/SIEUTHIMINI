@@ -124,7 +124,7 @@ public class QuanLyNhanVienGui extends JFrame {
     ImageIcon icon = new ImageIcon();
     JButton btnCapNhatAnh = new JButton();
     Object lastValueMaNv;
-    JButton btnXoa = new JButton("Ẩn");
+    JButton btnXoa = new JButton("Nghỉ việc");
     boolean check = true;
     JButton btnThem = new JButton("Thêm");
     JButton btnLuu = new JButton("Lưu");
@@ -173,15 +173,21 @@ public class QuanLyNhanVienGui extends JFrame {
             }
         }
 
-        String[] columnNames = {"Mã Nhân Viên", "Tên Nhân Viên", "Ngày Sinh", "Giới Tính", "Địa Chỉ", "SDT", "CCCD", "Ngày Vào Làm", "Chức Vụ"};
+        String[] columnNames = {"Mã Nhân Viên", "Tên Nhân Viên", "Ngày Sinh", "Giới Tính", "Địa Chỉ", "SDT", "CCCD", "Ngày Vào Làm", "Chức Vụ", "Tình trạng"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
         table.setModel(model);
         model.setRowCount(0);
         for (NhanVien nvdata : arrNv) {
+        	String tinhTrang;
+        	if(nvdata.getTinhTrang().equals("1")) {
+        		tinhTrang = "Đang làm việc";
+        	} else {
+        		tinhTrang = "Đã nghỉ việc";
+        	}
             Object[] row = new Object[]{nvdata.getMaNv(), nvdata.getTenNv(), nvdata.getNgaySinh(), nvdata.getGioiTinh(),
                 nvdata.getDiaChi(), nvdata.getSdt(), nvdata.getCccd(), nvdata.getNgayVaoLam(),
-                nvBll.getTenCV(nvdata.getChucVu())};
+                nvBll.getTenCV(nvdata.getChucVu()), tinhTrang};
 
             model.addRow(row);
         }
@@ -560,7 +566,7 @@ public class QuanLyNhanVienGui extends JFrame {
                 Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
        
         
-        btnXoa.setBounds(419, 10, 104, 53);
+        btnXoa.setBounds(419, 10, 150, 53);
         btnXoa.setEnabled(false);
         btnXoa.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Delete.png"))));
@@ -571,24 +577,24 @@ public class QuanLyNhanVienGui extends JFrame {
 				if(taiKhoan.getQuyen().equals("RL2")) {
 					if(taiKhoan.getMaNV().equals(textFieldManv.getText())) {
 						flag = false;
-						JOptionPane.showMessageDialog(contentPane, "Không thể ẩn chính bạn!");
+						JOptionPane.showMessageDialog(contentPane, "Không thể cho nghỉ việc chính bạn!");
 					} else if(comboBox.getSelectedItem().toString().equals("ADMIN")) {
 						flag = false;
-						JOptionPane.showMessageDialog(contentPane, "Không thể ẩn người có chức vụ cao hơn bạn!");
+						JOptionPane.showMessageDialog(contentPane, "Không thể cho nghỉ việc người có chức vụ cao hơn bạn!");
 					} else if(comboBox.getSelectedItem().toString().equals("QUẢN LÝ")) {
 						flag = false;
-						JOptionPane.showMessageDialog(contentPane, "Không thể ẩn người có chức vụ bằng bạn!");
+						JOptionPane.showMessageDialog(contentPane, "Không thể cho nghỉ việc người có chức vụ bằng bạn!");
 					}
 				}
 				if(flag) {
-					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn nhân viên "+textFieldManv.getText(), "Confirmation",
+					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn cho nghỉ việc nhân viên "+textFieldManv.getText(), "Confirmation",
 							JOptionPane.YES_NO_OPTION);
 					if (confirmed == JOptionPane.YES_OPTION) {
 						NhanVienBLL hideNv;
 						try {
 							hideNv = new NhanVienBLL();
 							if (hideNv.hideNhanVien(textFieldManv.getText())) {
-								JOptionPane.showMessageDialog(contentPane, "Ẩn thành công!");
+								JOptionPane.showMessageDialog(contentPane, "Cho nghỉ việc thành công!");
 								hienthinhanvien("hien thi");
 								resetValue();
 								setEnable();

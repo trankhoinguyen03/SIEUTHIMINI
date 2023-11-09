@@ -464,7 +464,7 @@ public class TaiKhoanGui extends JFrame {
 					boolean flag = true;
 					ArrayList<NhanVien> arr = testnv.getNhanVien("docnhanvien");
 					for (NhanVien nv : arr) {
-						if(nv.getMaNv().equals(comboTaiKhoan.getSelectedItem().toString())) {
+						if(nv.getMaNv().equals(comboTaiKhoan.getSelectedItem().toString()) && nv.getTinhTrang().equals("1")) {
 							flag = false;
 						}
 					}
@@ -482,9 +482,7 @@ public class TaiKhoanGui extends JFrame {
 							}
 						}
 					} else {
-						resetValue();
 		            	setEnable();
-		            	comboTaiKhoan.setSelectedItem(null);
 		            	JOptionPane.showMessageDialog(contentPane, "Không thể ẩn tài khoản này!");
 					}
 				} catch (SQLException e1) {

@@ -134,13 +134,14 @@ try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 }
  
 	 public boolean updatehoadon(HoaDon hd, String mahd) throws SQLException {
-		    String updateSQL = "UPDATE DSHOADON SET TongTien = ?, TongTienSauKM = ? WHERE MaHD = ?";
+		    String updateSQL = "UPDATE DSHOADON SET TongTien = ?, TongTienSauKM = ?, KhuyenMai = ? WHERE MaHD = ?";
 		    boolean success = false;
 
 		    try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
 		        pstmt.setString(1, Integer.parseInt(hd.getTongTien())+"");
 		        pstmt.setString(2, Integer.parseInt(hd.getTongTienSauKM())+"");
-		        pstmt.setString(3, mahd);
+		        pstmt.setString(3, hd.getKhuyenMai());
+		        pstmt.setString(4, mahd);
 
 		        int affectedRows = pstmt.executeUpdate();
 

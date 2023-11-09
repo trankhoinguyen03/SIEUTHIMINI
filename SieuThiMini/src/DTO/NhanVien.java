@@ -9,7 +9,7 @@ package DTO;
  * @author Acer
  */
 public class NhanVien {
-    private String maNv, tenNv, ngaySinh, sdt, diaChi, gioiTinh, cccd, ngayVaoLam, chucVu;
+    private String maNv, tenNv, ngaySinh, sdt, diaChi, gioiTinh, cccd, ngayVaoLam, chucVu, tinhTrang;
 
 	public String getMaNv() {
 		return maNv;
@@ -82,4 +82,13 @@ public class NhanVien {
 	public void setChucVu(String chucVu) {
 		this.chucVu = chucVu;
 	}
+
+	public String getTinhTrang() {
+		return tinhTrang;
+	}
+
+	public void setTinhTrang(String tinhTrang) {
+		this.tinhTrang = tinhTrang;
+	}
+	
 }
