@@ -160,7 +160,7 @@ try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
  public String getMucGiam(String makm) throws SQLException{
 	 String giamgia="0";
-	 String sql="Select MucGiam FROM KHUYENMAI WHERE MaKM=? ";
+	 String sql="Select MucGiam FROM KHUYENMAI where MaKM=? ";
 	 try (PreparedStatement pstmt = conn.prepareStatement(sql)) { 
      	 pstmt.setString(1, makm);
          ResultSet rs = pstmt.executeQuery();

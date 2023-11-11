@@ -14,13 +14,6 @@ public class SanPhamBLL {
 		SanPhamDAL spd = new SanPhamDAL();
 		return spd.docSanPham("timkiemtheoloaihang", value);
 	}
-
-	public ArrayList<SanPham> searchSanPham(String value) throws SQLException {
-		SanPhamDAL spd = new SanPhamDAL();
-		ArrayList<SanPham> arr = new ArrayList<SanPham>();
-		arr = spd.docSanPham("timkiem", value);
-		return arr;
-	}
 	public ArrayList<SanPham> getSanPham() throws SQLException {
 		SanPhamDAL spd = new SanPhamDAL();
 		ArrayList<SanPham> arr = new ArrayList<SanPham>();
@@ -34,10 +27,6 @@ public class SanPhamBLL {
 			}
 		}
 		return arr;
-	}
-	public boolean hideSanPham(String value) throws SQLException {
-		SanPhamDAL spd = new SanPhamDAL();
-		return spd.anSanPham(value);
 	}
 	public String getTenSP(String value) throws SQLException {
 		SanPhamDAL spd = new SanPhamDAL();
@@ -72,6 +61,5 @@ public class SanPhamBLL {
 	}
 	public static void main(String[] args) throws SQLException {
 		SanPhamBLL test = new SanPhamBLL();
-		System.out.println(test.searchSanPham("a"));
 	}
 }

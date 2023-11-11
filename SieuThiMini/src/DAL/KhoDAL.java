@@ -21,12 +21,12 @@ public class KhoDAL extends connectSql {
 	public ArrayList<Kho> docKho(){
 		ArrayList<Kho> arrKho = new ArrayList<Kho>();
 		try {
-			String sql = "select * from KHO where TrangThai = 1";
+			String sql = "SELECT * FROM SANPHAM INNER JOIN KHO ON SANPHAM.MaSP = KHO.MaSP where HSD > GETDATE() and SoLuong <> 0 order by SANPHAM.MaSP";
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
 			while(rs.next()) {
 				Kho kho = new Kho();
-				kho.setMaSP(rs.getString(1)); 
+				kho.setMaSP(rs.getString(1));
 				kho.setSoLuong(rs.getString(2));
 				arrKho.add(kho);
 			}

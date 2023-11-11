@@ -301,7 +301,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 				style2.setVerticalAlignment(VerticalAlignment.CENTER); // căn giữa dọc
 				style2.setFillForegroundColor(IndexedColors.WHITE.getIndex()); // màu nền là trắng
 				style2.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-				    FileInputStream fileIn = new FileInputStream("F://DANHSACH.xlsx");
+				    FileInputStream fileIn = new FileInputStream("D://DANHSACH.xlsx");
 				 
 				    TableModel model=jtable1.getModel();
 				     XSSFRow headerRow3 = sheet.createRow(1);
@@ -345,7 +345,8 @@ public class HoaDon1 extends javax.swing.JFrame {
 				            cell.setCellValue(model.getValueAt(i, j).toString());
 				        }
 				    }
-				FileOutputStream fileOut = new FileOutputStream("F://DANHSACH.xlsx");
+				FileOutputStream fileOut = new FileOutputStream("D://DANHSACH.xlsx");
+				JOptionPane.showMessageDialog(rootPane, "xuất hóa đơn thành công");
 				wordkbook.write(fileOut);
 				fileOut.close();
 				} catch(IOException ex)
@@ -1626,48 +1627,47 @@ public class HoaDon1 extends javax.swing.JFrame {
 						boolean kiemtra = goiham.themhoadon(hd, "themhoadon", null);
 						if (kiemtra) {
 							JOptionPane.showMessageDialog(rootPane, "Thêm hóa đơn");
-							hienthisanpham("hien thi");
 							add = false;
-							}
 						}
-						ChiTietHoaDonDAL hdctdal = new ChiTietHoaDonDAL();
-						ChiTietHoaDon hdct = new ChiTietHoaDon();
-		
-						hdct.setMaHd(TFmahd.getText());
-						hdct.setMaSp(TFmahh.getText());
-						hdct.setSoLuong(TFsoluong.getText());
-						hdct.setThanhTien(TFthanhtien.getText());
-						if(TFsoluong.getText().equals("")) {
-							JOptionPane.showMessageDialog(rootPane, "Số lượng rỗng");
-						} else {						
-							boolean kiemtra2 = hdctdal.themhoadon(hdct, "themhoadon");
-							int soluong = Integer.parseInt(TFsoluong.getText());
-							if (kiemtra2 && soluong > 0) {
-								KhachHang kh=new KhachHang();
-								KhuyenMai km=new KhuyenMai();
-								HoaDonDAL hdd=new HoaDonDAL();					
-								String mucgiam=hdd.getMucGiam(TFmagiam.getText());
-								int tongtien1 = Integer.parseInt(TFtongtien.getText());
-				            	int giatri=Integer.parseInt(mucgiam);
-				            	int thanhtien2= Integer.parseInt(TFthanhtien.getText());
-							    tongtien1 += thanhtien2;
-							    TFtongtien.setText(String.valueOf(tongtien1));
-				            	int tongtien=Integer.parseInt(TFtongtien.getText());
-				            	int giamgia=giatri*tongtien/100;
-				            	TFgiamgia.setText(""+giamgia);
-								JOptionPane.showMessageDialog(rootPane, "Thêm thành công");
-								hiennut();
-								hientext();
-							} else {
-								JOptionPane.showMessageDialog(rootPane, "Thêm thất bại");
-							}
+					}
+					ChiTietHoaDonDAL hdctdal = new ChiTietHoaDonDAL();
+					ChiTietHoaDon hdct = new ChiTietHoaDon();
+	
+					hdct.setMaHd(TFmahd.getText());
+					hdct.setMaSp(TFmahh.getText());
+					hdct.setSoLuong(TFsoluong.getText());
+					hdct.setThanhTien(TFthanhtien.getText());
+					if(TFsoluong.getText().equals("")) {
+						JOptionPane.showMessageDialog(rootPane, "Số lượng rỗng");
+					} else {						
+						boolean kiemtra2 = hdctdal.themhoadon(hdct, "themhoadon");
+						int soluong = Integer.parseInt(TFsoluong.getText());
+						if (kiemtra2 && soluong > 0) {
+							KhachHang kh=new KhachHang();
+							KhuyenMai km=new KhuyenMai();
+							HoaDonDAL hdd=new HoaDonDAL();					
+							String mucgiam=hdd.getMucGiam(TFmagiam.getText());
+							int tongtien1 = Integer.parseInt(TFtongtien.getText());
+			            	int giatri=Integer.parseInt(mucgiam);
+			            	int thanhtien2= Integer.parseInt(TFthanhtien.getText());
+						    tongtien1 += thanhtien2;
+						    TFtongtien.setText(String.valueOf(tongtien1));
+			            	int tongtien=Integer.parseInt(TFtongtien.getText());
+			            	int giamgia=giatri*tongtien/100;
+			            	TFgiamgia.setText(""+giamgia);
+							JOptionPane.showMessageDialog(rootPane, "Thêm thành công");
+							hiennut();
+							hientext();
+						} else {
+							JOptionPane.showMessageDialog(rootPane, "Thêm thất bại");
+						}
 						hienthisanpham("hien thi");
-						}
+					}
 				}
 			} catch (SQLException ex) {
 				Logger.getLogger(HoaDon1.class.getName()).log(Level.SEVERE, null, ex);
 	
-			}
+			}	 
 	}
 
 	public void start() {

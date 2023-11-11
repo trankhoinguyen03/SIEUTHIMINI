@@ -59,6 +59,7 @@ import BLL.LoaiHangBLL;
 import BLL.NhanVienBLL;
 import BLL.TaiKhoanBLL;
 import DTO.ChucVu;
+import DTO.LoaiHang;
 import DTO.NhanVien;
 import DTO.TaiKhoan;
 import DAL.TaiKhoanDAL;
@@ -232,7 +233,20 @@ public class TaiKhoanGui extends JFrame {
     			JOptionPane.showMessageDialog(contentPane, "Tài khoản rỗng!");
                 textFieldTaikhoan.requestFocus();
                 return false;
-    		} else if(textFieldTaikhoan.getText().length()>10) {
+    		} else {
+    			TaiKhoanBLL tkb = new TaiKhoanBLL();
+    			ArrayList<TaiKhoan> arr = new ArrayList<TaiKhoan>();
+    			arr = tkb.getTaiKhoan("doctaikhoan");
+    			for(TaiKhoan data: arr) {
+	    			if (data.getTenDangNhap().equals(textFieldTaikhoan.getText())) {
+						JOptionPane.showMessageDialog(contentPane, "Tài khoản đã tồn tại!");
+						textFieldTaikhoan.requestFocus();
+						textFieldTaikhoan.selectAll();
+						return false;
+					}
+    			}
+    		}   			
+    		if(textFieldTaikhoan.getText().length()>10) {
             	JOptionPane.showMessageDialog(contentPane, "Tài khoản tối đa 10 kí tự");
                 textFieldTaikhoan.requestFocus();
                 return false;

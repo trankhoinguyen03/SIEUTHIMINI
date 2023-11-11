@@ -26,8 +26,4 @@ public class KhoBLL {
 		KhoDAL kd = new KhoDAL();
 		return kd.themSoLuong(value, id);
 	}
-	public boolean hideSanPham(String value) throws SQLException {
-		KhoDAL kd = new KhoDAL();
-		return kd.anSanPham(value);
-	}
 }

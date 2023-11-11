@@ -36,7 +36,7 @@ public class SanPhamDAL extends connectSql {
 		ArrayList<SanPham> arrList = new ArrayList<SanPham>();
 		try {
 			if (condition.equals("docsanpham")) {
-				sql = "select * from SANPHAM where HSD > GETDATE() order by MaSP";
+				sql = "SELECT * FROM SANPHAM INNER JOIN KHO ON SANPHAM.MaSP = KHO.MaSP where HSD > GETDATE() and SoLuong <> 0 order by SANPHAM.MaSP";
 			}
 			if (condition.equals("timkiem")) {
 				
