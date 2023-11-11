@@ -26,8 +26,8 @@ public class KhoDAL extends connectSql {
 			ResultSet rs = pstm.executeQuery();
 			while(rs.next()) {
 				Kho kho = new Kho();
-				kho.setMaSP(rs.getString(1));
-				kho.setSoLuong(rs.getString(2));
+				kho.setMaSP(rs.getString("MaSP"));
+				kho.setSoLuong(rs.getString("SoLuong"));
 				arrKho.add(kho);
 			}
 			
