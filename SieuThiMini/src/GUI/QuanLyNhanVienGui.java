@@ -64,6 +64,7 @@ import BLL.DangNhapBLL;
 import BLL.NhaCungCapBLL;
 import BLL.NhanVienBLL;
 import DTO.ChucVu;
+import DTO.KhachHang;
 import DTO.NhaCungCap;
 import DTO.NhanVien;
 import DTO.TaiKhoan;
@@ -149,6 +150,7 @@ public class QuanLyNhanVienGui extends JFrame {
     boolean checkHide = false;
     
     TaiKhoan taiKhoan = DangNhapBLL.taiKhoan;
+    private JTextField txtSearch;
     public void hienthinhanvien(String condition) throws SQLException {
         NhanVienBLL nvBll = new NhanVienBLL();
         ArrayList<NhanVien> arrNv = new ArrayList<NhanVien>();
@@ -453,7 +455,7 @@ public class QuanLyNhanVienGui extends JFrame {
         lblNewLabel_13.setBounds(350, 170, 100, 25);
 
         textFieldDiachi = new JTextField();
-        textFieldDiachi.setBounds(460, 170, 250, 25);
+        textFieldDiachi.setBounds(460, 170, 200, 25);
         textFieldDiachi.setEnabled(false);
         textFieldDiachi.setColumns(10);
 
@@ -832,6 +834,84 @@ public class QuanLyNhanVienGui extends JFrame {
         });
         btnNewButton.setBounds(938, 153, 119, 39);
         panel_5.add(btnNewButton);
+        
+        txtSearch = new JTextField();
+        txtSearch.setBounds(800, 10, 257, 25);
+        panel_5.add(txtSearch);
+        txtSearch.setColumns(10);
+        txtSearch.setText("Tìm kiếm theo tên");
+        JButton btnSearch = new JButton("Tìm kiếm");
+        btnSearch.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+            		ArrayList<NhanVien> data = new ArrayList<>();
+            		NhanVienBLL nvBll = new NhanVienBLL();
+    				// Get the number of rows and columns in the JTable
+    				int numRows = table.getRowCount();
+    				// Loop through each row in the JTable and add the data to the ArrayList
+    				for (int i = 0; i < numRows; i++) {
+    					NhanVien nv = new NhanVien();
+    					nv.setMaNv((String) table.getValueAt(i, 0));
+    					nv.setTenNv((String) table.getValueAt(i, 1));
+    					nv.setNgaySinh((String) table.getValueAt(i, 2));
+    					nv.setGioiTinh((String) table.getValueAt(i, 3));
+    					nv.setDiaChi((String) table.getValueAt(i, 4));
+    					nv.setSdt((String) table.getValueAt(i, 5));
+    					nv.setCccd((String) table.getValueAt(i, 6));
+    					nv.setNgayVaoLam((String) table.getValueAt(i, 7));
+    					nv.setChucVu(nvBll.getChucVuNV((String) table.getValueAt(i, 0)));
+    					if(table.getValueAt(i, 9).equals("Đang làm việc")) {
+    						nv.setTinhTrang("1");
+            			} else {
+            				nv.setTinhTrang("0");
+            			}
+    					data.add(nv);
+
+    				}		
+    				
+    		        
+    				
+    				String[] columnNames = {"Mã Nhân Viên", "Tên Nhân Viên", "Ngày Sinh", "Giới Tính", "Địa Chỉ", "SDT", "CCCD", "Ngày Vào Làm", "Chức Vụ", "Tình trạng"};
+    		        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+    		        table.setModel(model);
+    		        model.setRowCount(0);
+    				if(!txtSearch.getText().isEmpty()) {
+    					for (NhanVien nvdata : data) {
+    						if(nvdata.getTenNv().contains(txtSearch.getText())) {
+            		        	String tinhTrang;
+            		        	if(nvdata.getTinhTrang().equals("1")) {
+            		        		tinhTrang = "Đang làm việc";
+            		        	} else {
+            		        		tinhTrang = "Đã nghỉ việc";
+            		        	}
+            		            Object[] row = new Object[]{nvdata.getMaNv(), nvdata.getTenNv(), nvdata.getNgaySinh(), nvdata.getGioiTinh(),
+            		                nvdata.getDiaChi(), nvdata.getSdt(), nvdata.getCccd(), nvdata.getNgayVaoLam(),
+            		                nvBll.getTenCV(nvdata.getChucVu()), tinhTrang};
+
+            		            model.addRow(row);
+    						}
+        		        }
+    				} else {
+    					try {
+    						hienthinhanvien("hien thi");
+    					} catch (SQLException e1) {
+    						// TODO Auto-generated catch block
+    						e1.printStackTrace();
+    					}
+    				}
+    				if(table.getRowCount() == 0) {
+    					JOptionPane.showMessageDialog(contentPane, "Không tìm thấy nhân viên!");
+    				}
+        		} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+        		txtSearch.setText("");
+        	}
+        });
+        btnSearch.setBounds(682, 10, 108, 25);
+        panel_5.add(btnSearch);
         panel_2.add(panel_6);
         panel_2.add(panel_8);
 

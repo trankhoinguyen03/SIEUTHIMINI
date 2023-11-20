@@ -24,6 +24,8 @@ import java.awt.Image;
 import java.awt.TextField;
 import java.awt.Toolkit;
 import java.util.Comparator;
+import java.util.List;
+
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -71,6 +73,7 @@ import BLL.DangNhapBLL;
 import BLL.KhoBLL;
 import BLL.SanPhamBLL;
 import DTO.Kho;
+import DTO.NhaCungCap;
 import DTO.SanPham;
 import DTO.TaiKhoan;
 import DAL.KhoDAL;
@@ -311,6 +314,7 @@ public class KhoGui extends JFrame {
 	// Tabbed 3
 
 	TaiKhoan taiKhoan = DangNhapBLL.taiKhoan;
+	private JTextField txtSearch;
 	public KhoGui() throws SQLException {
 
 		
@@ -822,45 +826,82 @@ public class KhoGui extends JFrame {
 		 * 
 		 * } });
 		 */
+		
+		txtSearch = new JTextField();
+		txtSearch.setColumns(10);
+		txtSearch.setText("Tìm kiếm theo mã");
+		JButton btnSearch = new JButton("Tìm kiếm");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ArrayList<Kho> data = new ArrayList<>();
+				// Get the number of rows and columns in the JTable
+				int numRows = table.getRowCount();
+				// Loop through each row in the JTable and add the data to the ArrayList
+				for (int i = 0; i < numRows; i++) {
+					Kho kho = new Kho();
+					kho.setMaSP((String) table.getValueAt(i, 0));
+					kho.setSoLuong((String) table.getValueAt(i, 2));
+					data.add(kho);
+				}
+				try {
+					String[] columnNames = { "Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng" };
+					DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+					table.setModel(model);
+					model.setRowCount(0);
+					SanPhamBLL spBll = new SanPhamBLL();
+					if(!txtSearch.getText().isEmpty()) {
+						for (Kho khodata : data) {
+							if(khodata.getMaSP().contains(txtSearch.getText())) {
+								Object[] row = new Object[] { khodata.getMaSP(),spBll.getTenSP(khodata.getMaSP()), khodata.getSoLuong() };
+								model.addRow(row);
+							}
+						}
+					} else {
+						try {
+							hienThiKho();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					if(table.getRowCount() == 0) {
+						JOptionPane.showMessageDialog(contentPane, "Không tìm thấy sản phẩm!");
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				txtSearch.setText("");
+			}
+		});
 		GroupLayout gl_panel_7_1 = new GroupLayout(panel_7_1);
 		gl_panel_7_1.setHorizontalGroup(
 			gl_panel_7_1.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_7_1.createSequentialGroup()
 					.addGap(24)
-					.addComponent(panel_7, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-					.addGap(24)
+					.addComponent(panel_7, GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
+					.addGap(28)
+					.addComponent(btnSearch, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(txtSearch, GroupLayout.PREFERRED_SIZE, 256, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnNewButton,GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+					.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
 					.addGap(3))
-					
-					//.addComponent(lblNewLabel_15, GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
-					//.addGap(18)
-					//.addComponent(textFieldFrom, GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-					//.addGap(10)
-					//.addComponent(lblNewLabel_16, GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
-					//.addPreferredGap(ComponentPlacement.RELATED)
-					//.addComponent(textFieldTo)
-					//.addGap(66))
 		);
 		gl_panel_7_1.setVerticalGroup(
 			gl_panel_7_1.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_7_1.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel_7_1.createParallelGroup(Alignment.TRAILING)
-						.addComponent(panel_7, GroupLayout.DEFAULT_SIZE,30, Short.MAX_VALUE)
+						.addComponent(panel_7, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(gl_panel_7_1.createSequentialGroup()
 							.addGap(0)
 							.addGroup(gl_panel_7_1.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnNewButton,GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-								.addGap(0)))))
-									//.addComponent(lblNewLabel_15, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
-								//.addGroup(gl_panel_7_1.createSequentialGroup()
-									//.addGap(3)
-									//.addGroup(gl_panel_7_1.createParallelGroup(Alignment.BASELINE)
-										//.addComponent(lblNewLabel_16, GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
-										//.addComponent(textFieldTo, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-										//.addComponent(textFieldFrom, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))))))
-					//.addGap(9))
+								.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+								.addGap(30)
+								.addComponent(txtSearch, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnSearch, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))))
+					.addGap(25))
 		);
 		panel_7_1.setLayout(gl_panel_7_1);
 		GroupLayout gl_panel_8 = new GroupLayout(panel_8);

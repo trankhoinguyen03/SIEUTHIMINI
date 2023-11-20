@@ -59,6 +59,7 @@ import BLL.DangNhapBLL;
 import BLL.KhachHangBLL;
 import BLL.NhanVienBLL;
 import DTO.KhachHang;
+import DTO.LoaiHang;
 import DAL.KhachHangDAL;
 import DTO.TaiKhoan;
 
@@ -123,6 +124,7 @@ public class QuanLyKhachHangGui extends JFrame {
 
     
     TaiKhoan taiKhoan = DangNhapBLL.taiKhoan;
+    private JTextField txtSearch;
     
     public void hienthikhachhang(String condition) throws SQLException {
         KhachHangBLL khBll = new KhachHangBLL();
@@ -149,7 +151,7 @@ public class QuanLyKhachHangGui extends JFrame {
              */
         }
 
-        String[] columnNames = {"Mã Khách Hàng", "Tên Khách Hàng", "SDT", "DiemThuong"};
+        String[] columnNames = {"Mã Khách Hàng", "Tên Khách Hàng", "SDT", "Điểm Thưởng"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
         if (condition == "timkiem") {
             table.setModel(model);
@@ -559,6 +561,58 @@ public class QuanLyKhachHangGui extends JFrame {
         });
         btnNewButton.setBounds(10, 8, 95, 37);
         panel_5.add(btnNewButton);
+        
+        txtSearch = new JTextField();
+        txtSearch.setBounds(320, 165, 200, 25);
+        txtSearch.setText("Tìm kiếm theo tên");
+        panel_5.add(txtSearch);
+        txtSearch.setColumns(10);
+        
+        JButton btnSearch = new JButton("Tìm kiếm");
+        btnSearch.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ArrayList<KhachHang> data = new ArrayList<>();
+
+				// Get the number of rows and columns in the JTable
+				int numRows = table.getRowCount();
+				// Loop through each row in the JTable and add the data to the ArrayList
+				for (int i = 0; i < numRows; i++) {
+					KhachHang kh = new KhachHang();
+					kh.setMaKh((String) table.getValueAt(i, 0));
+					kh.setTenKh((String) table.getValueAt(i, 1));
+					kh.setSoDienThoai((String) table.getValueAt(i, 2));
+					kh.setTichDiem((int) table.getValueAt(i, 3));
+					data.add(kh);
+
+				}			
+				
+		        String[] columnNames = {"Mã Khách Hàng", "Tên Khách Hàng", "SDT", "Điểm Thưởng"};
+		        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+				table.setModel(model);
+				model.setRowCount(0);
+				if(!txtSearch.getText().isEmpty()) {
+					for (KhachHang khdata : data) {
+						if(khdata.getTenKh().contains(txtSearch.getText())) {
+			                Object[] row = new Object[]{khdata.getMaKh(), khdata.getTenKh(), khdata.getSoDienThoai(), khdata.getTichDiem()};
+			                model.addRow(row);
+						}
+		            }
+				} else {
+					try {
+						hienthikhachhang("hien thi");
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				if(table.getRowCount() == 0) {
+					JOptionPane.showMessageDialog(contentPane, "Không tìm thấy khách hàng!");
+				}
+				txtSearch.setText("");
+        	}
+        });
+        btnSearch.setBounds(199, 165, 111, 25);
+        panel_5.add(btnSearch);
         panel_2.add(panel_6);
         panel_2.add(panel_8);
 

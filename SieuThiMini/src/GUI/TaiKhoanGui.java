@@ -142,6 +142,7 @@ public class TaiKhoanGui extends JFrame {
     String oldMaNV = null;
     private JTextField textFieldSearch;
     boolean checkFix = false;
+    private JTextField txtSearch;
 
     
     public void resetValue() {
@@ -709,6 +710,67 @@ public class TaiKhoanGui extends JFrame {
         });
         btnNewButton.setBounds(938, 153, 119, 39);
         panel_5.add(btnNewButton);
+        
+        txtSearch = new JTextField();
+        txtSearch.setBounds(130, 163, 205, 27);
+        panel_5.add(txtSearch);
+        txtSearch.setColumns(10);
+        txtSearch.setText("Tìm kiếm theo mã");
+        
+        JButton btnSearch = new JButton("Tìm kiếm");
+        btnSearch.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+            		ArrayList<TaiKhoan> data = new ArrayList<>();
+    				// Get the number of rows and columns in the JTable
+    				int numRows = table.getRowCount();
+    				// Loop through each row in the JTable and add the data to the ArrayList
+    				for (int i = 0; i < numRows; i++) {
+    					TaiKhoan tk = new TaiKhoan();
+    					tk.setMaNV((String) table.getValueAt(i, 0));
+    					tk.setTenDangNhap((String) table.getValueAt(i, 2));
+    					tk.setMatKhau((String) table.getValueAt(i, 3));
+    					tk.setQuyen((String) table.getValueAt(i, 4));
+    					data.add(tk);
+    				}		
+    				
+    		        
+    				
+					String[] columnNames = {"Mã Nhân Viên","Tên Nhân Viên", "Tên Đăng Nhập", "Mật Khẩu", "Quyền"};
+			        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+			        table.setModel(model);
+			        model.setRowCount(0);
+    				if(!txtSearch.getText().isEmpty()) {
+    			        for (TaiKhoan tkdata : data) {
+    			        	if(tkdata.getMaNV().contains(txtSearch.getText())) {
+        			        	NhanVienBLL nv = new NhanVienBLL();
+        			            Object[] row = new Object[]{tkdata.getMaNV(), nv.getTenNV(tkdata.getMaNV()), tkdata.getTenDangNhap(),
+        			            		tkdata.getMatKhau(), tkdata.getQuyen()};
+
+        			            model.addRow(row);
+    			        	}
+    			        }
+    				} else {
+    					try {
+    						hienthitaikhoan("hien thi");
+    					} catch (SQLException e1) {
+    						// TODO Auto-generated catch block
+    						e1.printStackTrace();
+    					}
+    				}
+    				if(table.getRowCount() == 0) {
+    					JOptionPane.showMessageDialog(contentPane, "Không tìm thấy tài khoản!");
+    				}
+        		} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+        		txtSearch.setText("");
+        	}
+        });
+        btnSearch.setBounds(20, 162, 100, 28);
+        panel_5.add(btnSearch);
         panel_2.add(panel_6);
         panel_2.add(panel_8);
 
