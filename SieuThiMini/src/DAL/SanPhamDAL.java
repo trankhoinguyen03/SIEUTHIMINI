@@ -38,25 +38,11 @@ public class SanPhamDAL extends connectSql {
 			if (condition.equals("docsanpham")) {
 				sql = "SELECT * FROM SANPHAM INNER JOIN KHO ON SANPHAM.MaSP = KHO.MaSP where HSD > GETDATE() and SoLuong <> 0 order by SANPHAM.MaSP";
 			}
-			if (condition.equals("timkiem")) {
-				
-				 if(value.contains("LH")) {
-				
-					 sql = "select * from SANPHAM where MaLH LIKE ?";
-				 }
-				 else if(value.contains("SP")) {
-					 sql = "select * from SANPHAM where MaSP LIKE ?";
-				 }
-				 else {
-					 sql = "select * from SANPHAM where GiaBan LIKE ?";
-				 }
-
-			}
 			if(condition.equals("timkiemtheoloaihang")) {
 				if(value.equals("Tất cả")) {
-					sql = "select * from SANPHAM where TrangThai = 1 order by MaSP";
+					sql = "SELECT * FROM SANPHAM INNER JOIN KHO ON SANPHAM.MaSP = KHO.MaSP where HSD > GETDATE() and SoLuong <> 0 order by SANPHAM.MaSP";
 				}
-				else sql = "select * from SANPHAM where TrangThai = 1 and MaLH LIKE ?";
+				else sql = "SELECT * FROM SANPHAM INNER JOIN KHO ON SANPHAM.MaSP = KHO.MaSP where HSD > GETDATE() and SoLuong <> 0 and SANPHAM.MaLH LIKE ?";
 			}
 			if (condition.equals("docsanphamtheoid")) {
 				sql = "select * from SANPHAM where TrangThai = 1 and MaLH =" + value;
@@ -153,7 +139,7 @@ public class SanPhamDAL extends connectSql {
 	
 	}
     public String layMaSp(String tenSp) throws SQLException {
-        String sql = "SELECT MaSP FROM SANPHAM WHERE TenSP = ?";
+        String sql = "SELECT MaSP FROM SANPHAM where TenSP = ? and HSD > GETDATE()";
         try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
             pstm.setString(1, tenSp);
             ResultSet rs = pstm.executeQuery();

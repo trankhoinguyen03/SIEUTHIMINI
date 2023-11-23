@@ -18,14 +18,6 @@ public class SanPhamBLL {
 		SanPhamDAL spd = new SanPhamDAL();
 		ArrayList<SanPham> arr = new ArrayList<SanPham>();
 		arr = spd.docSanPham("docsanpham", null);
-		LocalDate currentDate = LocalDate.now();
-		Date now = Date.valueOf(currentDate);
-		for(SanPham data: arr) {
-			Date hsd = Date.valueOf(data.getHanSuDung());
-			if(now.compareTo(hsd) > 0) {
-				data.setTenSp(data.getTenSp()+" (hết hạn)");
-			}
-		}
 		return arr;
 	}
 	public String getTenSP(String value) throws SQLException {
@@ -50,13 +42,6 @@ public class SanPhamBLL {
 	}
 	public boolean addSanPham(SanPham obj) throws SQLException {
 		SanPhamDAL spd = new SanPhamDAL();
-		LocalDate currentDate = LocalDate.now();
-		Date now = Date.valueOf(currentDate);
-		Date hsd = Date.valueOf(obj.getHanSuDung());
-		if(now.compareTo(hsd) > 0) {
-			obj.setTenSp(obj.getTenSp()+" (hết hạn)");
-			obj.setTinhTrang("0");
-		}
 		return spd.themSanPham(obj);
 	}
 	public static void main(String[] args) throws SQLException {
