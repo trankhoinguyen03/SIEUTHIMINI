@@ -844,6 +844,7 @@ public class QuanLyNhanVienGui extends JFrame {
         btnSearch.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		try {
+        			hienthinhanvien("hien thi");
             		ArrayList<NhanVien> data = new ArrayList<>();
             		NhanVienBLL nvBll = new NhanVienBLL();
     				// Get the number of rows and columns in the JTable
@@ -878,7 +879,7 @@ public class QuanLyNhanVienGui extends JFrame {
     		        model.setRowCount(0);
     				if(!txtSearch.getText().isEmpty()) {
     					for (NhanVien nvdata : data) {
-    						if(nvdata.getTenNv().contains(txtSearch.getText())) {
+    						if(nvdata.getTenNv().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
             		        	String tinhTrang;
             		        	if(nvdata.getTinhTrang().equals("1")) {
             		        		tinhTrang = "Đang làm việc";

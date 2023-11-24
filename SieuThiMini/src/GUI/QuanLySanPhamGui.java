@@ -1342,6 +1342,12 @@ public class QuanLySanPhamGui extends JFrame {
 		JButton btnSearch = new JButton("Tìm kiếm");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					hienThiLoaiHang();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				ArrayList<LoaiHang> data = new ArrayList<>();
 
 				// Get the number of rows and columns in the JTable
@@ -1361,7 +1367,7 @@ public class QuanLySanPhamGui extends JFrame {
 				model.setRowCount(0);
 				if(!txtSearch.getText().isEmpty()) {
 					for (LoaiHang lh : data) {
-						if(lh.getTenLH().contains(txtSearch.getText())) {
+						if(lh.getTenLH().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
 							Object[] row = new Object[] { lh.getMaLH(), lh.getTenLH() };
 							model.addRow(row);
 						}
@@ -1654,6 +1660,12 @@ public class QuanLySanPhamGui extends JFrame {
 		JButton btnTimKiem = new JButton("Tìm kiếm");
 		btnTimKiem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					hienThiNhaCungCap();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				ArrayList<NhaCungCap> data = new ArrayList<>();
 
 				// Get the number of rows and columns in the JTable
@@ -1675,7 +1687,7 @@ public class QuanLySanPhamGui extends JFrame {
 				model.setRowCount(0);
 				if(!txtTimKiem.getText().isEmpty()) {
 					for (NhaCungCap nccData : data) {
-						if(nccData.getTenNCC().contains(txtTimKiem.getText())) {
+						if(nccData.getTenNCC().toLowerCase().contains(txtTimKiem.getText().toLowerCase())) {
 							Object[] row = new Object[] {nccData.getMaNCC(), nccData.getTenNCC(), nccData.getDiaChi(),
 									nccData.getSoDT() };
 							model.addRow(row);

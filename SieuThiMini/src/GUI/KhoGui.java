@@ -833,6 +833,12 @@ public class KhoGui extends JFrame {
 		JButton btnSearch = new JButton("Tìm kiếm");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					hienThiKho();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				ArrayList<Kho> data = new ArrayList<>();
 				// Get the number of rows and columns in the JTable
 				int numRows = table.getRowCount();
@@ -851,7 +857,7 @@ public class KhoGui extends JFrame {
 					SanPhamBLL spBll = new SanPhamBLL();
 					if(!txtSearch.getText().isEmpty()) {
 						for (Kho khodata : data) {
-							if(khodata.getMaSP().contains(txtSearch.getText())) {
+							if(khodata.getMaSP().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
 								Object[] row = new Object[] { khodata.getMaSP(),spBll.getTenSP(khodata.getMaSP()), khodata.getSoLuong() };
 								model.addRow(row);
 							}

@@ -721,6 +721,7 @@ public class TaiKhoanGui extends JFrame {
         btnSearch.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		try {
+        			hienthitaikhoan("hien thi");
             		ArrayList<TaiKhoan> data = new ArrayList<>();
     				// Get the number of rows and columns in the JTable
     				int numRows = table.getRowCount();
@@ -743,7 +744,7 @@ public class TaiKhoanGui extends JFrame {
 			        model.setRowCount(0);
     				if(!txtSearch.getText().isEmpty()) {
     			        for (TaiKhoan tkdata : data) {
-    			        	if(tkdata.getMaNV().contains(txtSearch.getText())) {
+    			        	if(tkdata.getMaNV().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
         			        	NhanVienBLL nv = new NhanVienBLL();
         			            Object[] row = new Object[]{tkdata.getMaNV(), nv.getTenNV(tkdata.getMaNV()), tkdata.getTenDangNhap(),
         			            		tkdata.getMatKhau(), tkdata.getQuyen()};

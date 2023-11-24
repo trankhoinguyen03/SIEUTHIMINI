@@ -571,6 +571,12 @@ public class QuanLyKhachHangGui extends JFrame {
         JButton btnSearch = new JButton("Tìm kiếm");
         btnSearch.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		try {
+					hienthikhachhang("hien thi");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
         		ArrayList<KhachHang> data = new ArrayList<>();
 
 				// Get the number of rows and columns in the JTable
@@ -592,7 +598,7 @@ public class QuanLyKhachHangGui extends JFrame {
 				model.setRowCount(0);
 				if(!txtSearch.getText().isEmpty()) {
 					for (KhachHang khdata : data) {
-						if(khdata.getTenKh().contains(txtSearch.getText())) {
+						if(khdata.getTenKh().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
 			                Object[] row = new Object[]{khdata.getMaKh(), khdata.getTenKh(), khdata.getSoDienThoai(), khdata.getTichDiem()};
 			                model.addRow(row);
 						}
