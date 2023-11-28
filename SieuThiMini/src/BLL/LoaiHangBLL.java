@@ -29,4 +29,12 @@ public class LoaiHangBLL {
 		LoaiHangDAL lhd = new LoaiHangDAL();
 		return lhd.BtnLoaiHang(lh, condition);
 	}
+	public boolean fixLoaiHang(String id, String name) throws SQLException {
+		LoaiHangDAL lhd = new LoaiHangDAL();
+		return lhd.suaLoaiHang(id, name);
+	}
+	public boolean hideLoaiHang(String id) throws SQLException {
+		LoaiHangDAL lhd = new LoaiHangDAL();
+		return lhd.anLoaiHang(id);
+	}
 }

@@ -43,6 +43,10 @@ public class NhanVienBLL {
 		NhanVienDAL nvd = new NhanVienDAL();
 		return nvd.themNhanVien(obj);
 	}
+	public boolean fixNhanVien(NhanVien obj) throws SQLException {
+		NhanVienDAL nvd = new NhanVienDAL();
+		return nvd.suaNhanVien(obj);
+	}
 	public ArrayList<ChucVu> getChucVu() throws SQLException {
 		NhanVienDAL nvd = new NhanVienDAL();
 		ArrayList<ChucVu> arr = new ArrayList<ChucVu>();

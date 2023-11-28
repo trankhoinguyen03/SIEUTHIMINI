@@ -21,13 +21,13 @@ public class NhanVienDAL extends connectSql {
 	        ArrayList<NhanVien> arrList = new ArrayList<NhanVien>();
 	        try {
 	            if (condition.equals("sapxeptheoten")) {
-	                sql = "select * from NHANVIEN where order by TenNV";
+	                sql = "select * from NHANVIEN order by TenNV";
 	            }
 	            if (condition.equals("docnhanvien")) {
 	                sql = "select * from NHANVIEN";
 	            }
 	            if (condition.equals("sapxeptheoma")) {
-	                sql = "select * from NHANVIEN where order by MaNV";
+	                sql = "select * from NHANVIEN order by MaNV";
 	            }
 	            PreparedStatement pstm = conn.prepareStatement(sql);
 	            ResultSet rs = pstm.executeQuery();
@@ -158,6 +158,23 @@ public class NhanVienDAL extends connectSql {
 	        String sql = "UPDATE NHANVIEN SET TrangThai = 0 WHERE MaNV = ?";
 	        try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
 	        	pstm.setString(1, id);
+	            int rowsUpdated = pstm.executeUpdate();
+	            return rowsUpdated > 0;
+	        }
+	    }
+	    
+	    public boolean suaNhanVien(NhanVien nv) throws SQLException {
+	        String sql = "UPDATE NHANVIEN SET TenNV = ?, NgaySinh = ?, SDT = ?, DiaChi = ?, GioiTinh = ?, CCCD = ?, NgayVaoLam = ?, MaCV = ? WHERE MaNV = ?";
+	        try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
+	        	pstm.setString(1, nv.getTenNv());
+	            pstm.setString(2, nv.getNgaySinh());
+	            pstm.setString(3, nv.getSdt());
+	            pstm.setString(4, nv.getDiaChi());
+	            pstm.setString(5, nv.getGioiTinh());
+	            pstm.setString(6, nv.getCccd());
+	            pstm.setString(7, nv.getNgayVaoLam());
+	            pstm.setString(8, nv.getChucVu());
+	            pstm.setString(9, nv.getMaNv());
 	            int rowsUpdated = pstm.executeUpdate();
 	            return rowsUpdated > 0;
 	        }

@@ -57,6 +57,7 @@ import javax.swing.table.TableColumn;
 
 import BLL.DangNhapBLL;
 import BLL.KhachHangBLL;
+import BLL.LoaiHangBLL;
 import BLL.NhanVienBLL;
 import DTO.KhachHang;
 import DTO.LoaiHang;
@@ -101,7 +102,8 @@ public class QuanLyKhachHangGui extends JFrame {
     File selectedFile;
     ImageIcon icon = new ImageIcon();
     Object lastValueMaKh;
-    //JButton btnXoa = new JButton("Ẩn");
+    JButton btnSua = new JButton("Sửa");
+    JButton btnAn = new JButton("Ẩn");
     boolean isNumber = true;
     JButton btnThem = new JButton("Thêm");
     JButton btnLuu = new JButton("Lưu");
@@ -141,14 +143,6 @@ public class QuanLyKhachHangGui extends JFrame {
         }
         if (condition == "them") {
             arrKh = khBll.getKhachHang("dockhachhang");
-            /*			LoaiHangDAL test = new LoaiHangDAL();
-			ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
-			DefaultComboBoxModel combo = new DefaultComboBoxModel();
-			comboBox.setModel(combo);
-			for (LoaiHang makh : arrMaLH) {
-				combo.addElement(malh.getTenLH());
-                        }
-             */
         }
 
         String[] columnNames = {"Mã Khách Hàng", "Tên Khách Hàng", "SDT", "Điểm Thưởng"};
@@ -179,8 +173,9 @@ public class QuanLyKhachHangGui extends JFrame {
         textFieldTenkh.setText("");
         textFieldSDT.setText("");
         btnThem.setEnabled(true);
-        //btnXoa.setEnabled(false);
+        btnAn.setEnabled(false);
         btnLuu.setEnabled(false);
+        btnSua.setEnabled(false);
     }
 
     public void unSetEnable() {
@@ -303,6 +298,7 @@ public class QuanLyKhachHangGui extends JFrame {
 
         JPanel panel_6 = new JPanel();
         panel_6.setBounds(0, 210, 1067, 78);
+        btnLuu.setFont(new Font("Tahoma", Font.BOLD, 14));
         btnLuu.setBounds(10, 10, 104, 53);
 
         btnLuu.setEnabled(false);
@@ -312,40 +308,70 @@ public class QuanLyKhachHangGui extends JFrame {
         btnLuu.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if (checkEmtyValue()) {
-                    	int confirmed = JOptionPane.showConfirmDialog(null, "Bạn có muốn thêm khách hàng "+textFieldMakh.getText(),
-        						  "Confirmation", JOptionPane.YES_NO_OPTION);
-        				if (confirmed == JOptionPane.YES_OPTION) {
-	                        KhachHang kh = new KhachHang();
-	                        KhachHangBLL luukh;
-                            try {
-                                luukh = new KhachHangBLL();
-                                kh.setMaKh(textFieldMakh.getText());
-                                kh.setTenKh(textFieldTenkh.getText());
-                                kh.setSoDienThoai(textFieldSDT.getText());
-                                kh.setTichDiem(0);
-                                boolean checkAddPro = luukh.addKhachHang(kh);
-                                if (checkAddPro) {
-                                    JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
-                                    resetValue();
-                                    setEnable();
-                                    hienthikhachhang("hien thi");
-                                } else {
-                                    JOptionPane.showMessageDialog(contentPane, "Thêm thất bại");
+                	if(addbtn) {
+                        if (checkEmtyValue()) {
+                        	int confirmed = JOptionPane.showConfirmDialog(null, "Bạn có muốn thêm khách hàng "+textFieldMakh.getText(),
+            						  "Confirmation", JOptionPane.YES_NO_OPTION);
+            				if (confirmed == JOptionPane.YES_OPTION) {
+    	                        KhachHang kh = new KhachHang();
+    	                        KhachHangBLL luukh;
+                                try {
+                                    luukh = new KhachHangBLL();
+                                    kh.setMaKh(textFieldMakh.getText());
+                                    kh.setTenKh(textFieldTenkh.getText());
+                                    kh.setSoDienThoai(textFieldSDT.getText());
+                                    kh.setTichDiem(0);
+                                    boolean checkAddPro = luukh.addKhachHang(kh);
+                                    if (checkAddPro) {
+                                        JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
+                                        resetValue();
+                                        setEnable();
+                                        hienthikhachhang("hien thi");
+                                        addbtn = false;
+                                    } else {
+                                        JOptionPane.showMessageDialog(contentPane, "Thêm thất bại");
+                                    }
+                                } catch (SQLException e2) {
+                                    // TODO Auto-generated catch block
+                                    e2.printStackTrace();
                                 }
-                            } catch (SQLException e2) {
-                                // TODO Auto-generated catch block
-                                e2.printStackTrace();
-                            }
-        				}
-			  		}
+            				}
+    			  		}
+                	}
+                	if(fixbtn) {
+                        if (checkEmtyValue()) {
+                        	int confirmed = JOptionPane.showConfirmDialog(null, "Bạn có muốn sửa khách hàng "+textFieldMakh.getText(),
+            						  "Confirmation", JOptionPane.YES_NO_OPTION);
+            				if (confirmed == JOptionPane.YES_OPTION) {
+    	                        KhachHangBLL luukh;
+                                try {
+                                    luukh = new KhachHangBLL();
+                                    boolean checkAddPro = luukh.fixKhachHang(textFieldMakh.getText(),textFieldTenkh.getText(),textFieldSDT.getText());
+                                    if (checkAddPro) {
+                                        JOptionPane.showMessageDialog(contentPane, "Sửa thành công");
+                                        resetValue();
+                                        setEnable();
+                                        hienthikhachhang("hien thi");
+                                        fixbtn = false;
+                                    } else {
+                                        JOptionPane.showMessageDialog(contentPane, "Sửa thất bại");
+                                    }
+                                } catch (SQLException e2) {
+                                    // TODO Auto-generated catch block
+                                    e2.printStackTrace();
+                                }
+            				}
+    			  		}
+                	}
+
                 } catch (NumberFormatException | HeadlessException | SQLException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
         });
-        btnThem.setBounds(146, 10, 104, 53);
+        btnThem.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnThem.setBounds(146, 10, 135, 53);
         btnThem.setFocusPainted(false);
         btnThem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -364,8 +390,11 @@ public class QuanLyKhachHangGui extends JFrame {
                     } else {
                     	textFieldMakh.setText("KH"+(check+1));
                     }
+                    btnAn.setEnabled(false);
+                    btnSua.setEnabled(false);
                     btnThem.setEnabled(false);
                     btnLuu.setEnabled(true);
+                    addbtn = true;
                     try {
                         hienthikhachhang("them");
                     } catch (SQLException e3) {
@@ -406,7 +435,7 @@ public class QuanLyKhachHangGui extends JFrame {
         panel_7.setBorder(new LineBorder(new Color(0, 0, 0)));
 
         JButton btnDongBo = new JButton("");
-        btnDongBo.setBounds(280, 10, 104, 53);
+        btnDongBo.setBounds(304, 10, 104, 53);
         btnDongBo.setIcon(new ImageIcon(
                 Toolkit.getDefaultToolkit().createImage(QuanLyKhachHangGui.class.getResource(".\\Image\\Refresh-icon.png"))));
         btnDongBo.addActionListener(new ActionListener() {
@@ -498,7 +527,8 @@ public class QuanLyKhachHangGui extends JFrame {
                 textFieldTenkh.setText(TenKH);
                 textFieldSDT.setText(Sdt);
                 setEnable();
-                //btnXoa.setEnabled(true);
+                btnSua.setEnabled(true);
+                btnAn.setEnabled(true);
                 btnThem.setEnabled(true);
                 btnLuu.setEnabled(false);
             }
@@ -620,6 +650,64 @@ public class QuanLyKhachHangGui extends JFrame {
         btnSearch.setBounds(199, 165, 111, 25);
         panel_5.add(btnSearch);
         panel_2.add(panel_6);
+        
+        if(taiKhoan.getQuyen().equals("RL2")) {
+        	btnSua.setVisible(true);
+        	btnAn.setVisible(true);
+        } else {
+        	btnSua.setVisible(false);
+        	btnAn.setVisible(false);
+        }
+        btnSua.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+                unSetEnable();
+                btnAn.setEnabled(false);
+                btnSua.setEnabled(false);
+                btnThem.setEnabled(false);
+                btnLuu.setEnabled(true);
+                fixbtn = true;
+        	}
+        });
+        
+        
+        btnSua.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnSua.setFocusPainted(false);
+        btnSua.setEnabled(false);
+        btnSua.setBounds(432, 10, 104, 53);
+        btnSua.setIcon(new ImageIcon(
+                Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Change.png"))));
+        panel_6.add(btnSua);
+        btnAn.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn khách hàng "+textFieldMakh.getText(), "Confirmation",
+						JOptionPane.YES_NO_OPTION);
+				if (confirmed == JOptionPane.YES_OPTION) {
+					KhachHangBLL kh = new KhachHangBLL();
+					try {
+						if(kh.hideKhachHang(textFieldMakh.getText())) {
+							JOptionPane.showMessageDialog(contentPane, "Ẩn thành công!");
+					        hienthikhachhang("hien thi");
+					        resetValue();
+					        setEnable();
+						}
+						else {
+							JOptionPane.showMessageDialog(contentPane, "Ẩn thất bại!");
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+        	}
+        });
+        
+        btnAn.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnAn.setFocusPainted(false);
+        btnAn.setEnabled(false);
+        btnAn.setBounds(560, 10, 104, 53);
+        btnAn.setIcon(new ImageIcon(
+                Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Delete.png"))));
+        panel_6.add(btnAn);
         panel_2.add(panel_8);
 
         JPanel panel_3 = new JPanel();

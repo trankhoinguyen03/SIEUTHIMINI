@@ -21,7 +21,7 @@ public class KhoDAL extends connectSql {
 	public ArrayList<Kho> docKho(){
 		ArrayList<Kho> arrKho = new ArrayList<Kho>();
 		try {
-			String sql = "SELECT * FROM SANPHAM INNER JOIN KHO ON SANPHAM.MaSP = KHO.MaSP where HSD > GETDATE() and SoLuong <> 0 order by SANPHAM.MaSP";
+			String sql = "SELECT * FROM SANPHAM INNER JOIN KHO ON SANPHAM.MaSP = KHO.MaSP where HSD > GETDATE() and SoLuong <> 0 and SANPHAM.TrangThai = 1 order by SANPHAM.MaSP";
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
 			while(rs.next()) {
@@ -37,6 +37,7 @@ public class KhoDAL extends connectSql {
 //		closeConnection();
 		return arrKho;
 	}
+	
 	public int getLastMaSP() throws SQLException {
 		String sql = "select top 1 MaSP from KHO order by MaSP DESC";
 		PreparedStatement pstm = conn.prepareStatement(sql);
@@ -47,16 +48,6 @@ public class KhoDAL extends connectSql {
 		    }
 		  closeConnection();
 		  return 0;
-	}
-	
-	public boolean anSanPham(String masp) throws SQLException {
-		String sql = "UPDATE KHO SET TrangThai = 0 where MaSP = ?";
-		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
-			pstm.setString(1, masp);
-			int rowsUpdated = pstm.executeUpdate();
-
-			return rowsUpdated > 0;
-		}
 	}
 	
     public String laySoLuong(String value) throws SQLException {

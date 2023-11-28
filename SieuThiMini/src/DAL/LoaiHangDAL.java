@@ -81,6 +81,28 @@ public class LoaiHangDAL extends connectSql {
 		}
 		return null;
 	}
+	
+    public boolean anLoaiHang(String malh) throws SQLException {
+		String sql = "UPDATE LOAIHANG SET TrangThai = 0 where MaLH = ?";
+		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+			pstm.setString(1, malh);
+			int rowsUpdated = pstm.executeUpdate();
+
+			return rowsUpdated > 0;
+		}
+    }
+    
+    public boolean suaLoaiHang(String malh, String tenlh) throws SQLException {
+		String sql = "UPDATE LOAIHANG SET TenLH = ? where MaLH = ?";
+		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+			pstm.setString(1, tenlh);
+			pstm.setString(2, malh);
+			int rowsUpdated = pstm.executeUpdate();
+
+			return rowsUpdated > 0;
+		}
+    }
+	
 	public boolean BtnLoaiHang(LoaiHang Lh, String condition) throws SQLException {
 	    String sql = "";
 	    switch (condition) {

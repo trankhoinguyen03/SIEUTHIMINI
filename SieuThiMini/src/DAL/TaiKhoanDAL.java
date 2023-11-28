@@ -90,6 +90,18 @@ public class TaiKhoanDAL extends connectSql {
 	            return rowsUpdated > 0;
 	        }
 	    }
+	    
+	    public boolean suaTaiKhoan(TaiKhoan tk) throws SQLException {
+	        String sql = "UPDATE TAIKHOAN SET TenDangNhap = ?, MatKhau = ?, MaQuyen = ? WHERE MaNV = ?";
+	        try ( PreparedStatement pstm = conn.prepareStatement(sql)) {
+	            pstm.setString(1, tk.getTenDangNhap());
+	            pstm.setString(2, tk.getMatKhau());
+	            pstm.setString(3, tk.getQuyen());
+	            pstm.setString(4, tk.getMaNV());
+	            int rowsUpdated = pstm.executeUpdate();
+	            return rowsUpdated > 0;
+	        }
+	    }
 
 	    public boolean themTaiKhoan(TaiKhoan tk) throws SQLException {
 	        String sql = "INSERT INTO TAIKHOAN (TenDangNhap, MatKhau, MaQuyen, TrangThai, MaNV) VALUES (?, ?, ?, ?, ?)";

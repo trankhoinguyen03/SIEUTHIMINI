@@ -36,13 +36,13 @@ public class SanPhamDAL extends connectSql {
 		ArrayList<SanPham> arrList = new ArrayList<SanPham>();
 		try {
 			if (condition.equals("docsanpham")) {
-				sql = "SELECT * FROM SANPHAM INNER JOIN KHO ON SANPHAM.MaSP = KHO.MaSP where HSD > GETDATE() and SoLuong <> 0 order by SANPHAM.MaSP";
+				sql = "SELECT * FROM SANPHAM INNER JOIN KHO ON SANPHAM.MaSP = KHO.MaSP where HSD > GETDATE() and SoLuong <> 0 and SANPHAM.TrangThai = 1 order by SANPHAM.MaSP";
 			}
 			if(condition.equals("timkiemtheoloaihang")) {
 				if(value.equals("Tất cả")) {
-					sql = "SELECT * FROM SANPHAM INNER JOIN KHO ON SANPHAM.MaSP = KHO.MaSP where HSD > GETDATE() and SoLuong <> 0 order by SANPHAM.MaSP";
+					sql = "SELECT * FROM SANPHAM INNER JOIN KHO ON SANPHAM.MaSP = KHO.MaSP where HSD > GETDATE() and SoLuong <> 0 and SANPHAM.TrangThai = 1 order by SANPHAM.MaSP";
 				}
-				else sql = "SELECT * FROM SANPHAM INNER JOIN KHO ON SANPHAM.MaSP = KHO.MaSP where HSD > GETDATE() and SoLuong <> 0 and SANPHAM.MaLH LIKE ?";
+				else sql = "SELECT * FROM SANPHAM INNER JOIN KHO ON SANPHAM.MaSP = KHO.MaSP where HSD > GETDATE() and SoLuong <> 0 and SANPHAM.TrangThai = 1 and SANPHAM.MaLH LIKE ?";
 			}
 			if (condition.equals("docsanphamtheoid")) {
 				sql = "select * from SANPHAM where TrangThai = 1 and MaLH =" + value;
@@ -92,12 +92,23 @@ public class SanPhamDAL extends connectSql {
 			return null; // or throw an exception
 		}
 	}
-
+	
+	public boolean suaSanPham(String id, String name ) throws SQLException {
+		String sql = "UPDATE SANPHAM SET TenSP = ? where MaSP = ?";
+		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+			pstm.setString(1, name);
+			pstm.setString(2, id);
+			int rowsUpdated = pstm.executeUpdate();
+			return rowsUpdated > 0;
+		}
+	}
+	
 	public boolean anSanPham(String masp) throws SQLException {
-		String sql = "UPDATE SANPHAM SET TrangThai = 0 where MaSP LIKE ?";
+		String sql = "UPDATE SANPHAM SET TrangThai = 0 where MaSP = ?";
 		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
 			pstm.setString(1, masp);
 			int rowsUpdated = pstm.executeUpdate();
+
 			return rowsUpdated > 0;
 		}
 	}

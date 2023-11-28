@@ -29,4 +29,12 @@ public class NhaCungCapBLL {
 		NhaCungCapDAL nccd = new NhaCungCapDAL();
 		return nccd.BtnNhaCungCap(obj, value);
 	}
+	public boolean fixNhaCungCap(String mancc, String tenncc, String diachi, String sdt) throws SQLException {
+		NhaCungCapDAL nccd = new NhaCungCapDAL();
+		return nccd.suaNhaCungCap(mancc, tenncc, diachi, sdt);
+	}
+	public boolean hideNhaCungCap(String id) throws SQLException {
+		NhaCungCapDAL nccd = new NhaCungCapDAL();
+		return nccd.anNhaCungCap(id);
+	}
 }

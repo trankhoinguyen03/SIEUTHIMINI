@@ -139,7 +139,8 @@ public class QuanLySanPhamGui extends JFrame {
 	ImageIcon icon = new ImageIcon();
 	//JButton btnCapNhatAnh = new JButton();
 	Object lastValueMaSp;
-	//JButton btnAn = new JButton("Ẩn");
+	JButton btnAn = new JButton("Ẩn");
+	JButton btnSua = new JButton("Sửa");
 	boolean isNumber = true;
 	//JButton btnThem = new JButton("Thêm");
 	int lastRow = 0;
@@ -170,6 +171,9 @@ public class QuanLySanPhamGui extends JFrame {
 	JButton btnThem_1 = new JButton("Thêm");
 	//JButton btnAn_1 = new JButton("Ẩn");
 	JButton btnLuu_1 = new JButton("Lưu");
+	JButton btnAn_1 = new JButton("Ẩn");
+	JButton btnSua_1 = new JButton("Sửa");
+	boolean addlh, fixlh = false;
 	JTable table_1 = new JTable();
 	Object lastValueMaLh;
 	String oldTenMaLH = null;
@@ -182,8 +186,10 @@ public class QuanLySanPhamGui extends JFrame {
 //	Tabbed 3
 	JTable table_2 = new JTable();
 	JButton btnThem_2 = new JButton("Thêm");
-	//JButton btnAn_2 = new JButton("Ẩn");
+	JButton btnSua_2 = new JButton("Sửa");
+	JButton btnAn_2 = new JButton("Ẩn");
 	JButton btnLuu_2 = new JButton("Lưu");
+	boolean addncc, fixncc = false;
 	String oldTenNcc = null;
 
 	public void resetValueTabbed3() {
@@ -194,7 +200,8 @@ public class QuanLySanPhamGui extends JFrame {
 		textDiaChiCC.setEnabled(false);
 		textSDTNCC.setEnabled(false);
 		textTenNcc.setEnabled(false);
-		//btnAn_2.setEnabled(false);
+		btnSua_2.setEnabled(false);
+		btnAn_2.setEnabled(false);
 		btnLuu_2.setEnabled(false);
 	}
 
@@ -304,16 +311,17 @@ public class QuanLySanPhamGui extends JFrame {
 		textFieldTensp.setText("");
 		textFieldTensp.setEnabled(true);
 		//btnCapNhatAnh.setEnabled(true);
-		//btnThem.setEnabled(true);
-		//btnAn.setEnabled(false);
+		btnSua.setEnabled(false);
+		btnAn.setEnabled(false);
 
 //		Tabbed 2
 		textMaSP1.setText("");
 		textMaSP1.setEnabled(true);
 		textTenSp.setText("");
 		textTenSp.setEnabled(true);
-		//btnAn_1.setEnabled(false);
+		btnAn_1.setEnabled(false);
 		btnLuu_1.setEnabled(false);
+		btnSua_1.setEnabled(false);
 
 	}
 
@@ -331,7 +339,7 @@ public class QuanLySanPhamGui extends JFrame {
 		//btnThem.setEnabled(true);
 		//btnAn.setEnabled(false);
 		btnThem_1.setEnabled(true);
-		//.setEnabled(false);
+		btnSua_1.setEnabled(false);
 		btnLuu_1.setEnabled(false);
 		textTenSp.setEnabled(true);
 
@@ -347,7 +355,8 @@ public class QuanLySanPhamGui extends JFrame {
 		textFieldGianhap.setEnabled(false);
 		textFieldNsx.setEnabled(false);
 		textFieldTensp.setEnabled(false);
-		//btnAn.setEnabled(false);
+		btnAn.setEnabled(false);
+		btnSua.setEnabled(false);
 		textTenSp.setEnabled(false);
 	}
 
@@ -846,7 +855,7 @@ public class QuanLySanPhamGui extends JFrame {
 						}
 					});
 				}
-				 
+				resetValue();
 				
 				String[] columnNames = { "Loại Hàng", "Mã Sản Phẩm", "Tên Sản Phẩm", "Giá Mua", "Giá Bán", "Ngày Sản Xuất", "Hạn Sử Dụng" };
 				DefaultTableModel model = new DefaultTableModel(columnNames, 0);
@@ -916,7 +925,9 @@ public class QuanLySanPhamGui extends JFrame {
 				textFieldHsd.setText(hSD);
 
 				setEnable();
-				//btnAn.setEnabled(true);
+				textFieldTensp.setEnabled(true);
+				btnSua.setEnabled(true);
+				btnAn.setEnabled(true);
 				
 
 //				g.dispose();
@@ -1007,6 +1018,7 @@ public class QuanLySanPhamGui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				btg.clearSelection();
 				try {
+					resetValue();
 					hienthisanpham("timkiemtheoloaihang");
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
@@ -1062,26 +1074,116 @@ public class QuanLySanPhamGui extends JFrame {
 					.addContainerGap())
 		);
 		panel_8.setLayout(gl_panel_8);
+		if(taiKhoan.getQuyen().equals("RL2")) {
+			btnSua.setVisible(true);
+			btnAn.setVisible(true);
+			btnSua_1.setVisible(true);
+			btnAn_1.setVisible(true);
+			btnSua_2.setVisible(true);
+			btnAn_2.setVisible(true);
+		} else {
+			btnSua.setVisible(false);
+			btnAn.setVisible(false);
+			btnSua_1.setVisible(false);
+			btnAn_1.setVisible(false);
+			btnSua_2.setVisible(false);
+			btnAn_2.setVisible(false);
+		}
+		btnSua.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SanPhamBLL sp = new SanPhamBLL();
+				if(textFieldTensp.equals("")) {
+					JOptionPane.showMessageDialog(contentPane, "Tên sản phẩm trống!");
+					textFieldTensp.requestFocus();
+				}
+				else {
+					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn sửa sản phẩm "+textFieldMasp.getText(), "Confirmation",
+							JOptionPane.YES_NO_OPTION);
+					if (confirmed == JOptionPane.YES_OPTION) {
+						try {
+							if(sp.fixSanPham(textFieldMasp.getText(), textFieldTensp.getText())) {
+								JOptionPane.showMessageDialog(contentPane, "Sửa thành công!");
+								resetValue();
+								setEnable();
+								hienthisanpham("hien thi");
+							}
+							else {
+								JOptionPane.showMessageDialog(contentPane, "Sửa thất bại!");
+							}
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+		});
+		btnSua.setEnabled(false);
+		btnSua.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnSua.setIcon(new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Change.png"))));
+
+		btnSua.setFocusPainted(false);
+		
+		btnAn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn sản phẩm "+textFieldMasp.getText(), "Confirmation",
+						JOptionPane.YES_NO_OPTION);
+				if (confirmed == JOptionPane.YES_OPTION) {
+					SanPhamBLL spbll = new SanPhamBLL();
+					try {
+						if(spbll.hideSanPham(textFieldMasp.getText())) {
+							JOptionPane.showMessageDialog(contentPane, "Ẩn thành công!");
+							resetValue();
+							setEnable();
+							hienthisanpham("hien thi");
+						}
+						else {
+							JOptionPane.showMessageDialog(contentPane, "Ẩn thất bại!");
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+				}
+			}
+		});
+		btnAn.setEnabled(false);
+		btnAn.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnAn.setIcon(new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Delete.png"))));
+		btnAn.setFocusPainted(false);
 		GroupLayout gl_panel_6 = new GroupLayout(panel_6);
 		gl_panel_6.setHorizontalGroup(
 			gl_panel_6.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_6.createSequentialGroup()
-					.addGap(10)
-					//.addComponent(btnAn, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
-					//.addGap(40)
-					.addComponent(btnDongBo, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+					.addGap(25)
+					.addComponent(btnSua, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(btnAn, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
+					.addGap(24)
+					.addComponent(btnDongBo, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
 					.addGap(30)
-					.addComponent(panel_7, GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE))
+					.addComponent(panel_7, GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE))
 		);
 		gl_panel_6.setVerticalGroup(
-			gl_panel_6.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_6.createSequentialGroup()
+			gl_panel_6.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_panel_6.createSequentialGroup()
 					.addGap(10)
 					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
-						//.addComponent(btnAn, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-						.addComponent(btnDongBo, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-						.addComponent(panel_7, GroupLayout.PREFERRED_SIZE, 53, Short.MAX_VALUE))
-					.addGap(15))
+						.addGroup(gl_panel_6.createSequentialGroup()
+							.addComponent(btnAn, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())
+						.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_panel_6.createSequentialGroup()
+								.addComponent(btnSua, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+								.addContainerGap())
+							.addGroup(gl_panel_6.createSequentialGroup()
+								.addGroup(gl_panel_6.createParallelGroup(Alignment.TRAILING)
+									.addComponent(btnDongBo, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+									.addComponent(panel_7, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 53, Short.MAX_VALUE))
+								.addGap(15)))))
 		);
 		panel_6.setLayout(gl_panel_6);
 		GroupLayout gl_panel_5 = new GroupLayout(panel_5);
@@ -1248,9 +1350,10 @@ public class QuanLySanPhamGui extends JFrame {
 					e1.printStackTrace();
 				}
 				btnThem_1.setEnabled(false);
-				//btnAn_1.setEnabled(false);
+				btnSua_1.setEnabled(false);
+				btnAn_1.setEnabled(false);
 				textMaSP1.setEnabled(false);
-
+				addlh = true;
 			}
 		});
 
@@ -1286,32 +1389,60 @@ public class QuanLySanPhamGui extends JFrame {
 		btnLuu_1.setFont(new Font("Arial", Font.BOLD, 14));
 		btnLuu_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					if (checkEmtyValueTabbed2()) {
-						LoaiHang LH = new LoaiHang();
-						LH.setMaLH(textMaSP1.getText());
-						LH.setTenLH(textTenSp.getText());
-						LoaiHangBLL LHD;
-						int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn thêm loại hàng "+textMaSP1.getText(), "Confirmation",
-								JOptionPane.YES_NO_OPTION);
-						if (confirmed == JOptionPane.YES_OPTION) {
-							try {
-								LHD = new LoaiHangBLL();
-								if (LHD.BtnLoaiHang(LH, "themloaihang")) {
-									JOptionPane.showMessageDialog(contentPane, "Thêm Thành công!");
-									resetValue();
-									hienThiLoaiHang();
-									addbtn = false;
+				if(addlh) {
+					try {
+						if (checkEmtyValueTabbed2()) {
+							LoaiHang LH = new LoaiHang();
+							LH.setMaLH(textMaSP1.getText());
+							LH.setTenLH(textTenSp.getText());
+							LoaiHangBLL LHD;
+							int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn thêm loại hàng "+textMaSP1.getText(), "Confirmation",
+									JOptionPane.YES_NO_OPTION);
+							if (confirmed == JOptionPane.YES_OPTION) {
+								try {
+									LHD = new LoaiHangBLL();
+									if (LHD.BtnLoaiHang(LH, "themloaihang")) {
+										JOptionPane.showMessageDialog(contentPane, "Thêm Thành công!");
+										resetValue();
+										hienThiLoaiHang();
+										addlh = false;
+									}
+								} catch (SQLException e1) {
+									JOptionPane.showMessageDialog(contentPane, "Thêm Thất bại!");
 								}
-							} catch (SQLException e1) {
-								JOptionPane.showMessageDialog(contentPane, "Thêm Thất bại!");
 							}
 						}
+					} catch (NumberFormatException | HeadlessException | SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-				} catch (NumberFormatException | HeadlessException | SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
+				if(fixlh) {
+					try {
+						if (checkEmtyValueTabbed2()) {
+							LoaiHangBLL LHD;
+							int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn sửa loại hàng "+textMaSP1.getText(), "Confirmation",
+									JOptionPane.YES_NO_OPTION);
+							if (confirmed == JOptionPane.YES_OPTION) {
+								try {
+									LHD = new LoaiHangBLL();
+									if (LHD.fixLoaiHang(textMaSP1.getText(), textTenSp.getText())) {
+										JOptionPane.showMessageDialog(contentPane, "Sửa thành công!");
+										resetValue();
+										hienThiLoaiHang();
+										fixlh = false;
+									}
+								} catch (SQLException e1) {
+									JOptionPane.showMessageDialog(contentPane, "Sửa thất bại!");
+								}
+							}
+						}
+					} catch (NumberFormatException | HeadlessException | SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
 			}
 		});
 
@@ -1383,9 +1514,55 @@ public class QuanLySanPhamGui extends JFrame {
 				if(table_1.getRowCount() == 0) {
 					JOptionPane.showMessageDialog(contentPane, "Không tìm thấy loại hàng!");
 				}
+				resetValue();
 				txtSearch.setText("");
 			}
 		});
+		btnSua_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textTenSp.setEnabled(true);
+				btnLuu_1.setEnabled(true);
+				btnThem_1.setEnabled(false);
+				btnAn_1.setEnabled(false);
+				btnSua_1.setEnabled(false);
+				fixlh = true;
+				textMaSP1.setEnabled(false);
+			}
+		});
+		btnSua_1.setEnabled(false);
+		btnSua_1.setIcon(new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Change.png"))));
+		btnSua_1.setFont(new Font("Arial", Font.BOLD, 14));
+		btnSua_1.setFocusPainted(false);
+		btnAn_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn loại hàng "+textMaSP1.getText(), "Confirmation",
+						JOptionPane.YES_NO_OPTION);
+				if (confirmed == JOptionPane.YES_OPTION) {
+					LoaiHangBLL lh = new LoaiHangBLL();
+					try {
+						if(lh.hideLoaiHang(textMaSP1.getText())) {
+							JOptionPane.showMessageDialog(contentPane, "Ẩn thành công!");
+							textMaSP1.setText("");
+							textTenSp.setText("");
+							hienThiLoaiHang();
+						}
+						else {
+							JOptionPane.showMessageDialog(contentPane, "Ẩn thất bại!");
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		
+		btnAn_1.setEnabled(false);
+		btnAn_1.setIcon(new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Delete.png"))));
+		btnAn_1.setFont(new Font("Arial", Font.BOLD, 14));
+		btnAn_1.setFocusPainted(false);
 		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
 		gl_panel_3.setHorizontalGroup(
 			gl_panel_3.createParallelGroup(Alignment.TRAILING)
@@ -1405,14 +1582,19 @@ public class QuanLySanPhamGui extends JFrame {
 				.addGroup(gl_panel_3.createSequentialGroup()
 					.addGap(169)
 					.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, gl_panel_3.createSequentialGroup()
-							.addComponent(btnSearch, GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+						.addGroup(gl_panel_3.createSequentialGroup()
+							.addComponent(btnSearch, GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(txtSearch, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE))
-						.addComponent(btnThem_1, GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE))
-					.addGap(54)
-					.addComponent(btnLuu_1, GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
-					.addGap(151))
+						.addGroup(gl_panel_3.createSequentialGroup()
+							.addComponent(btnThem_1, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(btnLuu_1, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(btnSua_1, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(btnAn_1, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)))
+					.addGap(314))
 		);
 		gl_panel_3.setVerticalGroup(
 			gl_panel_3.createParallelGroup(Alignment.LEADING)
@@ -1423,11 +1605,18 @@ public class QuanLySanPhamGui extends JFrame {
 						.addComponent(textMaSP1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textTenSp, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-					.addGap(35)
-					.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnThem_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnLuu_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
-					.addGap(26)
+					.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(gl_panel_3.createSequentialGroup()
+							.addGap(35)
+							.addGroup(gl_panel_3.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnThem_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnLuu_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnSua_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
+							.addGap(26))
+						.addGroup(Alignment.TRAILING, gl_panel_3.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(btnAn_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+							.addGap(26)))
 					.addGroup(gl_panel_3.createParallelGroup(Alignment.TRAILING)
 						.addComponent(txtSearch, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
 						.addComponent(btnSearch, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
@@ -1456,7 +1645,8 @@ public class QuanLySanPhamGui extends JFrame {
 				textTenSp.setText(tenLh);
 				setEnable();
 				textMaSP1.setEnabled(false);
-				//btnAn_1.setEnabled(true);
+				btnSua_1.setEnabled(true);
+				btnAn_1.setEnabled(true);
 				btnThem_1.setEnabled(true);
 				btnLuu_1.setEnabled(false);
 
@@ -1464,6 +1654,7 @@ public class QuanLySanPhamGui extends JFrame {
 		});
 		
 		JPanel panel_4 = new JPanel();
+		tabbedPane.addTab("Thông Tin Nhà Cung Cấp",null, panel_4, null);
 		if(!taiKhoan.getQuyen().equals("RL3")) {
 			tabbedPane.addTab("Thông Tin Nhà Cung Cấp",null, panel_4, null);
 		}
@@ -1524,7 +1715,8 @@ public class QuanLySanPhamGui extends JFrame {
 				textDiaChiCC.setEnabled(false);
 				textSDTNCC.setEnabled(false);
 				textTenNcc.setEnabled(false);
-				//btnAn_2.setEnabled(true);
+				btnSua_2.setEnabled(true);
+				btnAn_2.setEnabled(true);
 				btnThem_2.setEnabled(true);
 				btnLuu_2.setEnabled(false);
 
@@ -1554,6 +1746,7 @@ public class QuanLySanPhamGui extends JFrame {
 
 		scrollPane_2.setViewportView(table_2);
 		panel_10.setLayout(gl_panel_10);
+		btnThem_2.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnThem_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				textDiaChiCC.setText("");
@@ -1562,7 +1755,8 @@ public class QuanLySanPhamGui extends JFrame {
 				textDiaChiCC.setEnabled(true);
 				textSDTNCC.setEnabled(true);
 				textTenNcc.setEnabled(true);
-				//btnAn_2.setEnabled(false);
+				btnAn_2.setEnabled(false);
+				btnSua_2.setEnabled(false);
 				btnLuu_2.setEnabled(true);
 				btnThem_2.setEnabled(false);
 				try {
@@ -1581,6 +1775,7 @@ public class QuanLySanPhamGui extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				addncc = true;
 			}
 		});
 
@@ -1615,36 +1810,65 @@ public class QuanLySanPhamGui extends JFrame {
 		 * if(taiKhoan.getQuyen().equals("RL2")) { btnAn_2.setVisible(true); } else {
 		 * btnAn_2.setVisible(false); }
 		 */
+		btnLuu_2.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnLuu_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					if (checkEmtyValueTabbed3()) {
-						NhaCungCap NCC = new NhaCungCap();
-						NCC.setMaNCC(textNhaCC.getText());
-						NCC.setTenNCC(textTenNcc.getText());
-						NCC.setDiaChi(textDiaChiCC.getText());
-						NCC.setSoDT(textSDTNCC.getText());
-						NhaCungCapBLL NCCB;
-						int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn thêm nhà cung cấp "+textNhaCC.getText(), "Confirmation",
-								JOptionPane.YES_NO_OPTION);
-						if (confirmed == JOptionPane.YES_OPTION) {
-							try {
-								NCCB = new NhaCungCapBLL();
-								if (NCCB.BtnNhaCungCap(NCC, "themnhacungcap")) {
-									JOptionPane.showMessageDialog(contentPane, "Thêm Thành công!");
-									resetValueTabbed3();
-									hienThiNhaCungCap();
-									addbtn = false;
+				if(addncc) {
+					try {
+						if (checkEmtyValueTabbed3()) {
+							NhaCungCap NCC = new NhaCungCap();
+							NCC.setMaNCC(textNhaCC.getText());
+							NCC.setTenNCC(textTenNcc.getText());
+							NCC.setDiaChi(textDiaChiCC.getText());
+							NCC.setSoDT(textSDTNCC.getText());
+							NhaCungCapBLL NCCB;
+							int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn thêm nhà cung cấp "+textNhaCC.getText(), "Confirmation",
+									JOptionPane.YES_NO_OPTION);
+							if (confirmed == JOptionPane.YES_OPTION) {
+								try {
+									NCCB = new NhaCungCapBLL();
+									if (NCCB.BtnNhaCungCap(NCC, "themnhacungcap")) {
+										JOptionPane.showMessageDialog(contentPane, "Thêm Thành công!");
+										resetValueTabbed3();
+										hienThiNhaCungCap();
+										addncc = false;
+									}
+								} catch (SQLException e1) {
+									JOptionPane.showMessageDialog(contentPane, "Thêm Thất bại!");
 								}
-							} catch (SQLException e1) {
-								JOptionPane.showMessageDialog(contentPane, "Thêm Thất bại!");
 							}
 						}
+					} catch (NumberFormatException | HeadlessException | SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-				} catch (NumberFormatException | HeadlessException | SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
+				if(fixncc) {
+					try {
+						if (checkEmtyValueTabbed3()) {
+							NhaCungCapBLL NCCB;
+							int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn sửa nhà cung cấp "+textNhaCC.getText(), "Confirmation",
+									JOptionPane.YES_NO_OPTION);
+							if (confirmed == JOptionPane.YES_OPTION) {
+								try {
+									NCCB = new NhaCungCapBLL();
+									if (NCCB.fixNhaCungCap(textNhaCC.getText(), textTenNcc.getText(), textDiaChiCC.getText(), textSDTNCC.getText())) {
+										JOptionPane.showMessageDialog(contentPane, "Sửa thành công!");
+										resetValueTabbed3();
+										hienThiNhaCungCap();
+										fixncc = false;
+									}
+								} catch (SQLException e1) {
+									JOptionPane.showMessageDialog(contentPane, "Sửa thất bại!");
+								}
+							}
+						}
+					} catch (NumberFormatException | HeadlessException | SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
 			}
 		});
 
@@ -1704,9 +1928,58 @@ public class QuanLySanPhamGui extends JFrame {
 				if(table_1.getRowCount() == 0) {
 					JOptionPane.showMessageDialog(contentPane, "Không tìm thấy nhà cung cấp!");
 				}
+				resetValueTabbed3();
 				txtTimKiem.setText("");
 			}
 		});
+		btnSua_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textDiaChiCC.setEnabled(true);
+				textSDTNCC.setEnabled(true);
+				textTenNcc.setEnabled(true);
+				btnAn_2.setEnabled(false);
+				btnLuu_2.setEnabled(true);
+				btnThem_2.setEnabled(false);
+				btnSua_2.setEnabled(false);
+				fixncc = true;
+			}
+		});
+		
+		btnSua_2.setEnabled(false);
+		btnSua_2.setIcon(new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Change.png"))));
+		btnSua_2.setFont(new Font("Arial", Font.BOLD, 14));
+		btnSua_2.setFocusPainted(false);
+		btnAn_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn ẩn nhà cung cấp "+textNhaCC.getText(), "Confirmation",
+						JOptionPane.YES_NO_OPTION);
+				if (confirmed == JOptionPane.YES_OPTION) {
+					NhaCungCapBLL ncc = new NhaCungCapBLL();
+					try {
+						if(ncc.hideNhaCungCap(textNhaCC.getText())) {
+							JOptionPane.showMessageDialog(contentPane, "Ẩn thành công!");
+							resetValueTabbed3();
+							hienThiNhaCungCap();
+						}
+						else {
+							JOptionPane.showMessageDialog(contentPane, "Ẩn thất bại!");
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		
+		
+		btnAn_2.setEnabled(false);
+		btnAn_2.setIcon(new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Delete.png"))));
+		btnAn_2.setFont(new Font("Arial", Font.BOLD, 14));
+		btnAn_2.setFocusPainted(false);
+		
 		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
 		gl_panel_4.setHorizontalGroup(
 			gl_panel_4.createParallelGroup(Alignment.LEADING)
@@ -1736,13 +2009,19 @@ public class QuanLySanPhamGui extends JFrame {
 					.addGap(100)
 					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_4.createSequentialGroup()
+							.addComponent(btnThem_2, GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+							.addGap(50)
+							.addComponent(btnLuu_2, GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+							.addGap(50)
+							.addComponent(btnSua_2, GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+							.addGap(50)
+							.addComponent(btnAn_2, GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+							.addGap(50))
+						.addGroup(gl_panel_4.createSequentialGroup()
 							.addComponent(btnTimKiem, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
 							.addGap(18)
-							.addComponent(txtTimKiem, GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE))
-						.addComponent(btnThem_2, GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE))
-					.addGap(100)
-					.addComponent(btnLuu_2, GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
-					.addGap(165))
+							.addComponent(txtTimKiem, GroupLayout.PREFERRED_SIZE, 214, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())))
 		);
 		gl_panel_4.setVerticalGroup(
 			gl_panel_4.createParallelGroup(Alignment.LEADING)
@@ -1762,7 +2041,9 @@ public class QuanLySanPhamGui extends JFrame {
 					.addGap(34)
 					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnThem_2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnLuu_2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
+						.addComponent(btnLuu_2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnSua_2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnAn_2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
 					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING, false)
 						.addComponent(txtTimKiem)

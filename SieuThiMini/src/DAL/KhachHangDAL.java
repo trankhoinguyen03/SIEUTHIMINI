@@ -86,13 +86,27 @@ public class KhachHangDAL extends connectSql {
 	}
         
         public boolean anKhachHang(String makh) throws SQLException {
-			String sql = "UPDATE KHACHHANG SET TrangThai = " + 0 + " where MaKH = " + makh;
+			String sql = "UPDATE KHACHHANG SET TrangThai = 0 where MaKH = ?";
 			try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+				pstm.setString(1, makh);
 				int rowsUpdated = pstm.executeUpdate();
 	
 				return rowsUpdated > 0;
 			}
         }
+        
+        public boolean suaKhachHang(String makh, String tenkh, String sdt) throws SQLException {
+			String sql = "UPDATE KHACHHANG SET TenKH = ?, SDT = ? where MaKH = ?";
+			try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+				pstm.setString(1, tenkh);
+				pstm.setString(2, sdt);
+				pstm.setString(3, makh);
+				int rowsUpdated = pstm.executeUpdate();
+	
+				return rowsUpdated > 0;
+			}
+        }
+        
         public String layMaKHcuoi() throws SQLException {
             String sql = "SELECT MAX(MaKH) FROM KHACHHANG";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {

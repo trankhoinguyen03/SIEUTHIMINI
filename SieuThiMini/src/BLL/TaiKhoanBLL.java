@@ -25,6 +25,10 @@ public class TaiKhoanBLL {
 		TaiKhoanDAL tkd = new TaiKhoanDAL();
 		return tkd.anTaiKhoan(id);
 	}
+	public boolean fixTaiKhoan(TaiKhoan obj) throws SQLException {
+		TaiKhoanDAL tkd = new TaiKhoanDAL();
+		return tkd.suaTaiKhoan(obj);
+	}
 	public boolean addTaiKhoan(TaiKhoan obj) throws SQLException {
 		TaiKhoanDAL tkd = new TaiKhoanDAL();
 		return tkd.themTaiKhoan(obj);

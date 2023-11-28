@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 
+import DAL.KhoDAL;
 import DAL.SanPhamDAL;
 import DTO.SanPham;
 
@@ -43,6 +44,14 @@ public class SanPhamBLL {
 	public boolean addSanPham(SanPham obj) throws SQLException {
 		SanPhamDAL spd = new SanPhamDAL();
 		return spd.themSanPham(obj);
+	}
+	public boolean fixSanPham(String id, String name) throws SQLException {
+		SanPhamDAL spd = new SanPhamDAL();
+		return spd.suaSanPham(id, name);
+	}
+	public boolean hideSanPham(String id) throws SQLException {
+		SanPhamDAL spd = new SanPhamDAL();
+		return spd.anSanPham(id);
 	}
 	public static void main(String[] args) throws SQLException {
 		SanPhamBLL test = new SanPhamBLL();

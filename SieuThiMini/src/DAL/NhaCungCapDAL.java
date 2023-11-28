@@ -62,6 +62,30 @@ public class NhaCungCapDAL extends connectSql {
 		    }
 		  return null;
 	}
+	
+    public boolean anNhaCungCap(String mancc) throws SQLException {
+		String sql = "UPDATE NHACUNGCAP SET TrangThai = 0 where MaNCC = ?";
+		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+			pstm.setString(1, mancc);
+			int rowsUpdated = pstm.executeUpdate();
+
+			return rowsUpdated > 0;
+		}
+    }
+    
+    public boolean suaNhaCungCap(String mancc, String tenncc, String diachi, String sdt) throws SQLException {
+		String sql = "UPDATE NHACUNGCAP SET TenNCC = ?, DiaChi = ?, SDT = ? where MaNCC = ?";
+		try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+			pstm.setString(1, tenncc);
+			pstm.setString(2, diachi);
+			pstm.setString(3, sdt);
+			pstm.setString(4, mancc);
+			int rowsUpdated = pstm.executeUpdate();
+
+			return rowsUpdated > 0;
+		}
+    }
+	
 	public boolean BtnNhaCungCap(NhaCungCap Ncc,String condition) throws SQLException {
 		String sql ="";
 		if(condition.equals("themnhacungcap")) {

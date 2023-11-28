@@ -199,8 +199,6 @@ public class KhoGui extends JFrame {
 		JTableHeader header = table.getTableHeader();
 		Font headerFont = header.getFont(); // get the current font of the header
 		header.setFont(new Font(headerFont.getName(), Font.BOLD, 14)); // set the new font for the header with size 16
-		lastRow = table.getRowCount() - 1; // get index of the last row
-		lastValueMaSp = table.getValueAt(lastRow, 0); // get the value at the last row and column n
 
 	}
 

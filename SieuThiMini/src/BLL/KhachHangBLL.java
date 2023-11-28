@@ -15,6 +15,10 @@ public class KhachHangBLL {
 		arr = khd.docKhachHang(condition);
 		return arr;
 	}
+	public boolean fixKhachHang(String id, String name, String phone) throws SQLException {
+		KhachHangDAL khd = new KhachHangDAL();
+		return khd.suaKhachHang(id, name, phone);
+	}
 	public boolean hideKhachHang(String id) throws SQLException {
 		KhachHangDAL khd = new KhachHangDAL();
 		return khd.anKhachHang(id);
