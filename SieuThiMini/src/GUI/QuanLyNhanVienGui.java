@@ -159,6 +159,14 @@ public class QuanLyNhanVienGui extends JFrame {
         if (condition == "hien thi") {
 
             arrNv = nvBll.getNhanVien("docnhanvien");
+            NhanVienBLL test = new NhanVienBLL();
+            ArrayList<ChucVu> arr = test.getChucVu();
+            DefaultComboBoxModel comboncc = new DefaultComboBoxModel();
+            comboBox.setModel(comboncc);
+            for (ChucVu macv : arr) {
+                comboncc.addElement(macv.getTenCV());
+            }
+            
         }
         if (condition == "sapxeptheoten") {
             arrNv = nvBll.getNhanVien("sapxeptheoten");
@@ -783,10 +791,8 @@ public class QuanLyNhanVienGui extends JFrame {
                 textFieldDiachi.setText(diaChi);
                 textFieldCmnd.setText(cccd);
 				textFieldDienthoai.setText(sdt);
-				textFieldNgayvaolam.setText(ngayVao);	
-                DefaultComboBoxModel combo = new DefaultComboBoxModel();
-                comboBox.setModel(combo);
-                combo.addElement(chucVu);
+				textFieldNgayvaolam.setText(ngayVao);
+                comboBox.setSelectedItem(chucVu);
 				setEnable();
 				hideField();
 				btnSua.setEnabled(true);
@@ -1003,6 +1009,7 @@ public class QuanLyNhanVienGui extends JFrame {
                    btnLuu.setEnabled(true);
                    btnXoa.setEnabled(false);
                    fixbtn = true;
+                   
 				}
 				if(taiKhoan.getMaNV().equals(textFieldManv.getText())) {
 					comboBox.setEnabled(false);
