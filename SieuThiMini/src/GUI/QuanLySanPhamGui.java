@@ -72,6 +72,7 @@ import BLL.KhoBLL;
 import BLL.LoaiHangBLL;
 import BLL.NhaCungCapBLL;
 import BLL.SanPhamBLL;
+import BLL.TaiKhoanBLL;
 import DTO.LoaiHang;
 import DTO.NhaCungCap;
 import DTO.NhanVien;
@@ -362,102 +363,29 @@ public class QuanLySanPhamGui extends JFrame {
 
 	public Boolean checkEmtyValue() throws SQLException {
 		// regular expression pattern
-		if (textFieldMasp.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Mã sản phẩm trống!");
-			textFieldMasp.requestFocus();
-			return false;
-		}
-		if (!textFieldMasp.getText().isEmpty()) {
-			SanPhamDAL spd = new SanPhamDAL();
-			ArrayList<SanPham> arrPro = new ArrayList<SanPham>();
-			arrPro = spd.docSanPham("docsanpham", null);
-			if (fixbtn) {
-				for (SanPham sp : arrPro) {
-					if (Integer.parseInt(oldMaSP) != Integer.parseInt(textFieldMasp.getText())
-							&& sp.getMaSp() == textFieldMasp.getText()) {
-						JOptionPane.showMessageDialog(contentPane, "Mã sản phẩm đã tồn tại!");
-						textFieldMasp.requestFocus();
-						return false;
-
-					}
-				}
-			}
-			if (addbtn) {
-				for (SanPham sp : arrPro) {
-					if (sp.getMaSp() == textFieldMasp.getText()) {
-						JOptionPane.showMessageDialog(contentPane, "Mã sản phẩm đã tồn tại!");
-						textFieldMasp.requestFocus();
-						return false;
-
-					}
-				}
-			}
-
-		}
-		/*
-		 * if (selectedFile == null && textFieldImg.getText().isEmpty()) {
-		 * JOptionPane.showMessageDialog(contentPane, "Chưa chọn ảnh cho sản phẩm");
-		 * return false; }
-		 */
-		if (textFieldGiaban.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Giá bán rỗng");
-			textFieldGiaban.requestFocus();
-			return false;
-
-		}
-		if (!textFieldGiaban.getText().isEmpty()) {
-			String input = textFieldGiaban.getText().replaceAll(",", "");
-			isNumber = input.matches(patternNumber);
-			if (!isNumber) {
-				JOptionPane.showMessageDialog(contentPane, "Giá trị phải là số");
-				textFieldGiaban.requestFocus();
-				textFieldGiaban.selectAll();
-				return false;
-			}
-		}
-		if (textFieldGianhap.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Giá nhập rỗng");
-			textFieldGianhap.requestFocus();
-			return false;
-
-		}
-		if (!textFieldGianhap.getText().isEmpty()) {
-			String input = textFieldGianhap.getText().replaceAll(",", "");
-			isNumber = input.matches(patternNumber);
-			if (!isNumber) {
-				JOptionPane.showMessageDialog(contentPane, "Giá trị phải là số");
-				textFieldGianhap.requestFocus();
-				textFieldGianhap.selectAll();
-				return false;
-			}
-
-		}
-
-		if (textFieldHsd.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Hạn sử dụng rỗng");
-			textFieldHsd.requestFocus();
-			return false;
-		}
-		if (textFieldTensp.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Tên sản phẩm rỗng");
+		if(textFieldTensp.getText().isEmpty()) {
+			JOptionPane.showMessageDialog(contentPane, "Tên Sản Phẩm Trống!");
 			textFieldTensp.requestFocus();
 			return false;
 		}
-		if (textFieldNsx.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(contentPane, "Ngày sản xuất rỗng");
-			textFieldNsx.requestFocus();
-			return false;
-		}
-
-		if (Integer.parseInt(textFieldGianhap.getText().replaceAll(",", "")) > Integer
-				.parseInt(textFieldGiaban.getText().replaceAll(",", ""))) {
-			int dialogResult = JOptionPane.showConfirmDialog(null, "Giá bán nhỏ hơn giá nhập,Bạn muốn tiếp tục",
-					"Confirmation", JOptionPane.YES_NO_OPTION);
-			if (dialogResult == JOptionPane.YES_OPTION) {
-				return true;
-			} else if (dialogResult == JOptionPane.NO_OPTION) {
-				return false;
-			} else if (dialogResult == JOptionPane.CANCEL_OPTION) {
+		else {
+			SanPhamBLL spbll = new SanPhamBLL();
+			ArrayList<SanPham> arr = new ArrayList<SanPham>();
+			arr = spbll.getSanPham();
+			boolean flag = true;
+			for(SanPham data: arr) {
+				if (data.getTenSp().equalsIgnoreCase(textFieldTensp.getText()) && !data.getMaSp().equals(textFieldMasp.getText())) {
+					flag = false;
+				}
+				if (data.getTenSp().equalsIgnoreCase(textFieldTensp.getText().toLowerCase()) && data.getMaSp().equals(textFieldMasp.getText())) {
+    				flag = true;
+    				break;
+				}
+			}
+			if(!flag) {
+				JOptionPane.showMessageDialog(contentPane, "Tên sản phẩm đã tồn tại!");
+				textFieldTensp.requestFocus();
+				textFieldTensp.selectAll();
 				return false;
 			}
 		}
@@ -472,31 +400,26 @@ public class QuanLySanPhamGui extends JFrame {
 			return false;
 
 		}
-		if (!textTenSp.getText().isEmpty()) {
-			LoaiHangBLL lhb = new LoaiHangBLL();
-			ArrayList<LoaiHang> arrLh = new ArrayList<LoaiHang>();
-			arrLh = lhb.getLoaiHang();
-
-			for (LoaiHang lh : arrLh) {
-
-				if (fixbtn && oldTenMaLH.equals(textTenSp.getText()) == false
-						&& lh.getTenLH().equals(textTenSp.getText())) {
-					JOptionPane.showMessageDialog(contentPane, "Tên Loại Hàng Đã Tồn Tại!");
-					textTenSp.requestFocus();
-					textTenSp.selectAll();
-
-					return false;
+		else {
+			LoaiHangBLL bll = new LoaiHangBLL();
+			ArrayList<LoaiHang> arr = new ArrayList<LoaiHang>();
+			arr = bll.getLoaiHang();
+			boolean flag = true;
+			for(LoaiHang data: arr) {
+				if (data.getTenLH().equalsIgnoreCase(textTenSp.getText().toLowerCase()) && !data.getMaLH().equals(textMaSP1.getText())) {
+					flag = false;
 				}
-
-				if (addbtn && lh.getTenLH().equals(textTenSp.getText())) {
-					JOptionPane.showMessageDialog(contentPane, "Tên Loại Hàng Đã Tồn Tại!");
-					textTenSp.requestFocus();
-					textTenSp.selectAll();
-
-					return false;
+				if (data.getTenLH().equalsIgnoreCase(textTenSp.getText().toLowerCase()) && data.getMaLH().equals(textMaSP1.getText())) {
+    				flag = true;
+    				break;
 				}
 			}
-
+			if(!flag) {
+				JOptionPane.showMessageDialog(contentPane, "Tên loại hàng đã tồn tại!");
+				textTenSp.requestFocus();
+				textTenSp.selectAll();
+				return false;
+			}
 		}
 		return true;
 	}
@@ -509,19 +432,25 @@ public class QuanLySanPhamGui extends JFrame {
 			return false;
 
 		}
-		if (!textTenNcc.getText().isEmpty()) {
-			NhaCungCapBLL NCCD = new NhaCungCapBLL();
-			ArrayList<NhaCungCap> arrNcc = new ArrayList<NhaCungCap>();
-			arrNcc = NCCD.getNhaCungCap();
-
-			for (NhaCungCap lh : arrNcc) {
-
-				if (lh.getTenNCC().equalsIgnoreCase(textTenNcc.getText())) {
-					JOptionPane.showMessageDialog(contentPane, "Tên Nhà Cung Cấp Đã Tồn Tại!");
-					textTenNcc.requestFocus();
-					textTenNcc.selectAll();
-					return false;
+		else {
+			NhaCungCapBLL bll = new NhaCungCapBLL();
+			ArrayList<NhaCungCap> arr = new ArrayList<NhaCungCap>();
+			arr = bll.getNhaCungCap();
+			boolean flag = true;
+			for(NhaCungCap data: arr) {
+				if (data.getTenNCC().equalsIgnoreCase(textTenNcc.getText().toLowerCase()) && !data.getMaNCC().equals(textNhaCC.getText())) {
+					flag = false;
 				}
+				if (data.getTenNCC().equalsIgnoreCase(textTenNcc.getText().toLowerCase()) && data.getMaNCC().equals(textNhaCC.getText())) {
+    				flag = true;
+    				break;
+				}
+			}
+			if(!flag) {
+				JOptionPane.showMessageDialog(contentPane, "Tên nhà cung cấp đã tồn tại!");
+				textTenNcc.requestFocus();
+				textTenNcc.selectAll();
+				return false;
 			}
 		}
 		if (textDiaChiCC.getText().isEmpty()) {
@@ -1092,29 +1021,33 @@ public class QuanLySanPhamGui extends JFrame {
 		btnSua.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SanPhamBLL sp = new SanPhamBLL();
-				if(textFieldTensp.equals("")) {
-					JOptionPane.showMessageDialog(contentPane, "Tên sản phẩm trống!");
-					textFieldTensp.requestFocus();
-				}
-				else {
-					int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn sửa sản phẩm "+textFieldMasp.getText(), "Confirmation",
-							JOptionPane.YES_NO_OPTION);
-					if (confirmed == JOptionPane.YES_OPTION) {
-						try {
-							if(sp.fixSanPham(textFieldMasp.getText(), textFieldTensp.getText())) {
-								JOptionPane.showMessageDialog(contentPane, "Sửa thành công!");
-								resetValue();
-								setEnable();
-								hienthisanpham("hien thi");
+				try {
+					if(checkEmtyValue()) {
+						int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn sửa sản phẩm "+textFieldMasp.getText(), "Confirmation",
+								JOptionPane.YES_NO_OPTION);
+						if (confirmed == JOptionPane.YES_OPTION) {
+							try {
+								if(sp.fixSanPham(textFieldMasp.getText(), textFieldTensp.getText())) {
+									JOptionPane.showMessageDialog(contentPane, "Sửa thành công!");
+									resetValue();
+									setEnable();
+									hienthisanpham("hien thi");
+								}
+								else {
+									JOptionPane.showMessageDialog(contentPane, "Sửa thất bại!");
+								}
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
 							}
-							else {
-								JOptionPane.showMessageDialog(contentPane, "Sửa thất bại!");
-							}
-						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
 						}
 					}
+				} catch (HeadlessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 			}
 		});

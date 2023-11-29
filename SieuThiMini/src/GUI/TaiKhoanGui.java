@@ -242,10 +242,10 @@ public class TaiKhoanGui extends JFrame {
     			arr = tkb.getTaiKhoan("doctaikhoan");
     			boolean flag = true;
     			for(TaiKhoan data: arr) {
-					if (data.getTenDangNhap().equals(textFieldTaikhoan.getText()) && !data.getMaNV().equals(comboTaiKhoan.getSelectedItem().toString())) {
+					if (data.getTenDangNhap().equalsIgnoreCase(textFieldTaikhoan.getText()) && !data.getMaNV().equals(comboTaiKhoan.getSelectedItem().toString())) {
 						flag = false;
 					}
-					if (data.getTenDangNhap().equals(textFieldTaikhoan.getText()) && data.getMaNV().equals(comboTaiKhoan.getSelectedItem().toString())) {
+					if (data.getTenDangNhap().equalsIgnoreCase(textFieldTaikhoan.getText()) && data.getMaNV().equals(comboTaiKhoan.getSelectedItem().toString())) {
 	    				flag = true;
 	    				break;
 					}
