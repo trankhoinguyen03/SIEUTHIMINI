@@ -639,11 +639,11 @@ public class QuanLyNhanVienGui extends JFrame {
     	btnXoa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean flag = true;
-				if(taiKhoan.getQuyen().equals("RL2")) {
-					if(taiKhoan.getMaNV().equals(textFieldManv.getText())) {
-						flag = false;
-						JOptionPane.showMessageDialog(contentPane, "Không thể cho nghỉ việc chính bạn!");
-					} else if(comboBox.getSelectedItem().toString().equals("ADMIN")) {
+				if(taiKhoan.getMaNV().equals(textFieldManv.getText())) {
+					flag = false;
+					JOptionPane.showMessageDialog(contentPane, "Không thể cho nghỉ việc chính bạn!");
+				} else if(taiKhoan.getQuyen().equals("RL2")) {
+					if(comboBox.getSelectedItem().toString().equals("ADMIN")) {
 						flag = false;
 						JOptionPane.showMessageDialog(contentPane, "Không thể cho nghỉ việc người có chức vụ cao hơn bạn!");
 					} else if(comboBox.getSelectedItem().toString().equals("QUẢN LÝ")) {
@@ -1003,6 +1003,9 @@ public class QuanLyNhanVienGui extends JFrame {
                    btnLuu.setEnabled(true);
                    btnXoa.setEnabled(false);
                    fixbtn = true;
+				}
+				if(taiKhoan.getMaNV().equals(textFieldManv.getText())) {
+					comboBox.setEnabled(false);
 				}
         	}
         });
