@@ -76,7 +76,6 @@ public class KhoDAL extends connectSql {
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		try {
 			pstm.setString(1, value);
-			
 			pstm.setString(2, id);
 			pstm.executeUpdate();
 			closeConnection();
