@@ -64,6 +64,7 @@ import com.toedter.calendar.JDateChooser;
 import BLL.DangNhapBLL;
 import BLL.NhaCungCapBLL;
 import BLL.NhanVienBLL;
+import BLL.TaiKhoanBLL;
 import DTO.ChucVu;
 import DTO.KhachHang;
 import DTO.NhaCungCap;
@@ -159,6 +160,14 @@ public class QuanLyNhanVienGui extends JFrame {
         if (condition == "hien thi") {
 
             arrNv = nvBll.getNhanVien("docnhanvien");
+            NhanVienBLL test = new NhanVienBLL();
+            ArrayList<ChucVu> arr = test.getChucVu();
+            DefaultComboBoxModel comboncc = new DefaultComboBoxModel();
+            comboBox.setModel(comboncc);
+            for (ChucVu macv : arr) {
+                comboncc.addElement(macv.getTenCV());
+            }
+            
         }
         if (condition == "sapxeptheoten") {
             arrNv = nvBll.getNhanVien("sapxeptheoten");
@@ -543,8 +552,11 @@ public class QuanLyNhanVienGui extends JFrame {
 	    								JOptionPane.YES_NO_OPTION);
 	    						if (confirmed == JOptionPane.YES_OPTION) {
 	    							NhanVien nv = new NhanVien();
+	    							TaiKhoan tk=new TaiKhoan();
 	    							NhanVienBLL luunv;
+	    							TaiKhoanBLL tkb;
 	    							try {
+	    								tkb=new TaiKhoanBLL();
 	    								luunv = new NhanVienBLL();
 	    		                        nv.setMaNv(textFieldManv.getText());
 	    		                        nv.setTenNv(textFieldTennv.getText());
@@ -563,6 +575,11 @@ public class QuanLyNhanVienGui extends JFrame {
 	    		                        nv.setNgayVaoLam(ngayLam);
 	    		                        nv.setDiaChi(textFieldDiachi.getText());
 	    		                        nv.setChucVu(luunv.getMaCV(comboBox.getSelectedItem().toString()));
+//	    		                        tk.setMaNV(textFieldManv.getText());
+//	    		                        String manv=textFieldManv.getText();
+//	    		                        String maquyen2=tkb.getQuyen(manv);
+//	    		                        System.out.println("Mã Quyền: '" + maquyen2 + "'");
+//	    		                        tk.setQuyen(maquyen2);
 	    								boolean checkAddPro = luunv.fixNhanVien(nv);
 	    								if (checkAddPro) {
 	    									JOptionPane.showMessageDialog(contentPane, "Sửa thành công");
@@ -639,11 +656,11 @@ public class QuanLyNhanVienGui extends JFrame {
     	btnXoa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean flag = true;
-				if(taiKhoan.getQuyen().equals("RL2")) {
-					if(taiKhoan.getMaNV().equals(textFieldManv.getText())) {
-						flag = false;
-						JOptionPane.showMessageDialog(contentPane, "Không thể cho nghỉ việc chính bạn!");
-					} else if(comboBox.getSelectedItem().toString().equals("ADMIN")) {
+				if(taiKhoan.getMaNV().equals(textFieldManv.getText())) {
+					flag = false;
+					JOptionPane.showMessageDialog(contentPane, "Không thể cho nghỉ việc chính bạn!");
+				} else if(taiKhoan.getQuyen().equals("RL2")) {
+					if(comboBox.getSelectedItem().toString().equals("ADMIN")) {
 						flag = false;
 						JOptionPane.showMessageDialog(contentPane, "Không thể cho nghỉ việc người có chức vụ cao hơn bạn!");
 					} else if(comboBox.getSelectedItem().toString().equals("QUẢN LÝ")) {
@@ -783,10 +800,8 @@ public class QuanLyNhanVienGui extends JFrame {
                 textFieldDiachi.setText(diaChi);
                 textFieldCmnd.setText(cccd);
 				textFieldDienthoai.setText(sdt);
-				textFieldNgayvaolam.setText(ngayVao);	
-                DefaultComboBoxModel combo = new DefaultComboBoxModel();
-                comboBox.setModel(combo);
-                combo.addElement(chucVu);
+				textFieldNgayvaolam.setText(ngayVao);
+                comboBox.setSelectedItem(chucVu);
 				setEnable();
 				hideField();
 				btnSua.setEnabled(true);
@@ -1003,6 +1018,10 @@ public class QuanLyNhanVienGui extends JFrame {
                    btnLuu.setEnabled(true);
                    btnXoa.setEnabled(false);
                    fixbtn = true;
+                   
+				}
+				if(taiKhoan.getMaNV().equals(textFieldManv.getText())) {
+					comboBox.setEnabled(false);
 				}
         	}
         });

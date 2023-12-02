@@ -37,11 +37,6 @@ public class LoginGui extends JFrame {
 
 	private JPanel contentPane;
 	
-
-
-	/**
-	 * Launch the application.
-	 */
 	JTextField textField = new JTextField();
 	JPasswordField textField_1 = new JPasswordField();
 	public static void main(String[] args) {

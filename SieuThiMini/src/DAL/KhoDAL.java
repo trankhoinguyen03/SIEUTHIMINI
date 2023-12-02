@@ -72,12 +72,12 @@ public class KhoDAL extends connectSql {
         }
     }
 	public boolean themSoLuong(String value, String id) throws SQLException {
-		String sql = "INSERT INTO KHO (SoLuong, TrangThai, MaSP) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO KHO (SoLuong, MaSP) VALUES (?, ?)";
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		try {
 			pstm.setString(1, value);
-			pstm.setString(2, ""+1);
-			pstm.setString(3, id);
+			
+			pstm.setString(2, id);
 			pstm.executeUpdate();
 			closeConnection();
 			return true;

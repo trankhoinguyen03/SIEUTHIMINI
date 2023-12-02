@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package GUI;
 
 import java.util.Calendar;
@@ -23,6 +20,7 @@ import DTO.TaiKhoan;
 import com.sun.jdi.connect.spi.Connection;
 
 import BLL.DangNhapBLL;
+import BLL.HoaDonBLL;
 import BLL.NhanVienBLL;
 import BLL.XuatHoaDonBLL;
 
@@ -103,6 +101,7 @@ import javax.swing.JTable;
 public class HoaDon1 extends javax.swing.JFrame {
 
 	
+	
 	JDateChooser TFngay = new JDateChooser(); 
 	String formatDateToString(Date date) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -117,6 +116,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 
 	public HoaDon1() throws SQLException {
 		initComponents();
+		btnhuy =new JButton();
 		antext();
 		new Thread() {
 			public void run() {
@@ -150,7 +150,9 @@ public class HoaDon1 extends javax.swing.JFrame {
 		btnthem.setEnabled(true);
 		//btnthemsanpham2.setEnabled(false);
 		jButton6.setEnabled(false);
-
+		btnhuy.setEnabled(false);
+		btnhuy_1.setEnabled(false);
+		
 	}
 
 	public void hiennut() {
@@ -247,10 +249,69 @@ public class HoaDon1 extends javax.swing.JFrame {
 				try {
 		            HoaDonDAL hdd = new HoaDonDAL();
 		            HoaDon hd = new HoaDon();
+		            ChiTietHoaDon cthd=new ChiTietHoaDon();
+		            ChiTietHoaDonDAL cthdd=new ChiTietHoaDonDAL();
 		            String mahd = TFmahd.getText();
 		            hd.setTongTien(TFtongtien.getText());
 		            hd.setTongTienSauKM(TFtong.getText());
 		            hd.setKhuyenMai(TFmagiam.getText());
+		         
+		            int rowCount = jtable1.getRowCount();
+
+		         if (rowCount == 1) {
+		             Object maHangObject = jtable1.getValueAt(0, jtable1.getColumnModel().getColumnIndex("Mã Hàng"));
+		             String maHang = (maHangObject != null) ? maHangObject.toString() : "";
+
+		             Object soLuongObject = jtable1.getValueAt(0, jtable1.getColumnModel().getColumnIndex("Số Lượng"));
+		             String soLuong = (soLuongObject != null) ? soLuongObject.toString() : "";
+
+		             Object thanhTienObject = jtable1.getValueAt(0, jtable1.getColumnModel().getColumnIndex("Thành Tiền"));
+		             String thanhTien = (thanhTienObject != null) ? thanhTienObject.toString() : "";
+
+		             ChiTietHoaDon cthd1 = new ChiTietHoaDon();
+		             cthd1.setMaSp(maHang);
+		             cthd1.setSoLuong(soLuong);
+		             cthd1.setThanhTien(thanhTien);
+
+		             boolean capnhat = cthdd.updatechitiethoadon(cthd1, mahd);
+		         } else if (rowCount >= 2) {
+		           
+		             List<ChiTietHoaDon> listChiTiet = new ArrayList<>();
+
+		             for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+		                 Object maHangObject = jtable1.getValueAt(rowIndex, jtable1.getColumnModel().getColumnIndex("Mã Hàng"));
+
+		                 if (maHangObject != null) {
+		                     String maHang = maHangObject.toString();
+
+		                     Object soLuongObject = jtable1.getValueAt(rowIndex, jtable1.getColumnModel().getColumnIndex("Số Lượng"));
+		                     String soLuong = (soLuongObject != null) ? soLuongObject.toString() : "";
+
+		                     Object thanhTienObject = jtable1.getValueAt(rowIndex, jtable1.getColumnModel().getColumnIndex("Thành Tiền"));
+		                     String thanhTien = (thanhTienObject != null) ? thanhTienObject.toString() : "";
+
+		                     ChiTietHoaDon cthd1 = new ChiTietHoaDon();
+		                     cthd1.setMaSp(maHang);
+		                     cthd1.setSoLuong(soLuong);
+		                     cthd1.setThanhTien(thanhTien);
+		                     cthd1.setMaHd(TFmahd.getText());
+		                     listChiTiet.add(cthd1);
+		                 }
+		             }
+		             for (ChiTietHoaDon cthd1 : listChiTiet) {
+		                 boolean capnhat2 = cthdd.themhoadon(cthd1, "themhoadon");
+		             }
+		         }
+
+		         HoaDonDAL hdDAL2;
+					try {
+						hdDAL2 = new HoaDonDAL();
+						String mahd2=TFmahd.getText();
+						hdDAL2.getgiamsoluong(mahd2);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 		            boolean updateSuccess = hdd.updatehoadon(hd, mahd);
 
 		            if (updateSuccess) {
@@ -358,6 +419,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 		
 		});
 		btnthem = new javax.swing.JButton();
+		btnhuy = new javax.swing.JButton();
 		jLabel13 = new javax.swing.JLabel();
 		jLabel14 = new javax.swing.JLabel();
 		jLabel15 = new javax.swing.JLabel();
@@ -383,6 +445,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 		jLabel20 = new javax.swing.JLabel();
 		LBgio = new javax.swing.JLabel();
 		jLabel19 = new javax.swing.JLabel();
+		btnhuy_1=new javax.swing.JButton();
 //		ChiTietHoaDonBLL ctbll = new ChiTietHoaDonBLL();
 		NhanVienBLL ten = new NhanVienBLL();
 		try {
@@ -436,19 +499,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 				TFsdtActionPerformed(evt);
 			}
 		});
-		// jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-		// jLabel5.setText("Ngày Đặt:");
 
-//		TFmakh.addActionListener(new java.awt.event.ActionListener() {
-//			public void actionPerformed(java.awt.event.ActionEvent evt) {
-//				try {
-//					TFmakhActionPerformed(evt);
-//				} catch (SQLException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		});
 		btngg.setEnabled(false);
 		
 		JLabel lblNgy = new JLabel();
@@ -568,32 +619,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 					    	  btnluu.setEnabled(false);
 					    }
 					
-//					        float value = Float.parseFloat(TFtongtien.getText());
-//					        int diemthuong = 0;
-//					        if (value >= 50000) {
-//					            int bonus =  (int) (value / 50000);
-//					            diemthuong += bonus;
-//					            TFdiemthuong.setText(String.valueOf(diemthuong));
-//					        }
-//					        int value2 = 0;
-//					        if(!TFdiemthuong.getText().isEmpty() &&!TFdiemthuong.getText().isBlank()) {
-//					        	 value2 = Integer.parseInt(TFdiemthuong.getText());
-//					   	}
-////					        int value2 = Integer.parseInt(TFdiemthuong.getText());
-//					        float giamgia = 0;
-//					        if (value2 >= 5 && value2 < 10) {
-//					            giamgia = 25000;
-//					        } else if (value2 >= 10 && value2 < 15) {
-//					            giamgia = 50000;
-//					        } else if (value2 >= 15) {
-//					            giamgia = 100000;
-//
-//					        }
-//					        TFgiamgia.setText(String.valueOf(giamgia));
-//					        float value3 = Float.parseFloat(TFgiamgia.getText());
-//					        float value4 = Float.parseFloat(TFtongtien.getText());
-//					        float tong = value4 - value3;
-//					        TFtong.setText(String.valueOf(tong));
+
 		}
 		});
 
@@ -746,14 +772,6 @@ public class HoaDon1 extends javax.swing.JFrame {
 			            	int giamgia=giatri*tongtien/100;
 			            	TFgiamgia.setText(""+giamgia);
 			            
-//			            	 float tong=tongtien-giamgia;
-//			            	TFtong.setText(String.valueOf(tong));
-//			            	String makh=TFmakh.getText();
-//			            	String makm=TFmagiam.getText();
-//			            	String tongdiemthuong=hdd.getdiemtong(makh, makm);
-//			            	float tongcuoidiemthuong=Float.parseFloat(tongdiemthuong);
-//			            	kh.setDiemThuong(tongcuoidiemthuong);
-//			            	System.out.print(kh.getDiemThuong());
 			            	
 			            }
 			            else if(value>15&&value<=30)
@@ -765,13 +783,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 			            	int tongtien= Integer.parseInt(TFtongtien.getText());
 			            	int giamgia=giatri*tongtien/100;
 			            	TFgiamgia.setText(""+giamgia);
-//			            	 tong=tongtien-giamgia;
-//			            	TFtong.setText(String.valueOf(tong));
-//			            	String makh=TFmakh.getText();
-//			            	String makm=TFmagiam.getText();
-//			            	String tongdiemthuong=hdd.getdiemtong(makh, makm);
-//			            	float tongcuoidiemthuong=Float.parseFloat(tongdiemthuong);
-//			            	kh.setDiemThuong(tongcuoidiemthuong);
+
 			            }
 			            else if(value>30&&value<=45)
 			            {
@@ -782,13 +794,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 			            	int tongtien= Integer.parseInt(TFtongtien.getText());
 			            	int giamgia=giatri*tongtien/100;
 			            	TFgiamgia.setText(""+giamgia);
-//			            	 tong=tongtien-giamgia;
-//			            	TFtong.setText(String.valueOf(tong));
-//			            	String makh=TFmakh.getText();
-//			            	String makm=TFmagiam.getText();
-//			            	String tongdiemthuong=hdd.getdiemtong(makh, makm);
-//			            	float tongcuoidiemthuong=Float.parseFloat(tongdiemthuong);
-//			            	kh.setDiemThuong(tongcuoidiemthuong);
+
 			            }
 			            else 
 			            {
@@ -799,27 +805,8 @@ public class HoaDon1 extends javax.swing.JFrame {
 			            	int tongtien= Integer.parseInt(TFtongtien.getText());
 			            	int giamgia=giatri*tongtien/100;
 			            	TFgiamgia.setText(""+giamgia);
-//			            	 tong=tongtien-giamgia;
-//			            	TFtong.setText(String.valueOf(tong));
-//			            	String makh=TFmakh.getText();
-//			            	String makm=TFmagiam.getText();
-//			            	String tongdiemthuong=hdd.getdiemtong(makh, makm);
-//			            	float tongcuoidiemthuong=Float.parseFloat(tongdiemthuong);
-//			            	kh.setDiemThuong(tongcuoidiemthuong);
+
 			            }
-//			            TFgiamgia.setText(TFdiemthuong.getText());
-//			            float value3=Float.parseFloat(TFgiamgia.getText());
-//			            float value4=Float.parseFloat(TFtongtien.getText());
-//			            if(value4>value3)
-//			            {
-//			            	float tong=value4-value3;
-//			            	TFtong.setText(String.valueOf(tong));
-//			            }
-//			            else
-//			            {
-//			            	TFtong.setText(""+0);
-//			            	
-//			            }
 			        } catch (SQLException e) {
 			            e.printStackTrace();
 			        }
@@ -854,42 +841,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 			    
 			        
 
-//			            TFdiemthuong.addKeyListener(new KeyAdapter() {
-//			                public void keyReleased(KeyEvent e) {
-//			                    if (!TFdiemthuong.getText().isEmpty()) {
-//			                        try {
-//			                            float giamgia = 0;
-//			                            int diemthuong2 = Integer.parseInt(TFdiemthuong.getText());
-//			                            // Kiểm tra xem diemthuong2 có lớn hơn hoặc bằng 1 không
-//			                            if (diemthuong2 >= 1) {
-//			                                giamgia = diemthuong2; // Cập nhật giá trị giảm giá tương ứng với số điểm thưởng
-//			                                TFgiamgia.setText(String.valueOf(giamgia));
-//			                                float giamgia3 = Float.parseFloat(TFgiamgia.getText());
-//			                                float tongtien = Float.parseFloat(TFtongtien.getText());
-//			                                float tiencuoi = 0;
-//			                                if (giamgia3 > tongtien) {
-//			                                    TFtong.setText(String.valueOf(tiencuoi));
-//			                                } else {
-//			                                    tiencuoi = tongtien - giamgia3;
-//			                                    TFtong.setText(String.valueOf(tiencuoi));
-//			                                }
-//			                            } else {
-//			                                giamgia = 0;
-//			                                TFgiamgia.setText(String.valueOf(giamgia));
-//			                            }
-//			                        } catch (NumberFormatException ex) {
-//			                            // Xử lý lỗi NumberFormatException
-//			                            ex.printStackTrace();
-//			                        }
-//			                    }
-//			                }
-//			            });
-//
-//			            TFtienkhach.setEnabled(true);
-//			        } catch (SQLException e) {
-//			            // Xử lý lỗi SQLException
-//			            e.printStackTrace();
-//			        }
+
 		    
 			    }
 
@@ -908,8 +860,10 @@ public class HoaDon1 extends javax.swing.JFrame {
 				TFmahh.setText("");
 				TFgia.setText("");
 				TFtong.setText("0");
+				TFtongtien.setText("0");
 				CBtenhh.setSelectedIndex(0);
 				TFngay.setToolTipText("");
+				
 		    }
 		});
 
@@ -925,11 +879,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 		jButton6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 		jButton6.setIcon(new ImageIcon(HoaDon1.class.getResource("/GUI/Image/Print Sale.png"))); // NOI18N
 		jButton6.setText("Xuất Hóa Đơn");
-		/*
-		 * jButton6.addActionListener(new java.awt.event.ActionListener() { public void
-		 * actionPerformed(java.awt.event.ActionEvent evt) {
-		 * jButton6ActionPerformed(evt); } });
-		 */
+		
 
 		btnthem.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 		btnthem.setIcon(new ImageIcon(HoaDon1.class.getResource("/GUI/Image/Add.png"))); // NOI18N
@@ -1005,17 +955,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 				} else if (!TFtienkhach.getText().matches("\\d+")) {
 					JOptionPane.showMessageDialog(rootPane, "Tiền khách phải là số!");
 				} else {
-					try {
-						HoaDonDAL hdd=new HoaDonDAL();
-						String makh=TFmakh.getText();
-						String tongtien1=TFtongtien.getText();
-						int tongdiem=hdd.gettangdiemtong(makh, tongtien1);
-						KhachHang kh=new KhachHang();
-						kh.setTichDiem(tongdiem);
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}              
+					 
 			        int tongtien = Integer.parseInt(TFtong.getText());
 			        int tienkhach = Integer.parseInt(TFtienkhach.getText());
 			        if (tienkhach < tongtien) {
@@ -1029,6 +969,20 @@ public class HoaDon1 extends javax.swing.JFrame {
 			            btnthem.setEnabled(true);
 			            btnthanhtoan.setEnabled(false);
 			            jButton6.setEnabled(true);
+			            try {
+			            	HoaDonDAL hdd = new HoaDonDAL();
+			            	HoaDonBLL hdb = new HoaDonBLL();
+			            	String makh = TFmakh.getText();
+			            	System.out.println("mã khách hàng là:"+makh);
+			            	String tongtien1 = TFtongtien.getText();
+			            	System.out.println("mã khách hàng là:"+tongtien1);
+			            	hdd.gettangdiemtong(tongtien1, makh);
+
+							
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}             
 			        }
 				}
 				  
@@ -1041,15 +995,6 @@ public class HoaDon1 extends javax.swing.JFrame {
 			}
 		});
 
-		/*
-		 * btnthemsanpham2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-		 * btnthemsanpham2.setIcon(new
-		 * ImageIcon(HoaDon1.class.getResource("/GUI/Image/Add.png"))); // NOI18N
-		 * btnthemsanpham2.setText("Sản Phẩm"); btnthemsanpham2.addActionListener(new
-		 * java.awt.event.ActionListener() { public void
-		 * actionPerformed(java.awt.event.ActionEvent evt) {
-		 * btnthemsanpham2ActionPerformed(evt); } });
-		 */
 
 		jLabel21.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
 		jLabel21.setText("Tổng Tiền Sau Khi Giảm:");
@@ -1096,18 +1041,20 @@ public class HoaDon1 extends javax.swing.JFrame {
 		btnxacnhan = new JButton();
 		btnxacnhan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
 				int tongtien= Integer.parseInt(TFtongtien.getText());
 				int giamgia= Integer.parseInt(TFgiamgia.getText());
 				int tong=tongtien-giamgia;
             	TFtong.setText(String.valueOf(tong));
             	try {
 					HoaDonDAL hdd=new HoaDonDAL();
+					HoaDonBLL hdb=new HoaDonBLL();
 					String makh=TFmakh.getText();
+					
 					String magiam=TFmagiam.getText();
-					int tongdiem=hdd.getdiemtong(makh,magiam);
+					
+					hdb.diemtong(magiam, makh);
 					KhachHang kh=new KhachHang();
-					kh.setTichDiem(tongdiem);
+					
 					btngg.setEnabled(false);
 					btnxacnhan.setEnabled(false);
 					TFtienkhach.setEnabled(true);
@@ -1123,6 +1070,38 @@ public class HoaDon1 extends javax.swing.JFrame {
 		btnxacnhan.setText("Xác Nhận");
 		btnxacnhan.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnxacnhan.setEnabled(false);
+		
+		btnhuy_1 = new JButton();
+		btnhuy_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int dialogResult = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn hủy hóa đơn không?", "Xác nhận hủy hóa đơn", JOptionPane.YES_NO_OPTION);
+				if (dialogResult == JOptionPane.YES_OPTION)
+				{
+				try {
+					
+					HoaDonDAL hd =new HoaDonDAL();
+					String mahd=TFmahd.getText();
+				hd.updatetrangthai(mahd);
+				JOptionPane.showMessageDialog(rootPane, "Hủy hóa đơn thành công");
+				
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+			
+			else
+			{
+				JOptionPane.getRootFrame().dispose();
+			}
+			
+			}	
+		});
+		btnhuy_1.setIcon(new ImageIcon(HoaDon1.class.getResource("/GUI/Image/Delete.png")));
+		btnhuy_1.setText("Hóa Đơn");
+		btnhuy_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnhuy_1.setEnabled(false);
 
 		javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
 		jPanel4Layout.setHorizontalGroup(
@@ -1133,28 +1112,29 @@ public class HoaDon1 extends javax.swing.JFrame {
 							.addGap(16)
 							.addGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
 								.addGroup(jPanel4Layout.createSequentialGroup()
-									.addComponent(TFmahd, GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+									.addComponent(TFmahd, GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
 									.addGap(62)
-									.addComponent(jLabel14, GroupLayout.PREFERRED_SIZE, 133, Short.MAX_VALUE))
+									.addComponent(jLabel14, GroupLayout.PREFERRED_SIZE, 156, Short.MAX_VALUE))
 								.addGroup(jPanel4Layout.createSequentialGroup()
-									.addComponent(jLabel11, GroupLayout.PREFERRED_SIZE, 130, Short.MAX_VALUE)
+									.addComponent(jLabel11, GroupLayout.PREFERRED_SIZE, 153, Short.MAX_VALUE)
 									.addGap(54)
-									.addComponent(jLabel12, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+									.addComponent(jLabel12, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
 								.addGroup(jPanel4Layout.createSequentialGroup()
 									.addComponent(TFtongtien, GroupLayout.PREFERRED_SIZE, 151, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-								.addComponent(TFdiemthuong, GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE))
+									.addPreferredGap(ComponentPlacement.RELATED, 47, Short.MAX_VALUE))
+								.addComponent(TFdiemthuong, GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
 							.addGap(133))
 						.addGroup(jPanel4Layout.createSequentialGroup()
-							.addComponent(btnthem, GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(btngg, GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-							.addGap(14)
+							.addComponent(btnthem)
+							.addGap(41)
+							.addComponent(btnhuy_1, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+							.addGap(34)
+							.addComponent(btngg, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
 							.addComponent(btnsua, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
 							.addGap(18)))
-							//.addComponent(btnthemsanpham2, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)))
 					.addGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
 						.addGroup(jPanel4Layout.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
@@ -1169,30 +1149,30 @@ public class HoaDon1 extends javax.swing.JFrame {
 					.addGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
 						.addGroup(jPanel4Layout.createSequentialGroup()
 							.addGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
-								.addComponent(jLabel13, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-								.addComponent(jLabel15, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE))
+								.addComponent(jLabel13, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+								.addComponent(jLabel15, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
 							.addGap(34)
 							.addGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
-								.addComponent(TFtienkhach, GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-								.addComponent(TFgiamgia, GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE))
+								.addComponent(TFtienkhach, GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+								.addComponent(TFgiamgia, GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
 							.addGap(38)
 							.addGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
 								.addGroup(jPanel4Layout.createSequentialGroup()
-									.addComponent(jLabel16, GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+									.addComponent(jLabel16, GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
 									.addGap(59)
-									.addComponent(TFtienthoi, GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
+									.addComponent(TFtienthoi, GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
 								.addGroup(jPanel4Layout.createSequentialGroup()
 									.addComponent(jLabel21)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(TFtong, GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)))
+									.addComponent(TFtong, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)))
 							.addGap(50))
 						.addGroup(jPanel4Layout.createSequentialGroup()
 							.addGap(11)
 							.addComponent(btnxacnhan, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(btnthanhtoan, GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+							.addComponent(btnthanhtoan, GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
 							.addGap(18)
-							.addComponent(jButton6, GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+							.addComponent(jButton6, GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(btnThe)
 							.addGap(22)))
@@ -1222,18 +1202,18 @@ public class HoaDon1 extends javax.swing.JFrame {
 						.addComponent(TFmagiam, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(TFtong, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
-					.addGroup(jPanel4Layout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(jPanel4Layout.createParallelGroup(Alignment.BASELINE)
+					.addGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, jPanel4Layout.createParallelGroup(Alignment.BASELINE)
 							.addComponent(jButton6, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnThe, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE))
-						.addGroup(jPanel4Layout.createParallelGroup(Alignment.BASELINE)
+						.addGroup(Alignment.TRAILING, jPanel4Layout.createParallelGroup(Alignment.BASELINE)
 							.addComponent(btnthem, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnthanhtoan, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
-							.addComponent(btngg, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnsua, GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-							//.addComponent(btnthemsanpham2, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnxacnhan, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
-							.addComponent(btnluu, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(btnluu, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
+							.addComponent(btngg, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE))
+						.addComponent(btnhuy_1, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap())
 		);
 		jPanel4.setLayout(jPanel4Layout);
@@ -1332,28 +1312,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 		jPanel7.setLayout(jPanel7Layout);
 
 	
-		/*
-		 * jTable2.setModel(new javax.swing.table.DefaultTableModel( new Object [][] {
-		 * 
-		 * }, new String [] { "Mã Khách Hàng", "Tên Khách Hàng", "SDT", "Tích Điểm" }
-		 * )); jTable2.addAncestorListener(new javax.swing.event.AncestorListener() {
-		 * public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-		 * jTable1AncestorAdded(evt); } public void
-		 * ancestorMoved(javax.swing.event.AncestorEvent evt) { } public void
-		 * ancestorRemoved(javax.swing.event.AncestorEvent evt) { } });
-		 */
-
-		/*
-		 * Table1.setModel(new javax.swing.table.DefaultTableModel( new Object [][] {
-		 * 
-		 * }, new String [] { "Mã Hóa Đơn", "Nhân Viên", "Tổng Tiền",
-		 * "Khuyến Mãi","Tổng Tiền Sau Khuyến Mãi" } )); jTable1.addAncestorListener(new
-		 * javax.swing.event.AncestorListener() { public void
-		 * ancestorAdded(javax.swing.event.AncestorEvent evt) {
-		 * jTable1AncestorAdded(evt); } public void
-		 * ancestorMoved(javax.swing.event.AncestorEvent evt) { } public void
-		 * ancestorRemoved(javax.swing.event.AncestorEvent evt) { } });
-		 */
+		
 
 	
 		lbstatus.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -1370,24 +1329,25 @@ public class HoaDon1 extends javax.swing.JFrame {
 
 		GroupLayout gl_panel_table = new GroupLayout(panel_table);
 		gl_panel_table.setHorizontalGroup(
-			gl_panel_table.createParallelGroup(Alignment.TRAILING)
+			gl_panel_table.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_table.createSequentialGroup()
-					.addContainerGap(542, Short.MAX_VALUE)
-					.addComponent(lblNewLabel_sp, GroupLayout.PREFERRED_SIZE, 424, GroupLayout.PREFERRED_SIZE)
-					.addGap(522))
-				.addGroup(Alignment.LEADING, gl_panel_table.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 1396, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(111, Short.MAX_VALUE))
+					.addContainerGap(99, Short.MAX_VALUE)
+					.addGroup(gl_panel_table.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, gl_panel_table.createSequentialGroup()
+							.addComponent(lblNewLabel_sp, GroupLayout.PREFERRED_SIZE, 424, GroupLayout.PREFERRED_SIZE)
+							.addGap(522))
+						.addGroup(Alignment.TRAILING, gl_panel_table.createSequentialGroup()
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 1450, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())))
 		);
 		gl_panel_table.setVerticalGroup(
 			gl_panel_table.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_table.createSequentialGroup()
 					.addGap(24)
 					.addComponent(lblNewLabel_sp, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
+					.addGap(28)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 326, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(300, Short.MAX_VALUE))
+					.addContainerGap(290, Short.MAX_VALUE))
 		);
 		jtable1 = new JTable();
 		scrollPane.setViewportView(jtable1);
@@ -1471,20 +1431,6 @@ public class HoaDon1 extends javax.swing.JFrame {
 		// TODO add your handling code here:
 	}
 
-//	private void TFmakhActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
-//		try {
-//			KhachHangDAL khd = new KhachHangDAL();
-//
-////         String maText = TFmakh.getText(); 
-////         int ma = Integer.parseInt(maText);
-//
-//			int makh = khd.getmakh(TFtenkh.getText());
-//			TFtenkh.setText(makh + "");
-//		} catch (SQLException ex) {
-//			Logger.getLogger(HoaDon1.class.getName()).log(Level.SEVERE, null, ex);
-//		}
-//
-//	}
 
 	private void TFmahhActionPerformed(java.awt.event.ActionEvent evt) {
 		// TODO add your handling code here:
@@ -1534,6 +1480,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 			TFtenkh.setEnabled(true);
 			TFsoluong.setEnabled(true);
 			CBtenhh.setEnabled(true);
+			
 			HoaDonDAL hoadonDAL = new HoaDonDAL();
 			String lastMaHD = hoadonDAL.getLastMaHD();
 		    int lastnumber = Integer.parseInt(lastMaHD.substring(2));
@@ -1541,67 +1488,18 @@ public class HoaDon1 extends javax.swing.JFrame {
 
 		    TFmahd.setText(newMaHD);
 			KhachHangDAL khd = new KhachHangDAL();
-//            SanPhamDAL sanphamDAL = new SanPhamDAL();
-//            String tensp = sanphamDAL.gettensp();
-//            
-//            String[] tenSPArray = sanphamDAL.getTenSP();
-//String tenSanPhamText = String.join(", ", tenSPArray); // Nối các phần tử trong mảng bằng dấu phẩy và khoảng trắng
-//List<String> keywordList = new ArrayList<>();
-//keywordList.addAll(Arrays.asList(tenSPArray));
-//String[] keywords = keywordList.toArray(new String[keywordList.size()]);
-//
-//// Tạo một TextField
-//
 
-//
-//// Tạo một AutoCompletionBinding và đặt danh sách từ khóa cho nó
-//AutoCompletionBinding<String> autoCompleteBinding = TFsanpham.bindAutoCompletion(TFsanpham, keywords);
-
-//
-//// Đặt số lượng hàng hiển thị trong danh sách gợi ý
-//autoCompleteBinding.setVisibleRowCount(10);
-
-//TFsanpham.setText(tenSanPhamText);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 	}
 
-//	public boolean check() throws SQLException {
-//
-//		if (TFtenkh.getText().isEmpty()) {
-//			JOptionPane.showMessageDialog(rootPane, "Tên khách hàng trống");
-//			TFtenkh.requestFocus();
-//		}
-//
-//		String phone = TFsdt.getText();
-//		if (phone.length() != 10) {
-//			JOptionPane.showMessageDialog(null, "Số điện thoại phải có 10 số.");
-//			return false;
-//		}
-//		if (phone.charAt(0) != '0') {
-//			JOptionPane.showMessageDialog(null, "Số điện thoại phải bắt đầu bằng số 0.");
-//			return false;
-//		}
-//		for (int i = 0; i < phone.length(); i++) {
-//			if (!Character.isDigit(phone.charAt(i))) {
-//				JOptionPane.showMessageDialog(null, "Số điện thoại chỉ chứa các ký tự số.");
-//				return false;
-//			}
-//		}
-//		String makh = TFmakh.getText();
-//		for (int i = 0; i < makh.length(); i++) {
-//			if (!Character.isDigit(makh.charAt(i))) {
-//				JOptionPane.showMessageDialog(null, "Mã khách hàng chỉ chứa các ký tự số.");
-//				return false;
-//			}
-//		}
-//		return true;
-//
-//	}
+
 
 	 private void btnluuActionPerformed(java.awt.event.ActionEvent evt) {
+		
+		 
 		 	try {
 		 		HoaDonDAL goiham = new HoaDonDAL();					
 				HoaDon hd = new HoaDon();
@@ -1641,33 +1539,45 @@ public class HoaDon1 extends javax.swing.JFrame {
 						JOptionPane.showMessageDialog(rootPane, "Số lượng rỗng");
 					} else {						
 						boolean kiemtra2 = hdctdal.themhoadon(hdct, "themhoadon");
-						int soluong = Integer.parseInt(TFsoluong.getText());
-						if (kiemtra2 && soluong > 0) {
-							KhachHang kh=new KhachHang();
-							KhuyenMai km=new KhuyenMai();
-							HoaDonDAL hdd=new HoaDonDAL();					
-							String mucgiam=hdd.getMucGiam(TFmagiam.getText());
-							int tongtien1 = Integer.parseInt(TFtongtien.getText());
-			            	int giatri=Integer.parseInt(mucgiam);
-			            	int thanhtien2= Integer.parseInt(TFthanhtien.getText());
-						    tongtien1 += thanhtien2;
-						    TFtongtien.setText(String.valueOf(tongtien1));
-			            	int tongtien=Integer.parseInt(TFtongtien.getText());
-			            	int giamgia=giatri*tongtien/100;
-			            	TFgiamgia.setText(""+giamgia);
-							JOptionPane.showMessageDialog(rootPane, "Thêm thành công");
-							hiennut();
-							hientext();
+						String soluongText = TFsoluong.getText().trim(); 
+						System.out.println("soluongText: " + soluongText);
+						if (!soluongText.isEmpty()) {
+						    int soluong = Integer.parseInt(soluongText);
+						    if (kiemtra2 && soluong > 0) {
+								KhachHang kh=new KhachHang();
+								KhuyenMai km=new KhuyenMai();
+								HoaDonDAL hdd=new HoaDonDAL();					
+								String mucgiam=hdd.getMucGiam(TFmagiam.getText());
+								int tongtien1 = Integer.parseInt(TFtongtien.getText().trim());
+				            	int giatri=Integer.parseInt(mucgiam);
+				            	int thanhtien2= Integer.parseInt(TFthanhtien.getText().trim());
+							    tongtien1 += thanhtien2;
+							    TFtongtien.setText(String.valueOf(tongtien1));
+				            	int tongtien=Integer.parseInt(TFtongtien.getText());
+				            	int giamgia=giatri*tongtien/100;
+				            	TFgiamgia.setText(""+giamgia);
+								JOptionPane.showMessageDialog(rootPane, "Thêm thành công");
+								hiennut();
+								hientext();
+								
+								
+							} else {
+								JOptionPane.showMessageDialog(rootPane, "Thêm thất bại");
+							}
 						} else {
-							JOptionPane.showMessageDialog(rootPane, "Thêm thất bại");
+							JOptionPane.showMessageDialog(rootPane, "số lượng không hợp lệ");
 						}
+
+						
 						hienthisanpham("hien thi");
 					}
 				}
 			} catch (SQLException ex) {
 				Logger.getLogger(HoaDon1.class.getName()).log(Level.SEVERE, null, ex);
 	
-			}	 
+			}
+			
+		 	
 	}
 
 	public void start() {
@@ -1692,31 +1602,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 		// TODO add your handling code here:
 	}
 
-//	private void btnxoaActionPerformed(java.awt.event.ActionEvent evt) {
-//
-//		int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa Hóa đơn này?", "Confirmation",
-//				JOptionPane.YES_NO_OPTION);
-//		if (confirmed == JOptionPane.YES_OPTION) {
-//			ChiTietHoaDonDAL deletehdct;
-//			HoaDonDAL deletehd;
-//			try {
-//				deletehd = new HoaDonDAL();
-//				deletehdct = new ChiTietHoaDonDAL();
-//				if (deletehdct.xoaHoaDon(TFmahd.getText()) && deletehd.xoaHoaDon(TFmahd.getText())) {
-//					JOptionPane.showMessageDialog(rootPane, "Xóa hóa đơn thành công!");
-//					hienthisanpham("hien thi");
-//					hiennut();
-//					annut();
-//					this.lbstatus.setText("Xóa đơn thành công");
-//				}
-//
-//			} catch (SQLException ex) {
-//				Logger.getLogger(HoaDon1.class.getName()).log(Level.SEVERE, null, ex);
-//			}
-//
-//		}
-//
-//	}
+
 
 	private void TFmahdActionPerformed(java.awt.event.ActionEvent evt) {
 		// TODO add your handling code here:
@@ -1760,111 +1646,6 @@ public class HoaDon1 extends javax.swing.JFrame {
 
 	}
 
-//	private void btnthanhtoanActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
-//
-//		hiennut();
-//		hientext();
-//		TFdiemthuong.setEnabled(false);
-//		 int choice = JOptionPane.showConfirmDialog(rootPane, "Bạn có muốn dùng điểm thưởng để giảm giá không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-//
-//	        if (choice == JOptionPane.YES_OPTION) {
-//	        	
-//	        	KhachHangDAL khachhang = null;
-//				try {
-//					khachhang = new KhachHangDAL();
-//				} catch (SQLException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//	    		int diemthuong = khachhang.getdiemthuong(TFmakh.getText());
-//	    		TFdiemthuong.setText(""+diemthuong);
-//	    		TFdiemthuong.addKeyListener(new KeyAdapter() {
-//	    		    public void keyReleased(KeyEvent e) {
-//	    		        if (!TFdiemthuong.getText().isEmpty()) {
-//	    		            int diemthuong2 = Integer.parseInt(TFdiemthuong.getText());
-//	    		            float giamgia=0;
-//	    		            
-//	    		            			// Gán giá trị ban đầu cho giảm giá là số điểm thưởng
-//	    		            
-//	    		            if (diemthuong2 >= 1) {
-//	    		                // Sử dụng điểm thưởng để áp dụng giảm giá
-//	    		            	 giamgia=Float.parseFloat(TFdiemthuong.getText());
-//	    		                giamgia = diemthuong2; // Cập nhật giá trị giảm giá tương ứng với số điểm thưởng
-//	    		                TFgiamgia.setText(""+giamgia);
-//	    		                float giamgia3=Float.parseFloat(TFgiamgia.getText());
-//	    		                float tongtien=Float.parseFloat(TFtongtien.getText());
-//	    		                float tiencuoi=0;
-//	    		                if(giamgia3>tongtien)
-//	    		                {
-//	    		                	TFtong.setText(""+tiencuoi);
-//	    		                }
-//	    		                else
-//	    		                {
-//	    		                	tiencuoi=tongtien-giamgia3;
-//	    		                	TFtong.setText(""+tiencuoi);
-//	    		                	
-//	    		                }
-//	    		                
-//	    		            } else {
-//	    		                // Nếu số điểm thưởng ít hơn 1, không áp dụng giảm giá
-//	    		                giamgia = 0;
-//	    		                TFgiamgia.setText(""+giamgia);
-//	    		           
-//	    		        }
-//	    		            
-//	    		    }
-//	    		    }});
-//	    		
-//	    		TFtienkhach.setEnabled(true);
-//	    		float tongtien = Float.parseFloat(TFtong.getText());
-//	    		float tienkhach = Float.parseFloat(TFtienkhach.getText());
-//	    		if (tienkhach < tongtien) {
-//	    			JOptionPane.showMessageDialog(rootPane, "Số tiền không đủ để thực hiện giao dịch");
-//	    		} 
-//	    			else {
-//	    			float tienthoilai = tienkhach - tongtien;
-//	    			NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
-//
-//	    			// Format the tienthoilai value as currency
-//	    			String formattedTienthoilai = currencyFormat.format(tienthoilai);
-//	    			TFtienthoi.setText(String.valueOf(tienthoilai));
-//	    			this.lbstatus.setText("Thanh toán thành công");
-//	    		
-//	    		
-//	    			}} 
-//	    		else {
-//	    			float tongtien2 = Float.parseFloat(TFtongtien.getText());
-//	    			float tienkhach = Float.parseFloat(TFtienkhach.getText());
-//	    			if (tienkhach < tongtien2) {
-//	    				JOptionPane.showMessageDialog(rootPane, "Số tiền không đủ để thực hiện giao dịch");
-//	    			} else {
-//	    				float tienthoilai2 = tienkhach - tongtien2;
-//	    				NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
-//
-//	    				// Format the tienthoilai value as currency
-//	    				String formattedTienthoilai = currencyFormat.format(tienthoilai2);
-//	    				TFtienthoi.setText(String.valueOf(tienthoilai2));
-//	    				this.lbstatus.setText("Thanh toán thành công");
-//	    				jButton6.setEnabled(true);
-//	        }}
-////	        hiennut();
-////	        hientext();
-////	        float tongtien = Float.parseFloat(TFtong.getText());
-////	        float tienkhach = Float.parseFloat(TFtienkhach.getText());
-////	        if (tienkhach < tongtien) {
-////	            JOptionPane.showMessageDialog(rootPane, "Số tiền không đủ để thực hiện giao dịch");
-////	        } else {
-////	            float tienthoilai = tienkhach - tongtien;
-////	            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
-////
-////	         // Format the tienthoilai value as currency
-////	         String formattedTienthoilai = currencyFormat.format(tienthoilai);
-////	            TFtienthoi.setText(String.valueOf(tienthoilai));
-////	            this.lbstatus.setText("Thanh toán thành công");
-////	            jButton6.setEnabled(true);
-////	        }
-//
-//	}
 
 	private void TFdiemthuongActionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -1878,71 +1659,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 
 	}
 
-//	public float tongtien=0;
-//	private int soluongtruocdo=0;
-//	    private void TFsoluongKeyReleased(java.awt.event.KeyEvent evt) {                                      
-//	      String str = TFsoluong.getText();
-//	if (!str.isEmpty()) {
-//	    try {
-//	        int soluong = Integer.parseInt(str);
-//	      soluongtruocdo=soluong;
-//	        try {
-//	            HoaDonDAL hdd=new HoaDonDAL();
-//	            int tonkho=hdd.getSoLuongTonKho(TFmahh.getText());
-//	            if(soluong>tonkho)
-//	            {
-//	                JOptionPane.showMessageDialog(rootPane, "Số lượng tồn kho không đủ!còn lại:"+tonkho);
-//	            }
-//	            else
-//	            {
-//	                 float gia = Float.parseFloat(TFgia.getText());
-//	        float thanhtien = soluong * gia;
-//	        TFthanhtien.setText(String.valueOf(thanhtien));
-//	         float thanhtien2= Float.parseFloat(TFthanhtien.getText());
-//	        
-//	       tongtien += thanhtien2;
-//	    TFtongtien.setText(String.valueOf(tongtien));
-//	            }
-//	        } catch (SQLException ex) {
-//	            Logger.getLogger(HoaDon1.class.getName()).log(Level.SEVERE, null, ex);
-//	        }
-//	      
-//	      
-//	    } catch (NumberFormatException e) {
-//	       
-//	        System.out.println("Số lượng không hợp lệ!");
-//	    }
-//	} else {
-//	    // Xử lý trường hợp chuỗi đầu vào rỗng
-//	    System.out.println("Chưa nhập số lượng!");
-//	}
-//	        float value = Float.parseFloat(TFtongtien.getText());
-//	        int diemthuong = 0;
-//	        if (value >= 50000) {
-//	            int bonus =  (int) (value / 50000);
-//	            diemthuong += bonus;
-//	            TFdiemthuong.setText(String.valueOf(diemthuong));
-//	        }
-//	        int value2 = 0;
-//	        if(!TFdiemthuong.getText().isEmpty() &&!TFdiemthuong.getText().isBlank()) {
-//	        	 value2 = Integer.parseInt(TFdiemthuong.getText());
-//	   	}
-////	        int value2 = Integer.parseInt(TFdiemthuong.getText());
-//	        float giamgia = 0;
-//	        if (value2 >= 5 && value2 < 10) {
-//	            giamgia = 25000;
-//	        } else if (value2 >= 10 && value2 < 15) {
-//	            giamgia = 50000;
-//	        } else if (value2 >= 15) {
-//	            giamgia = 100000;
-//
-//	        }
-//	        TFgiamgia.setText(String.valueOf(giamgia));
-//	        float value3 = Float.parseFloat(TFgiamgia.getText());
-//	        float value4 = Float.parseFloat(TFtongtien.getText());
-//	        float tong = value4 - value3;
-//	        TFtong.setText(String.valueOf(tong));
-//	    }                      
+                
 
 	
  
@@ -1965,91 +1682,13 @@ public class HoaDon1 extends javax.swing.JFrame {
 
 	}
 
-	/*
-	 * private void jTable1AncestorAdded(javax.swing.event.AncestorEvent evt) {
-	 * 
-	 * }
-	 */
-
-	/*
-	 * private void btnxoasanphamActionPerformed(java.awt.event.ActionEvent evt) {
-	 * int Click = JOptionPane.showConfirmDialog(null,
-	 * "Bạn có muốn xóa sản phẩm hay không?", "Thông Báo", 2); if (Click ==
-	 * JOptionPane.YES_OPTION) { ChiTietHoaDonDAL hdd = null; try { hdd = new
-	 * ChiTietHoaDonDAL(); DefaultTableModel model = (DefaultTableModel)
-	 * jTable1.getModel(); int selectedRowIndex = jTable1.getSelectedRow(); Object
-	 * value = jTable1.getValueAt(selectedRowIndex, 1); // Lấy giá trị của cột được
-	 * chọn
-	 * 
-	 * 
-	 * 
-	 * if (selectedRowIndex != -1) { model.removeRow(selectedRowIndex); }
-	 * hdd.xoaSanPham(value.toString(), TFmahd.getText()); } catch (SQLException ex)
-	 * { Logger.getLogger(HoaDon1.class.getName()).log(Level.SEVERE, null, ex); }
-	 * 
-	 * this.lbstatus.setText("Xóa sản phẩm thành công!");
-	 * 
-	 * } }
-	 */
+	
 
 	private void TFtongtienCaretUpdate(javax.swing.event.CaretEvent evt) {
 
 	}
 
-	/*
-	 * private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) { try {
-	 * XuatHoaDon xhd = new XuatHoaDon(); //java.util.Date dayy = TFngay.getDate();
-	 * 
-	 * //java.sql.Date dateFromSql = new java.sql.Date(dayy.getTime());
-	 * //xhd.exportToPDF(jTable1,TFtienkhach.getText(),TFtienthoi.getText(),TFmahh.
-	 * getText() ,TFtenkh.getText(),formatDateToString(dateFromSql));
-	 * 
-	 * PhieuXuatDAL phieuxuatDAL = new PhieuXuatDAL(); int lastMaPX =
-	 * phieuxuatDAL.getLastMaPX(); //TFmapx.setText("" + (lastMaPX + 1)); } catch
-	 * (SQLException ex) {
-	 * Logger.getLogger(HoaDon1.class.getName()).log(Level.SEVERE, null, ex); }
-	 * PhieuXuat px=new PhieuXuat(); try { PhieuXuatDAL goiham= new PhieuXuatDAL();
-	 * if(addpx) { px.setMaNV(Integer.parseInt(LBmanv.getText())); //java.util.Date
-	 * dateFromUtil2 = TFngay.getDate();
-	 * 
-	 * //java.sql.Date dateFromSql2 = new java.sql.Date(dateFromUtil2.getTime());
-	 * 
-	 * //px.setThoiDiemLap(formatDateToString(dateFromSql2)); boolean
-	 * kiemtra5=goiham.themhoadon(px, "themhoadon"); if(kiemtra5) { hiennut();
-	 * hientext(); addpx=true;
-	 * 
-	 * }
-	 * 
-	 * } boolean kiemtra6 = false; ChiTietPhieuXuat ctpx=new ChiTietPhieuXuat();
-	 * ChiTietPhieuXuatDAL goiham2=new ChiTietPhieuXuatDAL();
-	 * 
-	 * 
-	 * int rowCount = jTable1.getRowCount(); // lấy index của hàng được chọn for(int
-	 * i =0;i<rowCount;i++) { String masp = jTable1.getModel().getValueAt(i,
-	 * 1).toString(); // lấy giá trị của cột 2 String soluong =
-	 * jTable1.getModel().getValueAt(i, 2).toString(); // lấy giá trị của cột 3 //
-	 * ctpx.setMaPX(Integer.parseInt(TFmapx.getText())); //java.util.Date
-	 * dateFromUtil2 = TFngay.getDate();
-	 * 
-	 * //java.sql.Date dateFromSql2 = new java.sql.Date(dateFromUtil2.getTime());
-	 * 
-	 * //ctpx.setNgayXuat(formatDateToString(dateFromSql2));
-	 * ctpx.setMaSP(Integer.parseInt(masp));
-	 * ctpx.setSoLuongBan(Integer.parseInt(soluong));
-	 * kiemtra6=goiham2.themhoadon(ctpx,"themhoadon"); }
-	 * 
-	 * 
-	 * 
-	 * 
-	 * if(kiemtra6) { JOptionPane.showMessageDialog(rootPane,
-	 * "Xuất Đơn Thành Công");
-	 * 
-	 * } else JOptionPane.showMessageDialog(rootPane, "Xuất Đơn Thất Bại");
-	 * 
-	 * } catch (SQLException ex) {
-	 * Logger.getLogger(HoaDon1.class.getName()).log(Level.SEVERE, null, ex); }
-	 * hiennut(); hientext(); this.lbstatus.setText("Xuất Đơn Thành Công"); }
-	 */
+	
 	public void reset() {
 		hiennut();
 		hientext();
@@ -2058,7 +1697,7 @@ public class HoaDon1 extends javax.swing.JFrame {
 		TFmakh.setText("");
 		// TFngay.setToolTipText("");
 		TFsoluong.setText("");
-		TFtongtien.setText("");
+		//TFtongtien.setText("0");
 		TFgiamgia.setText("");
 		TFthanhtien.setText("");
 		TFmahd.setText("");
@@ -2072,26 +1711,13 @@ public class HoaDon1 extends javax.swing.JFrame {
 		CBtenhh.setSelectedIndex(0);
 		TFngay.setToolTipText("");
 		}
-	/*
-	 * private void btnsuaActionPerformed(java.awt.event.ActionEvent evt) { reset();
-	 * DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-	 * model.setRowCount(0); for (int i = 0; i < model.getRowCount(); i++) { for
-	 * (int j = 0; j < model.getColumnCount(); j++) { model.setValueAt("", i, j); }
-	 * } }
-	 */
+	
 
 	/**
 	 * @param args the command line arguments
 	 */
 	public static void main(String args[]) {
-		/* Set the Nimbus look and feel */
-		// <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
-		// (optional) ">
-		/*
-		 * If Nimbus (introduced in Java SE 6) is not available, stay with the default
-		 * look and feel. For details see
-		 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-		 */
+		
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("FlatLaf Dark".equals(info.getName())) {
@@ -2186,6 +1812,8 @@ public class HoaDon1 extends javax.swing.JFrame {
 	private JLabel lblMGim;
 	private JTextField TFmagiam;
 	private JButton btnxacnhan;
+	private JButton btnhuy;
+	private JButton btnhuy_1;
 
 	// End of variables declaration
 	public void hienthihoadon(String condition) throws SQLException {
@@ -2251,4 +1879,5 @@ public class HoaDon1 extends javax.swing.JFrame {
 		                }
 		   
 	
-}}
+}	
+}

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import DTO.ChucVu;
 import DTO.NhanVien;
+import DTO.TaiKhoan;
 public class NhanVienDAL extends connectSql {
 
 	public NhanVienDAL() throws SQLException {
@@ -24,7 +25,7 @@ public class NhanVienDAL extends connectSql {
 	                sql = "select * from NHANVIEN order by TenNV";
 	            }
 	            if (condition.equals("docnhanvien")) {
-	                sql = "select * from NHANVIEN";
+	                sql = "select * from NHANVIEN where TrangThai=1";
 	            }
 	            if (condition.equals("sapxeptheoma")) {
 	                sql = "select * from NHANVIEN order by MaNV";
@@ -179,6 +180,7 @@ public class NhanVienDAL extends connectSql {
 	            return rowsUpdated > 0;
 	        }
 	    }
+
 
 	    public boolean themNhanVien(NhanVien nv) throws SQLException {
 	        String sql = "INSERT INTO NHANVIEN (TenNV, NgaySinh, SDT, DiaChi, GioiTinh, CCCD, NgayVaoLam, MaCV, TrangThai, MaNV) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

@@ -827,7 +827,7 @@ public class KhoGui extends JFrame {
 		
 		txtSearch = new JTextField();
 		txtSearch.setColumns(10);
-		txtSearch.setText("Tìm kiếm theo mã");
+		txtSearch.setText("Tìm kiếm theo tên sản phẩm");
 		JButton btnSearch = new JButton("Tìm kiếm");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -855,7 +855,7 @@ public class KhoGui extends JFrame {
 					SanPhamBLL spBll = new SanPhamBLL();
 					if(!txtSearch.getText().isEmpty()) {
 						for (Kho khodata : data) {
-							if(khodata.getMaSP().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
+							if (spBll.getTenSP(khodata.getMaSP()).toLowerCase().contains(txtSearch.getText().toLowerCase())) {
 								Object[] row = new Object[] { khodata.getMaSP(),spBll.getTenSP(khodata.getMaSP()), khodata.getSoLuong() };
 								model.addRow(row);
 							}

@@ -66,6 +66,28 @@ public class ChiTietHoaDonDAL extends connectSql {
 			return true;
 		}
 } 
+	public boolean updatechitiethoadon(ChiTietHoaDon hdct, String mahd) throws SQLException {
+	    String updateSQL = "UPDATE CHITIETHOADON SET MaSP=?, SoLuong=?, ThanhTien=? WHERE MaHD = ?";
+	    boolean success = false;
+
+	    try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+	    	pstmt.setString(1,hdct.getMaSp());
+			pstmt.setString(2, hdct.getSoLuong());
+			pstmt.setString(3, Integer.parseInt(hdct.getThanhTien())+"");
+			pstmt.setString(4, mahd);
+	        int affectedRows = pstmt.executeUpdate();
+
+	        if (affectedRows > 0) {
+	            // Nếu có hàng bị ảnh hưởng bởi cập nhật
+	            success = true; // Đặt biến success thành true
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        // Xử lý lỗi khi cập nhật không thành công
+	    }
+
+	    return success; // Trả về giá tr ị success để biết kết quả cập nhật
+	}
        public boolean xoaSanPham(String masp, String mahd) throws SQLException {
     String sql = "UPDATE CHITIETHOADON SET TrangThai = 0 WHERE MaSP = ? AND MaHD = ?";
     try (PreparedStatement pstm = conn.prepareStatement(sql)) {

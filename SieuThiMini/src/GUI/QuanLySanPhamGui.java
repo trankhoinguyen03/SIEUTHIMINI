@@ -129,6 +129,7 @@ public class QuanLySanPhamGui extends JFrame {
 			}
 		});
 	}
+	
 
 	/**
 	 * Create the frame.
@@ -1587,12 +1588,20 @@ public class QuanLySanPhamGui extends JFrame {
 		});
 		
 		JPanel panel_4 = new JPanel();
-		tabbedPane.addTab("Thông Tin Nhà Cung Cấp",null, panel_4, null);
 		if(!taiKhoan.getQuyen().equals("RL3")) {
 			tabbedPane.addTab("Thông Tin Nhà Cung Cấp",null, panel_4, null);
 		}
-		 
+		String tabNameToRemove = "Thông Tin Loại Hàng";
 
+		 if (taiKhoan.getQuyen().equals("RL3")) {
+		     for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+		         String tabTitle = tabbedPane.getTitleAt(i);
+		         if (tabTitle.equals(tabNameToRemove)) {
+		             tabbedPane.remove(i);
+		             break;
+		         }
+		     }
+		 }
 		JLabel lblNewLabel_11 = new JLabel("Mã Nhà Cung Cấp");
 		lblNewLabel_11.setFont(new Font("Arial", Font.BOLD, 12));
 

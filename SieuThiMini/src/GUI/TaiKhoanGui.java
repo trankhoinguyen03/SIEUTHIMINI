@@ -325,7 +325,7 @@ public class TaiKhoanGui extends JFrame {
         textFieldTennv.setEnabled(false);
         textFieldTennv.setColumns(10);
 
-        JLabel lblNewLabel_3 = new JLabel("Nhân viên");
+        JLabel lblNewLabel_3 = new JLabel("Mã Nhân viên");
         lblNewLabel_3.setBounds(20, 50, 100, 25);
         
         comboTaiKhoan = new JComboBox();
@@ -764,7 +764,7 @@ public class TaiKhoanGui extends JFrame {
         txtSearch.setBounds(130, 163, 205, 27);
         panel_5.add(txtSearch);
         txtSearch.setColumns(10);
-        txtSearch.setText("Tìm kiếm theo mã");
+        txtSearch.setText("Tìm kiếm theo tên nhân viên");
         
         JButton btnSearch = new JButton("Tìm kiếm");
         btnSearch.addActionListener(new ActionListener() {
@@ -784,7 +784,6 @@ public class TaiKhoanGui extends JFrame {
     					data.add(tk);
     				}		
     				
-    		        
     				
 					String[] columnNames = {"Mã Nhân Viên","Tên Nhân Viên", "Tên Đăng Nhập", "Mật Khẩu", "Quyền"};
 			        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
@@ -793,8 +792,10 @@ public class TaiKhoanGui extends JFrame {
 			        model.setRowCount(0);
     				if(!txtSearch.getText().isEmpty()) {
     			        for (TaiKhoan tkdata : data) {
-    			        	if(tkdata.getMaNV().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
-        			        	NhanVienBLL nv = new NhanVienBLL();
+    			        	NhanVienBLL nv = new NhanVienBLL();
+    			        	if (nv.getTenNV(tkdata.getMaNV()).toLowerCase().contains(txtSearch.getText().toLowerCase()))
+ {
+        			        	
         			            Object[] row = new Object[]{tkdata.getMaNV(), nv.getTenNV(tkdata.getMaNV()), tkdata.getTenDangNhap(),
         			            		tkdata.getMatKhau(), tkdata.getQuyen()};
 

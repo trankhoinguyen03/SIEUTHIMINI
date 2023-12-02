@@ -154,6 +154,29 @@ try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 		        // Xử lý lỗi khi cập nhật không thành công
 		    }
 
+		    return success; // Trả về giá tr ị success để biết kết quả cập nhật
+		}
+	 public boolean updatetrangthai(String mahd) throws SQLException {
+		    String updateSQL = "DELETE DSHOADON  WHERE MaHD = ?";
+		    boolean success = false;
+
+		    try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+		    	
+		       
+		    
+		        pstmt.setString(1, mahd);
+
+		        int affectedRows = pstmt.executeUpdate();
+
+		        if (affectedRows > 0) {
+		            // Nếu có hàng bị ảnh hưởng bởi cập nhật
+		            success = true; // Đặt biến success thành true
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        // Xử lý lỗi khi cập nhật không thành công
+		    }
+
 		    return success; // Trả về giá trị success để biết kết quả cập nhật
 		}
 
@@ -170,69 +193,106 @@ try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
      }
      return giamgia;
  }
- public int getdiemtong(String makh, String makm) throws SQLException {
-	    int diem = 0;
-	    String updateSQL = "UPDATE KHACHHANG SET TichDiem = " +
-	        "CASE " +
-	            "WHEN D.MaKM = 'KM1' THEN TichDiem - 0 " +
-	            "WHEN D.MaKM = 'KM2' THEN TichDiem - 15 " +
-	            "WHEN D.MaKM = 'KM3' THEN TichDiem - 30 " +
-	            "WHEN D.MaKM = 'KM4' THEN TichDiem - 45 " +
-	        "END " +
-	        "FROM KHACHHANG K " +
-	        "INNER JOIN DSHOADON D ON K.MaKH = D.MaKH " +
-	        "WHERE D.MaKM = ? " +
-	        "AND K.MaKH = ?";
+ public boolean getdiemtong(String makm, String makh) throws SQLException {
+	    String updateSQL = "UPDATE KHACHHANG " +
+	            "SET TichDiem = " +
+	            "CASE " +
+	                "WHEN ? = 'KM1' THEN TichDiem - 0 " +
+	                "WHEN ? = 'KM2' THEN TichDiem - 15 " +
+	                "WHEN ? = 'KM3' THEN TichDiem - 30 " +
+	                "WHEN ? = 'KM4' THEN TichDiem - 45 " +
+	            "END " +
+	            "FROM KHACHHANG K " +
+	            "INNER JOIN DSHOADON D ON K.MaKH = D.MaKH " +
+	            "WHERE D.MaKM = ? " +
+	            "AND K.MaKH = ?";
+	    
+	    Connection conn = null;
+
+	    try {
+	        conn = getConnection(); // Đảm bảo rằng bạn có phương thức getConnection() để lấy Connection
+
+	        try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+	            pstmt.setString(1, makm);
+	            pstmt.setString(2, makm);
+	            pstmt.setString(3, makm);
+	            pstmt.setString(4, makm);
+	            pstmt.setString(5, makm);
+	            pstmt.setString(6, makh);
+	            int affectedRows = pstmt.executeUpdate();
+	            return affectedRows > 0;
+	        }
+	    } finally {
+	        closeConnection(conn);
+	    }
+	}
+
+
+
+	// Hàm đóng kết nối
+	private void closeConnection(Connection connection) {
+	    try {
+	        if (connection != null && !connection.isClosed()) {
+	            connection.close();
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace(); // Xử lý exception nếu cần
+	    }
+	}
+
+
+
+ public int getgiamsoluong(String mahd) throws SQLException {
+	    int soluong = 0;
+	    String updateSQL = "UPDATE KHO " +
+	            "SET SoLuong = CONVERT(INT, SoLuong) - (SELECT CONVERT(INT, SoLuong) " +
+	            "FROM CHITIETHOADON WHERE KHO.MaSP = CHITIETHOADON.MaSP AND CHITIETHOADON.MaHD = ?) " +
+	            "WHERE KHO.MaSP IN (SELECT MaSP FROM CHITIETHOADON WHERE CHITIETHOADON.MaHD = ? AND CHITIETHOADON.SoLuong > 0)";
 
 	    try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
-	        pstmt.setString(1, makm);
-	        pstmt.setString(2, makh);
+	        pstmt.setString(1, mahd);
+	        pstmt.setString(2, mahd); 
 	        int affectedRows = pstmt.executeUpdate();
 	        if (affectedRows > 0) {
-	            String selectSQL = "SELECT TichDiem FROM KHACHHANG WHERE MaKH = ?";
+	            String selectSQL = "SELECT SoLuong FROM KHO WHERE MaSP IN (SELECT MaSP FROM CHITIETHOADON WHERE CHITIETHOADON.MaHD = ?)";
 	            try (PreparedStatement selectStmt = conn.prepareStatement(selectSQL)) {
-	                selectStmt.setString(1, makh);
+	                selectStmt.setString(1, mahd);
 	                ResultSet resultSet = selectStmt.executeQuery();
 	                if (resultSet.next()) {
-	                    diem = resultSet.getInt("TichDiem");
+	                    soluong = resultSet.getInt("SoLuong");
 	                }
 	            }
 	        }
 	    }
-	    return diem;
+	    return soluong;
 	}
 
- public int gettangdiemtong(String makh, String tongtien) throws SQLException {
-	    int diem = 0;
 
+
+
+ public boolean gettangdiemtong(String tongtien, String makh) throws SQLException {
 	    String updateSQL = "UPDATE KHACHHANG " +
 	        "SET TichDiem = " +
 	        "CASE " +
 	            "WHEN D.TongTien > 50000 AND D.TongTien <= 100000 THEN TichDiem + 5 " +
 	            "WHEN D.TongTien > 100000 AND D.TongTien <= 200000 THEN TichDiem + 8 " +
-	            "WHEN D.TongTien > 200000 AND D.TongTien <=350000 THEN TichDiem + 12 " +
-	            "WHEN D.TongTien >350000 THEN TichDiem + 20 " +
+	            "WHEN D.TongTien > 200000 AND D.TongTien <= 350000 THEN TichDiem + 12 " +
+	            "WHEN D.TongTien > 350000 THEN TichDiem + 20 " +
 	        "END " +
-	        "FROM KHACHHANG K " +
-	        "INNER JOIN DSHOADON D ON K.MaKH = D.MaKH " +
+	        "FROM DSHOADON D " +
+	        "INNER JOIN KHACHHANG K ON K.MaKH = D.MaKH " +
 	        "WHERE D.TongTien = ? AND K.MaKH = ?";
 
 	    try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
-	        pstmt.setString(1, makh);
-	        pstmt.setString(2, tongtien);
+	        // Giả sử giá trị tongtien là một số nguyên
+	        int tongtienValue = Integer.parseInt(tongtien);
+	        pstmt.setInt(1, tongtienValue);
+	        pstmt.setString(2, makh);
+
 	        int affectedRows = pstmt.executeUpdate();
-	        if (affectedRows > 0) {
-	            String selectSQL = "SELECT TichDiem FROM KHACHHANG WHERE MaKH = ?";
-	            try (PreparedStatement selectStmt = conn.prepareStatement(selectSQL)) {
-	                selectStmt.setString(1, makh);
-	                ResultSet resultSet = selectStmt.executeQuery();
-	                if (resultSet.next()) {
-	                    diem = resultSet.getInt("TichDiem");
-	                }
-	            }
-	        }
+
+	        return affectedRows > 0;
 	    }
-	    return diem;
 	}
 
  public  String getdiemthuong(String makh) throws SQLException {
@@ -291,6 +351,7 @@ try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 	    int tongBan = getTongBan(masp);
 	    return tongKho - tongBan;
 	}
+	
 
  public static void main(String[] args) throws SQLException {
 	HoaDonDAL hdd = new HoaDonDAL();

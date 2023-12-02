@@ -21,6 +21,10 @@ public class TaiKhoanBLL {
 		TaiKhoanDAL tkd = new TaiKhoanDAL();
 		return tkd.layMaQuyen(name);
 	}
+	public String getQuyen(String name) throws SQLException {
+		TaiKhoanDAL tkd = new TaiKhoanDAL();
+		return tkd.MaQuyen(name);
+	}
 	public boolean hideTaiKhoan(String id) throws SQLException {
 		TaiKhoanDAL tkd = new TaiKhoanDAL();
 		return tkd.anTaiKhoan(id);

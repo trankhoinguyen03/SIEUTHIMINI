@@ -81,6 +81,17 @@ public class TaiKhoanDAL extends connectSql {
 	        }
 	        return null;
 	    }
+	    public String MaQuyen(String name) throws SQLException {
+	        String sql = "SELECT MaQuyen FROM TAIKHOAN WHERE MaNV=?";
+	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        	pstmt.setString(1, name);
+	            ResultSet rs = pstmt.executeQuery();
+	            if (rs.next()) {
+	                return rs.getString(1);
+	            }
+	        }
+	        return null;
+	    }
 	    
 	    public boolean anTaiKhoan(String id) throws SQLException {
 	        String sql = "UPDATE TAIKHOAN SET TrangThai =  0 WHERE MaNV = ?";
